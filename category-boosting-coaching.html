@@ -32,6 +32,17 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #475569;
         }
+        
+        /* Mobile header scroll behavior */
+        @media (max-width: 768px) {
+            header {
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            header.header-hidden {
+                transform: translateY(-100%);
+            }
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -63,17 +74,33 @@
                     
                     <!-- Logged In User -->
                     <div id="loggedInUser" class="flex items-center space-x-3 hidden">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
+                        <!-- User Avatar with Dropdown -->
+                        <div class="relative group">
+                            <div id="userAvatar" class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg">
+                                <span id="avatarInitials">U</span>
                             </div>
-                            <span class="text-white font-medium" id="userEmail">User</span>
+                            <!-- Profile Dropdown -->
+                            <div class="absolute right-0 top-12 w-48 bg-slate-800 rounded-xl shadow-2xl border border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100">
+                                <div class="p-4 border-b border-slate-700">
+                                    <div class="text-white font-semibold" id="dropdownUsername">User</div>
+                                    <div class="text-gray-400 text-sm mt-1" id="dropdownEmail">user@example.com</div>
+                                </div>
+                                <div class="p-2">
+                                    <a href="profile.html" class="flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                        <span>My Profile</span>
+                                    </a>
+                                    <button onclick="signOut()" class="w-full flex items-center space-x-3 px-3 py-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-colors">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                        </svg>
+                                        <span>Sign Out</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <button onclick="signOut()" class="bg-red-600 text-white px-3 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
-                            Sign Out
-                        </button>
                     </div>
                 </div>
                 
@@ -250,15 +277,43 @@
     <!-- JavaScript -->
     <script>
         let products = [];
-        let lastScrollTop = 0;
-        let header = null;
 
         // Load products on page load
         window.addEventListener('load', function() {
             loadProducts();
             setupAuthState();
-            setupMobileHeader();
+            setupMobileHeaderScroll();
         });
+
+        // Mobile header scroll behavior
+        function setupMobileHeaderScroll() {
+            let lastScrollTop = 0;
+            const header = document.querySelector('header');
+            const mobileBreakpoint = 768;
+            
+            window.addEventListener('scroll', function() {
+                // Only apply on mobile devices
+                if (window.innerWidth <= mobileBreakpoint) {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    // Show header when scrolling up or at the top
+                    if (scrollTop <= 0) {
+                        header.classList.remove('header-hidden');
+                    } else if (scrollTop < lastScrollTop) {
+                        // Scrolling up - show header
+                        header.classList.remove('header-hidden');
+                    } else if (scrollTop > lastScrollTop && scrollTop > 100) {
+                        // Scrolling down and not at the top - hide header
+                        header.classList.add('header-hidden');
+                    }
+                    
+                    lastScrollTop = scrollTop;
+                } else {
+                    // On desktop, always show header
+                    header.classList.remove('header-hidden');
+                }
+            });
+        }
 
         // Authentication State Management
         function setupAuthState() {
@@ -272,13 +327,49 @@
         function updateAuthUI(user) {
             const guestUser = document.getElementById('guestUser');
             const loggedInUser = document.getElementById('loggedInUser');
-            const userEmail = document.getElementById('userEmail');
+            const avatarInitials = document.getElementById('avatarInitials');
+            const dropdownUsername = document.getElementById('dropdownUsername');
+            const dropdownEmail = document.getElementById('dropdownEmail');
             
             if (user) {
                 // User is signed in
                 guestUser.classList.add('hidden');
                 loggedInUser.classList.remove('hidden');
-                userEmail.textContent = user.email || 'User';
+                
+                // Try to get username from Firestore
+                if (window.FirebaseService) {
+                    FirebaseService.getUser(user.uid)
+                        .then(userData => {
+                            if (userData && userData.username) {
+                                const username = userData.username;
+                                const initials = getInitials(username);
+                                avatarInitials.textContent = initials;
+                                dropdownUsername.textContent = username;
+                                dropdownEmail.textContent = userData.email || user.email || 'user@example.com';
+                            } else {
+                                const email = user.email || 'User';
+                                const initials = getInitials(email);
+                                avatarInitials.textContent = initials;
+                                dropdownUsername.textContent = email;
+                                dropdownEmail.textContent = email;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching user data:', error);
+                            const email = user.email || 'User';
+                            const initials = getInitials(email);
+                            avatarInitials.textContent = initials;
+                            dropdownUsername.textContent = email;
+                            dropdownEmail.textContent = email;
+                        });
+                } else {
+                    const email = user.email || 'User';
+                    const initials = getInitials(email);
+                    avatarInitials.textContent = initials;
+                    dropdownUsername.textContent = email;
+                    dropdownEmail.textContent = email;
+                }
+                
                 console.log('User is signed in:', user.email);
             } else {
                 // User is signed out
@@ -286,6 +377,12 @@
                 loggedInUser.classList.add('hidden');
                 console.log('User is signed out');
             }
+        }
+
+        // Get initials from name
+        function getInitials(name) {
+            if (!name) return 'U';
+            return name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2);
         }
 
         async function signOut() {
@@ -448,47 +545,6 @@
         function closeModal() {
             const modal = document.getElementById('buyNowModal');
             modal.classList.add('hidden');
-        }
-
-        // Mobile header scroll behavior
-        function setupMobileHeader() {
-            header = document.querySelector('header');
-            if (!header) return;
-
-            // Only apply on mobile devices
-            if (window.innerWidth <= 768) {
-                window.addEventListener('scroll', handleMobileScroll);
-            }
-
-            // Update on window resize
-            window.addEventListener('resize', function() {
-                if (window.innerWidth <= 768) {
-                    window.addEventListener('scroll', handleMobileScroll);
-                } else {
-                    window.removeEventListener('scroll', handleMobileScroll);
-                    header.style.transform = 'translateY(0)';
-                    header.style.transition = 'none';
-                }
-            });
-        }
-
-        function handleMobileScroll() {
-            if (!header) return;
-            
-            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            // Add transition for smooth animation
-            header.style.transition = 'transform 0.3s ease-in-out';
-            
-            if (currentScrollTop > lastScrollTop && currentScrollTop > 100) {
-                // Scrolling down - hide header
-                header.style.transform = 'translateY(-100%)';
-            } else {
-                // Scrolling up - show header
-                header.style.transform = 'translateY(0)';
-            }
-            
-            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
         }
     </script>
 

@@ -274,6 +274,51 @@ const FirebaseService = {
       console.error('Error updating website settings in Firebase:', error);
       throw error;
     }
+  },
+
+  // Add user data to Firestore
+  async addUser(userData) {
+    try {
+      console.log('Attempting to add user data to Firebase:', userData);
+      await db.collection('users').doc(userData.uid).set(userData);
+      console.log('Successfully added user data to Firebase:', userData.uid);
+      return true;
+    } catch (error) {
+      console.error('Error adding user data to Firebase:', error);
+      throw error;
+    }
+  },
+
+  // Get user data from Firestore
+  async getUser(uid) {
+    try {
+      console.log('Attempting to fetch user data from Firebase:', uid);
+      const doc = await db.collection('users').doc(uid).get();
+      if (doc.exists) {
+        const userData = doc.data();
+        console.log('Successfully fetched user data from Firebase:', userData);
+        return userData;
+      } else {
+        console.log('No user data found in Firebase for:', uid);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error getting user data from Firebase:', error);
+      return null;
+    }
+  },
+
+  // Update user data in Firestore
+  async updateUser(uid, userData) {
+    try {
+      console.log('Attempting to update user data in Firebase:', uid, userData);
+      await db.collection('users').doc(uid).update(userData);
+      console.log('Successfully updated user data in Firebase:', uid);
+      return true;
+    } catch (error) {
+      console.error('Error updating user data in Firebase:', error);
+      throw error;
+    }
   }
 };
 
