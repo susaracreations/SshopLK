@@ -92,9 +92,6 @@
         </div>
     </header>
 
-    <!-- Hidden Admin Access Links (Invisible but clickable) -->
-    <!-- Removed all hidden admin access methods -->
-
     <!-- Hero Section -->
     <div id="heroSection" class="bg-gradient-to-r from-purple-900 to-red-900 text-white py-16 md:py-24 relative overflow-hidden">
         <!-- Background Image Overlay -->
@@ -321,6 +318,7 @@
         window.addEventListener('load', function() {
             loadProducts();
             loadHeroImages();
+            setupAdminAccess();
             setupAuthState();
             setupMobileHeader();
         });
@@ -670,51 +668,6 @@
             isAutoPlaying = true;
         }
 
-        function loadProducts() {
-            // Try to load from Firebase first
-            if (window.FirebaseService) {
-                FirebaseService.getProducts()
-                    .then(firebaseProducts => {
-                        if (firebaseProducts.length > 0) {
-                            products = firebaseProducts;
-                            displayProducts();
-                            console.log('Loaded products from Firebase:', products);
-                        } else {
-                            // Fallback to localStorage if no Firebase data
-                            loadFromLocalStorage();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading from Firebase:', error);
-                        loadFromLocalStorage();
-                    });
-            } else {
-                loadFromLocalStorage();
-            }
-        }
-
-        function loadFromLocalStorage() {
-            const storedProducts = localStorage.getItem('sShopProducts');
-            if (storedProducts) {
-                products = JSON.parse(storedProducts);
-                displayProducts();
-            } else {
-                // Fallback to products.json if no admin data
-                fetch('products.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        products = data.products;
-                        displayProducts();
-                    })
-                    .catch(error => {
-                        console.error('Error loading products:', error);
-                        // Load default products if both fail
-                        products = [];
-                        displayProducts();
-                    });
-            }
-        }
-
         function displayProducts() {
             const productContainer = document.getElementById('productContainer');
             productContainer.innerHTML = '';
@@ -793,16 +746,60 @@
             }
         }
 
-        // Setup multiple admin panel access methods
+        // Setup admin panel access method (keyboard shortcut only)
         function setupAdminAccess() {
-            // Keyboard shortcuts only
+            // Keyboard shortcut: Ctrl + Alt + A (Windows/Linux) or Cmd + Alt + A (Mac)
             document.addEventListener('keydown', function(event) {
-                // Ctrl + Alt + A (Windows/Linux) or Cmd + Alt + A (Mac)
                 if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 'a') {
                     event.preventDefault();
                     window.location.href = 'admin-login.html';
                 }
             });
+        }
+
+        function loadProducts() {
+            // Try to load from Firebase first
+            if (window.FirebaseService) {
+                FirebaseService.getProducts()
+                    .then(firebaseProducts => {
+                        if (firebaseProducts.length > 0) {
+                            products = firebaseProducts;
+                            displayProducts();
+                            console.log('Loaded products from Firebase:', products);
+                        } else {
+                            // Fallback to localStorage if no Firebase data
+                            loadFromLocalStorage();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading from Firebase:', error);
+                        loadFromLocalStorage();
+                    });
+            } else {
+                loadFromLocalStorage();
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const storedProducts = localStorage.getItem('sShopProducts');
+            if (storedProducts) {
+                products = JSON.parse(storedProducts);
+                displayProducts();
+            } else {
+                // Fallback to products.json if no admin data
+                fetch('products.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        products = data.products;
+                        displayProducts();
+                    })
+                    .catch(error => {
+                        console.error('Error loading products:', error);
+                        // Load default products if both fail
+                        products = [];
+                        displayProducts();
+                    });
+            }
         }
         
         /**
