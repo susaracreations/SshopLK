@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - S Shop LK</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        
+        /* Custom slider styling */
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e5e7eb;
+            outline: none;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            background: #2563eb;
+            transform: scale(1.1);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+        
+        .slider::-moz-range-thumb:hover {
+            background: #2563eb;
+            transform: scale(1.1);
+        }
+        
+        .slider:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span class="text-2xl font-extrabold text-gray-900">S Shop LK - Admin</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600">Welcome, <span id="adminUsername">Admin</span></span>
+                <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                    Logout
+                </button>
+                <a href="index.html" class="text-blue-600 hover:text-blue-800">← Back to Website</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Sidebar - Add/Edit Product Form -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Add New Product</h2>
+                    
+                    <form id="productForm" class="space-y-4">
+                        <input type="hidden" id="productId" value="">
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                            <input type="text" id="productName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea id="productDescription" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Price (LKR)</label>
+                                <input type="number" id="productPrice" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Availability</label>
+                                <input type="number" id="productAvailability" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Sold Count</label>
+                                <input type="number" id="productSoldCount" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
+                            <input type="url" id="productImage" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                                <select id="productCategory" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                    <option value="">Select Category</option>
+                                    <option value="games">Games</option>
+                                    <option value="software-apps">Software & Apps</option>
+                                    <option value="boosting-coaching">Boosting & Coaching</option>
+                                    <option value="gift-cards">Gift Cards</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
+                                <input type="text" id="productSubcategory" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., steam, epic-games, office, adobe">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Features (comma separated)</label>
+                            <input type="text" id="productFeatures" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., GTA V Included, Exclusive Skins">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Redeem Points</label>
+                                <input type="number" id="productRedeemPoints" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Other Sellers</label>
+                                <input type="number" id="productOtherSellers" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Trust Badge</label>
+                            <input type="text" id="productTrustBadge" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., TRUSTED SELLER WITH OVER 1000 SALES" value="TRUSTED SELLER WITH OVER 1000 SALES">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Speed</label>
+                                <select id="productDeliverySpeed" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleCustomDeliverySpeed()">
+                                    <option value="Instant">Instant</option>
+                                    <option value="5-10 minutes">5-10 minutes</option>
+                                    <option value="15-30 minutes">15-30 minutes</option>
+                                    <option value="1-2 hours">1-2 hours</option>
+                                    <option value="Same day">Same day</option>
+                                    <option value="Next day">Next day</option>
+                                    <option value="2-3 days">2-3 days</option>
+                                    <option value="Custom">Custom</option>
+                                </select>
+                                <input type="text" id="customDeliverySpeed" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2 hidden" placeholder="Enter custom delivery speed">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Method</label>
+                                <select id="productDeliveryMethod" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleCustomDeliveryMethod()">
+                                    <option value="Auto delivery">Auto delivery</option>
+                                    <option value="Email delivery">Email delivery</option>
+                                    <option value="WhatsApp delivery">WhatsApp delivery</option>
+                                    <option value="Discord delivery">Discord delivery</option>
+                                    <option value="Manual delivery">Manual delivery</option>
+                                    <option value="Digital download">Digital download</option>
+                                    <option value="Account credentials">Account credentials</option>
+                                    <option value="Custom">Custom</option>
+                                </select>
+                                <input type="text" id="customDeliveryMethod" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2 hidden" placeholder="Enter custom delivery method">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Activation Region</label>
+                            <select id="productActivationRegion" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleCustomActivationRegion()">
+                                <option value="Can activate in Sri Lanka">Can activate in Sri Lanka</option>
+                                <option value="Global activation">Global activation</option>
+                                <option value="Worldwide activation">Worldwide activation</option>
+                                <option value="Region free">Region free</option>
+                                <option value="No activation required">No activation required</option>
+                                <option value="Instant activation">Instant activation</option>
+                                <option value="Works worldwide">Works worldwide</option>
+                                <option value="Custom">Custom</option>
+                            </select>
+                            <input type="text" id="customActivationRegion" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2 hidden" placeholder="Enter custom activation region">
+                        </div>
+                        
+                        <div class="flex space-x-3">
+                            <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                                Add Product
+                            </button>
+                            <button type="button" onclick="clearForm()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-600 transition-colors">
+                                Clear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Side - Product List -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">Manage Products</h2>
+                        <div class="flex space-x-2">
+                            <button onclick="exportProducts()" class="bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                                Export JSON
+                            </button>
+                            <button onclick="importProducts()" class="bg-purple-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                                Import JSON
+                            </button>
+                            <button onclick="debugProducts()" class="bg-yellow-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-yellow-700 transition-colors">
+                                Debug
+                            </button>
+                            <button onclick="deleteAllProducts()" class="bg-red-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                                Delete All
+                            </button>
+                            <button onclick="deleteLocalStorageProducts()" class="bg-orange-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-orange-700 transition-colors">
+                                Clear localStorage
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Debug Info -->
+                    <div id="debugInfo" class="mb-4 p-3 bg-gray-100 rounded-lg text-sm hidden">
+                        <strong>Debug Info:</strong>
+                        <div id="debugContent"></div>
+                    </div>
+                    
+                    <div id="productList" class="space-y-4">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Website Settings Section -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 mt-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Website Settings</h2>
+                    
+                    <!-- Hero Image Management -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Hero Section Images</h3>
+                        
+                        <!-- Image Dimensions Guide -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-blue-800 mb-2">📏 Recommended Image Dimensions:</h4>
+                            <div class="text-sm text-blue-700 space-y-1">
+                                <p><strong>Optimal Size:</strong> 1200 × 800 pixels (3:2 ratio)</p>
+                                <p><strong>Minimum Size:</strong> 800 × 600 pixels</p>
+                                <p><strong>Maximum Size:</strong> 1920 × 1280 pixels</p>
+                                <p><strong>File Format:</strong> JPG, PNG, or WebP</p>
+                                <p><strong>File Size:</strong> Under 2MB per image</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Hero Image Visibility Toggle -->
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <label class="font-medium text-gray-700">Show Hero Images</label>
+                                <p class="text-sm text-gray-500">Display the hero image carousel on the website</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="showHeroImagesToggle" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Add New Hero Image</label>
+                                <div class="space-y-2">
+                                    <input type="url" id="newHeroImageUrl" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://example.com/hero-image.jpg">
+                                    <input type="text" id="newHeroImageAlt" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Image description (optional)">
+                                    <div class="flex space-x-2">
+                                        <button onclick="addHeroImage()" class="bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                                            Add Image
+                                        </button>
+                                        <button onclick="previewNewHeroImage()" class="bg-gray-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+                                            Preview
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Hero Images</label>
+                                <div id="heroImagesList" class="space-y-2 max-h-60 overflow-y-auto">
+                                    <!-- Hero images will be listed here -->
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button onclick="saveHeroImages()" class="bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                                    Save All Images
+                                </button>
+                                <button onclick="resetHeroImages()" class="bg-orange-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-orange-700 transition-colors">
+                                    Reset to Default
+                                </button>
+                            </div>
+                            
+                            <div id="heroImagePreview" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Preview:</label>
+                                <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                                    <img id="previewImage" src="" alt="Hero Image Preview" class="max-w-full h-auto rounded-lg shadow-md">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hero Background Image Management -->
+                    <div class="space-y-4 mt-6">
+                        <h3 class="text-lg font-semibold text-gray-800">Hero Background Image</h3>
+                        
+                        <!-- Background Image Dimensions Guide -->
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-green-800 mb-2">📏 Background Image Dimensions:</h4>
+                            <div class="text-sm text-green-700 space-y-1">
+                                <p><strong>Optimal Size:</strong> 1920 × 1080 pixels (16:9 ratio)</p>
+                                <p><strong>Minimum Size:</strong> 1200 × 675 pixels</p>
+                                <p><strong>File Format:</strong> JPG, PNG, or WebP</p>
+                                <p><strong>File Size:</strong> Under 3MB</p>
+                                <p><strong>Note:</strong> Background appears behind the gradient overlay</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Background Image URL</label>
+                                <input type="url" id="heroBackgroundImageUrl" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://example.com/background-image.jpg">
+                            </div>
+                            
+                            <!-- Background Opacity Control -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Background Opacity: <span id="opacityValue">20%</span></label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="range" id="heroBackgroundOpacity" min="0" max="100" value="20" class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider" oninput="updateOpacityValue(this.value)">
+                                    <button onclick="resetBackgroundOpacity()" class="bg-gray-500 text-white px-3 py-1 rounded text-sm hover:bg-gray-600 transition-colors">
+                                        Reset
+                                    </button>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>0% (Hidden)</span>
+                                    <span>50% (Medium)</span>
+                                    <span>100% (Full)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button onclick="saveHeroBackgroundImage()" class="bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                                    Save Background
+                                </button>
+                                <button onclick="previewHeroBackgroundImage()" class="bg-gray-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+                                    Preview
+                                </button>
+                                <button onclick="removeHeroBackgroundImage()" class="bg-red-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                                    Remove Background
+                                </button>
+                            </div>
+                            
+                            <div id="backgroundImagePreview" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Background Preview:</label>
+                                <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                                    <div class="relative w-full h-32 bg-gradient-to-r from-purple-900 to-red-900 rounded-lg overflow-hidden">
+                                        <img id="backgroundPreviewImage" src="" alt="Background Preview" class="absolute inset-0 w-full h-full object-cover opacity-20">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-red-900/80"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <span class="text-white font-semibold">Background with overlay</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Import Modal -->
+    <div id="importModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
+        <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">Import Products</h3>
+            <textarea id="importTextarea" rows="10" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Paste your JSON data here..."></textarea>
+            <div class="flex space-x-3 mt-4">
+                <button onclick="confirmImport()" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Import
+                </button>
+                <button onclick="closeImportModal()" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-gray-600 transition-colors">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let products = [];
+        let categories = [];
+
+        // Check authentication on page load
+        window.addEventListener('load', function() {
+            checkAuth();
+            loadProducts();
+        });
+
+        function checkAuth() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            const username = sessionStorage.getItem('adminUsername');
+            const loginTime = sessionStorage.getItem('adminLoginTime');
+            
+            if (isLoggedIn !== 'true' || !loginTime) {
+                // Redirect to login page
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            // Check session timeout (30 minutes)
+            const currentTime = Date.now();
+            const timeDiff = currentTime - parseInt(loginTime);
+            const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+            
+            if (timeDiff > SESSION_TIMEOUT) {
+                // Session expired
+                sessionStorage.clear();
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            // Display username
+            if (username) {
+                document.getElementById('adminUsername').textContent = username;
+            }
+            
+            // Start inactivity monitoring
+            startInactivityMonitoring();
+        }
+
+        function startInactivityMonitoring() {
+            let inactivityTimer;
+            const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+            
+            function resetInactivityTimer() {
+                clearTimeout(inactivityTimer);
+                inactivityTimer = setTimeout(function() {
+                    sessionStorage.clear();
+                    window.location.href = 'admin-login.html';
+                }, SESSION_TIMEOUT);
+            }
+            
+            // Reset timer on user activity
+            document.addEventListener('mousemove', resetInactivityTimer);
+            document.addEventListener('keypress', resetInactivityTimer);
+            document.addEventListener('click', resetInactivityTimer);
+            
+            // Start the timer
+            resetInactivityTimer();
+        }
+
+        function logout() {
+            // Clear session
+            sessionStorage.clear();
+            
+            // Redirect to login page
+            window.location.href = 'admin-login.html';
+        }
+
+        // Load products on page load
+        window.addEventListener('load', function() {
+            loadProducts();
+        });
+
+        function loadProducts() {
+            console.log('Starting to load products...');
+            // Try to load from Firebase first
+            if (window.FirebaseService) {
+                console.log('Firebase service available, attempting to load from Firebase...');
+                FirebaseService.getProducts()
+                    .then(firebaseProducts => {
+                        console.log('Firebase returned products:', firebaseProducts);
+                        if (firebaseProducts && firebaseProducts.length > 0) {
+                            products = firebaseProducts;
+                            displayProducts();
+                            console.log('Successfully loaded products from Firebase:', products);
+                        } else {
+                            console.log('No products in Firebase, falling back to localStorage');
+                            loadFromLocalStorage();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading from Firebase:', error);
+                        console.log('Falling back to localStorage due to Firebase error');
+                        loadFromLocalStorage();
+                    });
+            } else {
+                console.log('Firebase service not available, loading from localStorage');
+                loadFromLocalStorage();
+            }
+        }
+
+        function loadFromLocalStorage() {
+            console.log('Loading products from localStorage...');
+            // In a real application, you would fetch this from a server
+            // For now, we'll use localStorage or load from products.json
+            const storedProducts = localStorage.getItem('sShopProducts');
+            console.log('Stored products from localStorage:', storedProducts);
+            
+            if (storedProducts) {
+                try {
+                    products = JSON.parse(storedProducts);
+                    console.log('Successfully loaded products from localStorage:', products);
+                    displayProducts();
+                } catch (error) {
+                    console.error('Error parsing localStorage data:', error);
+                    loadDefaultProducts();
+                }
+            } else {
+                console.log('No stored products in localStorage, loading default products');
+                loadDefaultProducts();
+            }
+        }
+
+        function loadDefaultProducts() {
+            console.log('Loading default products...');
+            // Load default products
+            fetch('products.json')
+                .then(response => {
+                    console.log('products.json response:', response);
+                    if (!response.ok) {
+                        throw new Error('products.json not found');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Loaded data from products.json:', data);
+                    products = data.products || [];
+                    categories = data.categories || [];
+                    console.log('Successfully loaded products from products.json:', products);
+                    displayProducts();
+                })
+                .catch(error => {
+                    console.error('Error loading products.json:', error);
+                    // Load sample data if file not found
+                    products = [];
+                    console.log('Using empty products array as fallback');
+                    displayProducts();
+                });
+        }
+
+        function displayProducts() {
+            const productList = document.getElementById('productList');
+            console.log('Displaying products:', products);
+            console.log('Product list element:', productList);
+            
+            if (!productList) {
+                console.error('Product list element not found!');
+                return;
+            }
+            
+            productList.innerHTML = '';
+
+            if (products.length === 0) {
+                productList.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-gray-500 mb-4">No products found. Add your first product using the form on the left.</p>
+                        <button onclick="addTestProducts()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                            Add Test Products
+                        </button>
+                    </div>`;
+                return;
+            }
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow';
+                productCard.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <img src="${product.image}" alt="${product.name}" class="w-16 h-16 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-900">${product.name}</h3>
+                            <p class="text-sm text-gray-600">${product.description}</p>
+                            <div class="flex items-center space-x-4 mt-2 text-sm">
+                                <span class="text-green-600 font-semibold">LKR ${product.price.toLocaleString()}</span>
+                                <span class="text-gray-500">${product.availability} available</span>
+                                <span class="text-blue-600 font-semibold">${product.sold || 0} sold</span>
+                                <span class="text-gray-500">${product.category}</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="editProduct('${product.id}')" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                                Edit
+                            </button>
+                            <button onclick="deleteProduct('${product.id}')" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productList.appendChild(productCard);
+            });
+        }
+
+        function addTestProducts() {
+            console.log('Adding test products...');
+            alert('Test products feature has been removed. Please add products manually using the form on the left.');
+        }
+
+        function editProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                document.getElementById('productId').value = product.id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productDescription').value = product.description;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productAvailability').value = product.availability;
+                document.getElementById('productSoldCount').value = product.sold || 0;
+                document.getElementById('productImage').value = product.image;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productSubcategory').value = product.subcategory || '';
+                document.getElementById('productFeatures').value = product.features ? product.features.join(', ') : '';
+                document.getElementById('productRedeemPoints').value = product.redeem_points || 0;
+                document.getElementById('productOtherSellers').value = product.other_sellers || 0;
+                document.getElementById('productTrustBadge').value = product.trust_badge || 'TRUSTED SELLER WITH OVER 1000 SALES';
+                
+                // Handle delivery speed
+                const deliverySpeed = product.delivery_speed || 'Instant';
+                const speedSelect = document.getElementById('productDeliverySpeed');
+                const customSpeedInput = document.getElementById('customDeliverySpeed');
+                
+                // Check if the delivery speed is a predefined option
+                const predefinedSpeeds = ['Instant', '5-10 minutes', '15-30 minutes', '1-2 hours', 'Same day', 'Next day', '2-3 days'];
+                if (predefinedSpeeds.includes(deliverySpeed)) {
+                    speedSelect.value = deliverySpeed;
+                    customSpeedInput.classList.add('hidden');
+                    customSpeedInput.value = '';
+                } else {
+                    speedSelect.value = 'Custom';
+                    customSpeedInput.classList.remove('hidden');
+                    customSpeedInput.value = deliverySpeed;
+                }
+                
+                // Handle delivery method
+                const deliveryMethod = product.delivery_method || 'Auto delivery';
+                const methodSelect = document.getElementById('productDeliveryMethod');
+                const customMethodInput = document.getElementById('customDeliveryMethod');
+                
+                // Check if the delivery method is a predefined option
+                const predefinedMethods = ['Auto delivery', 'Email delivery', 'WhatsApp delivery', 'Discord delivery', 'Manual delivery', 'Digital download', 'Account credentials'];
+                if (predefinedMethods.includes(deliveryMethod)) {
+                    methodSelect.value = deliveryMethod;
+                    customMethodInput.classList.add('hidden');
+                    customMethodInput.value = '';
+                } else {
+                    methodSelect.value = 'Custom';
+                    customMethodInput.classList.remove('hidden');
+                    customMethodInput.value = deliveryMethod;
+                }
+                
+                // Handle activation region
+                const activationRegion = product.activation_region || 'Can activate in Sri Lanka';
+                const activationSelect = document.getElementById('productActivationRegion');
+                const customActivationInput = document.getElementById('customActivationRegion');
+                
+                // Check if the activation region is a predefined option
+                const predefinedActivationRegions = ['Can activate in Sri Lanka', 'Global activation', 'Worldwide activation', 'Region free', 'No activation required', 'Instant activation', 'Works worldwide'];
+                if (predefinedActivationRegions.includes(activationRegion)) {
+                    activationSelect.value = activationRegion;
+                    customActivationInput.classList.add('hidden');
+                    customActivationInput.value = '';
+                } else {
+                    activationSelect.value = 'Custom';
+                    customActivationInput.classList.remove('hidden');
+                    customActivationInput.value = activationRegion;
+                }
+                
+                document.querySelector('#productForm button[type="submit"]').textContent = 'Update Product';
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('productSoldCount').value = '0';
+            document.getElementById('productRedeemPoints').value = '0';
+            document.getElementById('productOtherSellers').value = '0';
+            document.getElementById('productTrustBadge').value = 'TRUSTED SELLER WITH OVER 1000 SALES';
+            document.getElementById('productDeliverySpeed').value = 'Instant';
+            document.getElementById('productDeliveryMethod').value = 'Auto delivery';
+            document.getElementById('productActivationRegion').value = 'Can activate in Sri Lanka';
+            
+            // Hide custom input fields
+            document.getElementById('customDeliverySpeed').classList.add('hidden');
+            document.getElementById('customDeliveryMethod').classList.add('hidden');
+            document.getElementById('customActivationRegion').classList.add('hidden');
+            document.getElementById('customDeliverySpeed').value = '';
+            document.getElementById('customDeliveryMethod').value = '';
+            document.getElementById('customActivationRegion').value = '';
+            
+            document.querySelector('#productForm button[type="submit"]').textContent = 'Add Product';
+        }
+
+        function saveProducts() {
+            // Save to Firebase if available, otherwise fallback to localStorage
+            if (window.FirebaseService) {
+                // Note: Firebase operations are handled in the form submission
+                console.log('Products will be saved to Firebase');
+            } else {
+                localStorage.setItem('sShopProducts', JSON.stringify(products));
+            }
+        }
+
+        function exportProducts() {
+            const dataStr = JSON.stringify({ products, categories }, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'products.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importProducts() {
+            document.getElementById('importModal').classList.remove('hidden');
+        }
+
+        function confirmImport() {
+            try {
+                const jsonData = JSON.parse(document.getElementById('importTextarea').value);
+                if (jsonData.products) {
+                    // Import to Firebase if available
+                    if (window.FirebaseService) {
+                        // Clear existing products and import new ones
+                        importProductsToFirebase(jsonData.products);
+                    } else {
+                        products = jsonData.products;
+                        if (jsonData.categories) {
+                            categories = jsonData.categories;
+                        }
+                        saveProducts();
+                        displayProducts();
+                        closeImportModal();
+                        alert('Products imported successfully!');
+                    }
+                } else {
+                    alert('Invalid JSON format. Please check your data.');
+                }
+            } catch (error) {
+                alert('Error parsing JSON. Please check your data.');
+            }
+        }
+
+        async function importProductsToFirebase(productsToImport) {
+            try {
+                // Clear existing products (you might want to implement this differently)
+                // For now, we'll just add the new products
+                for (const product of productsToImport) {
+                    await FirebaseService.addProduct(product);
+                }
+                closeImportModal();
+                alert('Products imported successfully to Firebase!');
+                loadProducts(); // Reload products from Firebase
+            } catch (error) {
+                console.error('Error importing to Firebase:', error);
+                alert('Error importing products to Firebase.');
+            }
+        }
+
+        function closeImportModal() {
+            document.getElementById('importModal').classList.add('hidden');
+            document.getElementById('importTextarea').value = '';
+        }
+
+        // Handle form submission
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const productId = document.getElementById('productId').value;
+            
+            // Handle custom delivery speed and method
+            let deliverySpeed = document.getElementById('productDeliverySpeed').value;
+            let deliveryMethod = document.getElementById('productDeliveryMethod').value;
+            
+            // If custom is selected, use the custom input value
+            if (deliverySpeed === 'Custom') {
+                const customSpeed = document.getElementById('customDeliverySpeed').value.trim();
+                if (customSpeed) {
+                    deliverySpeed = customSpeed;
+                }
+            }
+            
+            if (deliveryMethod === 'Custom') {
+                const customMethod = document.getElementById('customDeliveryMethod').value.trim();
+                if (customMethod) {
+                    deliveryMethod = customMethod;
+                }
+            }
+
+            // Handle custom activation region
+            let activationRegion = document.getElementById('productActivationRegion').value;
+            if (activationRegion === 'Custom') {
+                const customActivation = document.getElementById('customActivationRegion').value.trim();
+                if (customActivation) {
+                    activationRegion = customActivation;
+                }
+            }
+            
+            const productData = {
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDescription').value,
+                price: parseInt(document.getElementById('productPrice').value),
+                availability: parseInt(document.getElementById('productAvailability').value),
+                sold: parseInt(document.getElementById('productSoldCount').value), // Add sold count
+                image: document.getElementById('productImage').value,
+                category: document.getElementById('productCategory').value,
+                subcategory: document.getElementById('productSubcategory').value,
+                features: document.getElementById('productFeatures').value.split(',').map(f => f.trim()).filter(f => f),
+                redeem_points: parseInt(document.getElementById('productRedeemPoints').value),
+                other_sellers: parseInt(document.getElementById('productOtherSellers').value),
+                trust_badge: document.getElementById('productTrustBadge').value,
+                delivery_speed: deliverySpeed,
+                delivery_method: deliveryMethod,
+                activation_region: activationRegion,
+                rating: 100,
+                currency: "LKR"
+            };
+
+            try {
+                if (window.FirebaseService) {
+                    // Save to Firebase
+                    if (productId) {
+                        // Update existing product
+                        await FirebaseService.updateProduct(productId, productData);
+                        alert('Product updated successfully in Firebase!');
+                    } else {
+                        // Add new product
+                        const newProductId = await FirebaseService.addProduct(productData);
+                        alert('Product added successfully to Firebase!');
+                    }
+                    // Reload products from Firebase
+                    loadProducts();
+                } else {
+                    // Fallback to localStorage
+                    if (productId) {
+                        // Update existing product
+                        const index = products.findIndex(p => p.id === productId);
+                        if (index !== -1) {
+                            products[index] = { ...products[index], ...productData };
+                        }
+                    } else {
+                        // Add new product
+                        productData.id = generateId();
+                        products.push(productData);
+                    }
+                    saveProducts();
+                    displayProducts();
+                }
+                clearForm();
+            } catch (error) {
+                console.error('Error saving product:', error);
+                alert('Error saving product. Please try again.');
+            }
+        });
+
+        async function deleteProduct(productId) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                try {
+                    if (window.FirebaseService) {
+                        // Delete from Firebase
+                        await FirebaseService.deleteProduct(productId);
+                        alert('Product deleted successfully from Firebase!');
+                        loadProducts(); // Reload products from Firebase
+                    } else {
+                        // Fallback to localStorage
+                        products = products.filter(p => p.id !== productId);
+                        saveProducts();
+                        displayProducts();
+                    }
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    alert('Error deleting product. Please try again.');
+                }
+            }
+        }
+
+        function generateId() {
+            return 'product-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function debugProducts() {
+            const debugInfo = document.getElementById('debugInfo');
+            const debugContent = document.getElementById('debugContent');
+            debugContent.innerHTML = '';
+
+            debugContent.innerHTML += `<p><strong>Current Products:</strong></p>`;
+            products.forEach(product => {
+                debugContent.innerHTML += `<p>ID: ${product.id}, Name: ${product.name}, Category: ${product.category}, Availability: ${product.availability}, Sold: ${product.sold}</p>`;
+            });
+
+            debugContent.innerHTML += `<p><strong>Current Categories:</strong></p>`;
+            categories.forEach(cat => {
+                debugContent.innerHTML += `<p>${cat}</p>`;
+            });
+
+            debugInfo.classList.remove('hidden');
+        }
+
+        async function deleteAllProducts() {
+            if (confirm('Are you sure you want to delete ALL products? This action cannot be undone.')) {
+                try {
+                    if (window.FirebaseService) {
+                        // Delete all products from Firebase
+                        await FirebaseService.deleteAllProducts();
+                        alert('All products deleted successfully from Firebase!');
+                        products = []; // Clear local products array
+                        saveProducts(); // Save empty array to localStorage
+                        displayProducts();
+                    } else {
+                        // Delete all products from localStorage
+                        localStorage.removeItem('sShopProducts');
+                        alert('All products deleted successfully from localStorage!');
+                        products = []; // Clear local products array
+                        displayProducts();
+                    }
+                } catch (error) {
+                    console.error('Error deleting all products:', error);
+                    alert('Error deleting all products. Please try again.');
+                }
+            }
+        }
+
+        function deleteLocalStorageProducts() {
+            if (confirm('Are you sure you want to delete ALL products from localStorage? This action cannot be undone.')) {
+                localStorage.removeItem('sShopProducts');
+                alert('All products deleted successfully from localStorage!');
+                products = []; // Clear local products array
+                displayProducts();
+            }
+        }
+
+        function toggleCustomDeliverySpeed() {
+            const customSpeedInput = document.getElementById('customDeliverySpeed');
+            const selectedSpeed = document.getElementById('productDeliverySpeed').value;
+
+            if (selectedSpeed === 'Custom') {
+                customSpeedInput.classList.remove('hidden');
+                customSpeedInput.value = ''; // Clear default value
+                customSpeedInput.focus();
+            } else {
+                customSpeedInput.classList.add('hidden');
+                customSpeedInput.value = ''; // Clear input value
+            }
+        }
+
+        function toggleCustomDeliveryMethod() {
+            const customMethodInput = document.getElementById('customDeliveryMethod');
+            const selectedMethod = document.getElementById('productDeliveryMethod').value;
+
+            if (selectedMethod === 'Custom') {
+                customMethodInput.classList.remove('hidden');
+                customMethodInput.value = ''; // Clear default value
+                customMethodInput.focus();
+            } else {
+                customMethodInput.classList.add('hidden');
+                customMethodInput.value = ''; // Clear input value
+            }
+        }
+
+        function toggleCustomActivationRegion() {
+            const customActivationInput = document.getElementById('customActivationRegion');
+            const selectedRegion = document.getElementById('productActivationRegion').value;
+
+            if (selectedRegion === 'Custom') {
+                customActivationInput.classList.remove('hidden');
+                customActivationInput.value = ''; // Clear default value
+                customActivationInput.focus();
+            } else {
+                customActivationInput.classList.add('hidden');
+                customActivationInput.value = ''; // Clear input value
+            }
+        }
+
+        // Hero Image Management Functions
+        function addHeroImage() {
+            const newHeroImageUrl = document.getElementById('newHeroImageUrl').value.trim();
+            const newHeroImageAlt = document.getElementById('newHeroImageAlt').value.trim();
+            const heroImagesList = document.getElementById('heroImagesList');
+
+            if (!newHeroImageUrl) {
+                alert('Please enter a valid image URL for the new hero image.');
+                return;
+            }
+
+            const heroImageItem = document.createElement('div');
+            heroImageItem.className = 'flex items-center justify-between bg-gray-100 p-2 rounded-lg';
+            heroImageItem.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <img src="${newHeroImageUrl}" alt="${newHeroImageAlt || 'Hero Image'}" class="w-10 h-10 object-cover rounded-md">
+                    <span class="text-sm text-gray-700">${newHeroImageAlt || 'Hero Image'}</span>
+                </div>
+                <button onclick="removeHeroImage(this)" class="text-red-600 hover:text-red-800 text-lg">
+                    ×
+                </button>
+            `;
+            heroImagesList.appendChild(heroImageItem);
+
+            document.getElementById('newHeroImageUrl').value = '';
+            document.getElementById('newHeroImageAlt').value = '';
+        }
+
+        function removeHeroImage(button) {
+            const heroImageItem = button.closest('.flex');
+            heroImageItem.remove();
+        }
+
+        function previewNewHeroImage() {
+            const newHeroImageUrl = document.getElementById('newHeroImageUrl').value.trim();
+            const previewDiv = document.getElementById('heroImagePreview');
+            const previewImage = document.getElementById('previewImage');
+            
+            if (!newHeroImageUrl) {
+                alert('Please enter a valid image URL first');
+                return;
+            }
+            
+            previewImage.src = newHeroImageUrl;
+            previewImage.onload = function() {
+                previewDiv.classList.remove('hidden');
+                
+                // Check image dimensions
+                const width = this.naturalWidth;
+                const height = this.naturalHeight;
+                const aspectRatio = (width / height).toFixed(2);
+                
+                // Create dimension info
+                const dimensionInfo = document.createElement('div');
+                dimensionInfo.className = 'mt-2 p-2 bg-gray-100 rounded text-xs';
+                dimensionInfo.innerHTML = `
+                    <p><strong>Image Dimensions:</strong> ${width} × ${height} pixels</p>
+                    <p><strong>Aspect Ratio:</strong> ${aspectRatio}</p>
+                    ${width < 800 || height < 600 ? '<p class="text-red-600">⚠️ Image is smaller than recommended minimum (800×600)</p>' : ''}
+                    ${width > 1920 || height > 1280 ? '<p class="text-orange-600">⚠️ Image is larger than recommended maximum (1920×1280)</p>' : ''}
+                    ${width >= 1200 && height >= 800 ? '<p class="text-green-600">✅ Optimal size for hero images</p>' : ''}
+                `;
+                
+                // Remove existing dimension info and add new one
+                const existingInfo = previewDiv.querySelector('.bg-gray-100');
+                if (existingInfo) {
+                    existingInfo.remove();
+                }
+                previewDiv.appendChild(dimensionInfo);
+            };
+            previewImage.onerror = function() {
+                alert('Error loading image. Please check the URL.');
+                previewDiv.classList.add('hidden');
+            };
+        }
+
+        function saveHeroImages() {
+            const heroImages = [];
+            document.querySelectorAll('#heroImagesList img').forEach(img => {
+                heroImages.push({
+                    url: img.src,
+                    alt: img.alt
+                });
+            });
+
+            if (heroImages.length === 0) {
+                alert('No hero images to save. Please add at least one.');
+                return;
+            }
+
+            // Save to localStorage
+            localStorage.setItem('sShopHeroImages', JSON.stringify(heroImages));
+            
+            // Save to Firebase if available
+            if (window.FirebaseService) {
+                FirebaseService.updateWebsiteSettings({ heroImages: heroImages })
+                    .then(() => {
+                        alert('Hero images saved successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error saving to Firebase:', error);
+                        alert('Hero images saved to localStorage. Firebase save failed.');
+                    });
+            } else {
+                alert('Hero images saved successfully!');
+            }
+        }
+
+        function resetHeroImages() {
+            const defaultImages = [
+                {
+                    url: 'https://placehold.co/600x400/805ad5/ffffff?text=S+Shop+LK',
+                    alt: 'S Shop LK Hero 1'
+                },
+                {
+                    url: 'https://placehold.co/600x400/667eea/ffffff?text=Gaming+Products',
+                    alt: 'S Shop LK Hero 2'
+                },
+                {
+                    url: 'https://placehold.co/600x400/764ba2/ffffff?text=Best+Deals',
+                    alt: 'S Shop LK Hero 3'
+                }
+            ];
+
+            // Save the reset
+            localStorage.setItem('sShopHeroImages', JSON.stringify(defaultImages));
+            
+            // Save to Firebase if available
+            if (window.FirebaseService) {
+                FirebaseService.updateWebsiteSettings({ heroImages: defaultImages })
+                    .then(() => {
+                        alert('Hero images reset to default!');
+                        loadHeroImages();
+                    })
+                    .catch(error => {
+                        console.error('Error saving to Firebase:', error);
+                        alert('Hero images reset to default in localStorage.');
+                    });
+            } else {
+                alert('Hero images reset to default!');
+            }
+        }
+
+        // Load hero images on page load
+        function loadHeroImages() {
+            const heroImages = JSON.parse(localStorage.getItem('sShopHeroImages') || '[]');
+            const heroImagesList = document.getElementById('heroImagesList');
+            heroImagesList.innerHTML = '';
+
+            if (heroImages.length === 0) {
+                // Load default images
+                const defaultImages = [
+                    {
+                        url: 'https://placehold.co/600x400/805ad5/ffffff?text=S+Shop+LK',
+                        alt: 'S Shop LK Hero 1'
+                    },
+                    {
+                        url: 'https://placehold.co/600x400/667eea/ffffff?text=Gaming+Products',
+                        alt: 'S Shop LK Hero 2'
+                    },
+                    {
+                        url: 'https://placehold.co/600x400/764ba2/ffffff?text=Best+Deals',
+                        alt: 'S Shop LK Hero 3'
+                    }
+                ];
+
+                defaultImages.forEach(image => {
+                    const heroImageItem = document.createElement('div');
+                    heroImageItem.className = 'flex items-center justify-between bg-gray-100 p-2 rounded-lg';
+                    heroImageItem.innerHTML = `
+                        <div class="flex items-center space-x-2">
+                            <img src="${image.url}" alt="${image.alt}" class="w-10 h-10 object-cover rounded-md">
+                            <span class="text-sm text-gray-700">${image.alt}</span>
+                        </div>
+                        <button onclick="removeHeroImage(this)" class="text-red-600 hover:text-red-800 text-lg">
+                            ×
+                        </button>
+                    `;
+                    heroImagesList.appendChild(heroImageItem);
+                });
+            } else {
+                heroImages.forEach(image => {
+                    const heroImageItem = document.createElement('div');
+                    heroImageItem.className = 'flex items-center justify-between bg-gray-100 p-2 rounded-lg';
+                    heroImageItem.innerHTML = `
+                        <div class="flex items-center space-x-2">
+                            <img src="${image.url}" alt="${image.alt}" class="w-10 h-10 object-cover rounded-md">
+                            <span class="text-sm text-gray-700">${image.alt}</span>
+                        </div>
+                        <button onclick="removeHeroImage(this)" class="text-red-600 hover:text-red-800 text-lg">
+                            ×
+                        </button>
+                    `;
+                    heroImagesList.appendChild(heroImageItem);
+                });
+            }
+        }
+
+        // Load hero images when page loads
+        window.addEventListener('load', function() {
+            loadHeroImages();
+            loadHeroBackgroundImageSettings();
+            loadHeroImageVisibilitySettings();
+        });
+
+        // Background Image Management Functions
+        function saveHeroBackgroundImage() {
+            const backgroundImageUrl = document.getElementById('heroBackgroundImageUrl').value.trim();
+            const backgroundOpacity = document.getElementById('heroBackgroundOpacity').value;
+            
+            if (!backgroundImageUrl) {
+                alert('Please enter a valid background image URL');
+                return;
+            }
+            
+            const backgroundSettings = {
+                url: backgroundImageUrl,
+                opacity: parseInt(backgroundOpacity)
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('sShopHeroBackgroundImage', JSON.stringify(backgroundSettings));
+            
+            // Save to Firebase if available
+            if (window.FirebaseService) {
+                FirebaseService.updateWebsiteSettings({ heroBackgroundImage: backgroundSettings })
+                    .then(() => {
+                        alert('Background image saved successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error saving to Firebase:', error);
+                        alert('Background image saved to localStorage. Firebase save failed.');
+                    });
+            } else {
+                alert('Background image saved successfully!');
+            }
+        }
+
+        function previewHeroBackgroundImage() {
+            const backgroundImageUrl = document.getElementById('heroBackgroundImageUrl').value.trim();
+            const backgroundOpacity = document.getElementById('heroBackgroundOpacity').value;
+            const previewDiv = document.getElementById('backgroundImagePreview');
+            const previewImage = document.getElementById('backgroundPreviewImage');
+            
+            if (!backgroundImageUrl) {
+                alert('Please enter a valid background image URL first');
+                return;
+            }
+            
+            previewImage.src = backgroundImageUrl;
+            previewImage.style.opacity = backgroundOpacity / 100;
+            previewImage.onload = function() {
+                previewDiv.classList.remove('hidden');
+                
+                // Check image dimensions
+                const width = this.naturalWidth;
+                const height = this.naturalHeight;
+                const aspectRatio = (width / height).toFixed(2);
+                
+                // Create dimension info
+                const dimensionInfo = document.createElement('div');
+                dimensionInfo.className = 'mt-2 p-2 bg-gray-100 rounded text-xs';
+                dimensionInfo.innerHTML = `
+                    <p><strong>Background Dimensions:</strong> ${width} × ${height} pixels</p>
+                    <p><strong>Aspect Ratio:</strong> ${aspectRatio}</p>
+                    <p><strong>Opacity:</strong> ${backgroundOpacity}%</p>
+                    ${width < 1200 || height < 675 ? '<p class="text-red-600">⚠️ Image is smaller than recommended minimum (1200×675)</p>' : ''}
+                    ${width >= 1920 && height >= 1080 ? '<p class="text-green-600">✅ Optimal size for background images</p>' : ''}
+                `;
+                
+                // Remove existing dimension info and add new one
+                const existingInfo = previewDiv.querySelector('.bg-gray-100');
+                if (existingInfo) {
+                    existingInfo.remove();
+                }
+                previewDiv.appendChild(dimensionInfo);
+            };
+            previewImage.onerror = function() {
+                alert('Error loading background image. Please check the URL.');
+                previewDiv.classList.add('hidden');
+            };
+        }
+
+        function removeHeroBackgroundImage() {
+            // Clear the input
+            document.getElementById('heroBackgroundImageUrl').value = '';
+            document.getElementById('heroBackgroundOpacity').value = '20';
+            updateOpacityValue('20');
+            
+            // Remove from localStorage
+            localStorage.removeItem('sShopHeroBackgroundImage');
+            
+            // Remove from Firebase if available
+            if (window.FirebaseService) {
+                FirebaseService.updateWebsiteSettings({ heroBackgroundImage: null })
+                    .then(() => {
+                        alert('Background image removed successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error removing from Firebase:', error);
+                        alert('Background image removed from localStorage.');
+                    });
+            } else {
+                alert('Background image removed successfully!');
+            }
+        }
+
+        function loadHeroBackgroundImageSettings() {
+            const backgroundImageData = localStorage.getItem('sShopHeroBackgroundImage');
+            if (backgroundImageData) {
+                try {
+                    const settings = JSON.parse(backgroundImageData);
+                    if (typeof settings === 'string') {
+                        // Legacy format (just URL string)
+                        document.getElementById('heroBackgroundImageUrl').value = settings;
+                        document.getElementById('heroBackgroundOpacity').value = '20';
+                        updateOpacityValue('20');
+                    } else {
+                        // New format (object with URL and opacity)
+                        document.getElementById('heroBackgroundImageUrl').value = settings.url || '';
+                        document.getElementById('heroBackgroundOpacity').value = settings.opacity || '20';
+                        updateOpacityValue(settings.opacity || '20');
+                    }
+                } catch (error) {
+                    // Fallback to legacy format
+                    document.getElementById('heroBackgroundImageUrl').value = backgroundImageData;
+                    document.getElementById('heroBackgroundOpacity').value = '20';
+                    updateOpacityValue('20');
+                }
+            }
+        }
+
+        // Hero Image Visibility Management Functions
+        function saveHeroImageVisibility() {
+            const showHeroImages = document.getElementById('showHeroImagesToggle').checked;
+            
+            // Save to localStorage
+            localStorage.setItem('sShopShowHeroImages', showHeroImages.toString());
+            
+            // Save to Firebase if available
+            if (window.FirebaseService) {
+                FirebaseService.updateWebsiteSettings({ showHeroImages: showHeroImages })
+                    .then(() => {
+                        alert('Hero image visibility setting saved successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error saving to Firebase:', error);
+                        alert('Setting saved to localStorage. Firebase save failed.');
+                    });
+            } else {
+                alert('Hero image visibility setting saved successfully!');
+            }
+        }
+
+        function loadHeroImageVisibilitySettings() {
+            const showHeroImages = localStorage.getItem('sShopShowHeroImages');
+            if (showHeroImages !== null) {
+                document.getElementById('showHeroImagesToggle').checked = showHeroImages === 'true';
+            } else {
+                // Default to true if no setting is saved
+                document.getElementById('showHeroImagesToggle').checked = true;
+            }
+        }
+
+        // Add event listeners for the toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('showHeroImagesToggle');
+            if (toggle) {
+                toggle.addEventListener('change', saveHeroImageVisibility);
+            }
+        });
+
+        // Background Opacity Control Functions
+        function updateOpacityValue(value) {
+            document.getElementById('opacityValue').textContent = `${value}%`;
+            const previewImage = document.getElementById('backgroundPreviewImage');
+            if (previewImage) {
+                previewImage.style.opacity = value / 100;
+            }
+        }
+
+        function resetBackgroundOpacity() {
+            document.getElementById('heroBackgroundOpacity').value = '20';
+            updateOpacityValue('20');
+        }
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+</body>
+</html> 
