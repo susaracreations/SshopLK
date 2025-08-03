@@ -250,12 +250,56 @@
     <!-- JavaScript -->
     <script>
         let products = [];
+        let lastScrollTop = 0;
+        let header = null;
 
         // Load products on page load
         window.addEventListener('load', function() {
             loadProducts();
             setupAuthState();
+            setupMobileHeader();
         });
+
+        // Mobile header scroll behavior
+        function setupMobileHeader() {
+            header = document.querySelector('header');
+            if (!header) return;
+
+            // Only apply on mobile devices
+            if (window.innerWidth <= 768) {
+                window.addEventListener('scroll', handleMobileScroll);
+            }
+
+            // Update on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth <= 768) {
+                    window.addEventListener('scroll', handleMobileScroll);
+                } else {
+                    window.removeEventListener('scroll', handleMobileScroll);
+                    header.style.transform = 'translateY(0)';
+                    header.style.transition = 'none';
+                }
+            });
+        }
+
+        function handleMobileScroll() {
+            if (!header) return;
+            
+            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Add transition for smooth animation
+            header.style.transition = 'transform 0.3s ease-in-out';
+            
+            if (currentScrollTop > lastScrollTop && currentScrollTop > 100) {
+                // Scrolling down - hide header
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up - show header
+                header.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+        }
 
         // Authentication State Management
         function setupAuthState() {

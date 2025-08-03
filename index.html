@@ -93,8 +93,7 @@
     </header>
 
     <!-- Hidden Admin Access Links (Invisible but clickable) -->
-    <div class="fixed top-0 left-0 w-4 h-4 opacity-0 cursor-pointer" onclick="window.location.href='admin-login.html'" title="Secret Admin Access"></div>
-    <div class="fixed top-0 right-0 w-4 h-4 opacity-0 cursor-pointer" onclick="window.location.href='admin-login.html'" title="Secret Admin Access"></div>
+    <!-- Removed all hidden admin access methods -->
 
     <!-- Hero Section -->
     <div id="heroSection" class="bg-gradient-to-r from-purple-900 to-red-900 text-white py-16 md:py-24 relative overflow-hidden">
@@ -315,14 +314,57 @@
     <script>
         let products = [];
         let currentCategory = 'all';
+        let lastScrollTop = 0;
+        let header = null;
 
         // Load products on page load
         window.addEventListener('load', function() {
             loadProducts();
             loadHeroImages();
-            setupAdminAccess();
             setupAuthState();
+            setupMobileHeader();
         });
+
+        // Mobile header scroll behavior
+        function setupMobileHeader() {
+            header = document.querySelector('header');
+            if (!header) return;
+
+            // Only apply on mobile devices
+            if (window.innerWidth <= 768) {
+                window.addEventListener('scroll', handleMobileScroll);
+            }
+
+            // Update on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth <= 768) {
+                    window.addEventListener('scroll', handleMobileScroll);
+                } else {
+                    window.removeEventListener('scroll', handleMobileScroll);
+                    header.style.transform = 'translateY(0)';
+                    header.style.transition = 'none';
+                }
+            });
+        }
+
+        function handleMobileScroll() {
+            if (!header) return;
+            
+            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Add transition for smooth animation
+            header.style.transition = 'transform 0.3s ease-in-out';
+            
+            if (currentScrollTop > lastScrollTop && currentScrollTop > 100) {
+                // Scrolling down - hide header
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up - show header
+                header.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+        }
 
         // Authentication State Management
         function setupAuthState() {
@@ -628,6 +670,51 @@
             isAutoPlaying = true;
         }
 
+        function loadProducts() {
+            // Try to load from Firebase first
+            if (window.FirebaseService) {
+                FirebaseService.getProducts()
+                    .then(firebaseProducts => {
+                        if (firebaseProducts.length > 0) {
+                            products = firebaseProducts;
+                            displayProducts();
+                            console.log('Loaded products from Firebase:', products);
+                        } else {
+                            // Fallback to localStorage if no Firebase data
+                            loadFromLocalStorage();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading from Firebase:', error);
+                        loadFromLocalStorage();
+                    });
+            } else {
+                loadFromLocalStorage();
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const storedProducts = localStorage.getItem('sShopProducts');
+            if (storedProducts) {
+                products = JSON.parse(storedProducts);
+                displayProducts();
+            } else {
+                // Fallback to products.json if no admin data
+                fetch('products.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        products = data.products;
+                        displayProducts();
+                    })
+                    .catch(error => {
+                        console.error('Error loading products:', error);
+                        // Load default products if both fail
+                        products = [];
+                        displayProducts();
+                    });
+            }
+        }
+
         function displayProducts() {
             const productContainer = document.getElementById('productContainer');
             productContainer.innerHTML = '';
@@ -708,136 +795,14 @@
 
         // Setup multiple admin panel access methods
         function setupAdminAccess() {
-            // Keyboard shortcuts
+            // Keyboard shortcuts only
             document.addEventListener('keydown', function(event) {
                 // Ctrl + Alt + A (Windows/Linux) or Cmd + Alt + A (Mac)
                 if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 'a') {
                     event.preventDefault();
                     window.location.href = 'admin-login.html';
                 }
-                
-                // Ctrl + Alt + S (Windows/Linux) or Cmd + Alt + S (Mac)
-                if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 's') {
-                    event.preventDefault();
-                    window.location.href = 'admin.html';
-                }
-                
-                // F12 key (Developer Tools alternative)
-                if (event.key === 'F12') {
-                    event.preventDefault();
-                    window.location.href = 'admin-login.html';
-                }
             });
-
-            // Double-click on logo to access admin
-            document.querySelector('a[href="#"]').addEventListener('dblclick', function(event) {
-                event.preventDefault();
-                window.location.href = 'admin-login.html';
-            });
-
-            // Right-click on logo for admin menu
-            document.querySelector('a[href="#"]').addEventListener('contextmenu', function(event) {
-                event.preventDefault();
-                showAdminMenu(event);
-            });
-
-            // Triple-click anywhere on the page
-            let clickCount = 0;
-            let clickTimer;
-            document.addEventListener('click', function() {
-                clickCount++;
-                clearTimeout(clickTimer);
-                clickTimer = setTimeout(function() {
-                    if (clickCount === 3) {
-                        window.location.href = 'admin-login.html';
-                    }
-                    clickCount = 0;
-                }, 500);
-            });
-        }
-
-        // Show admin menu on right-click
-        function showAdminMenu(event) {
-            // Remove existing menu
-            const existingMenu = document.getElementById('adminMenu');
-            if (existingMenu) {
-                existingMenu.remove();
-            }
-
-            // Create menu
-            const menu = document.createElement('div');
-            menu.id = 'adminMenu';
-            menu.className = 'fixed bg-white border border-gray-300 rounded-lg shadow-lg z-50 py-2';
-            menu.style.left = event.pageX + 'px';
-            menu.style.top = event.pageY + 'px';
-
-            menu.innerHTML = `
-                <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="window.location.href='admin-login.html'">
-                    🔐 Admin Login
-                </div>
-                <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="window.location.href='admin.html'">
-                    ⚙️ Admin Panel
-                </div>
-                <div class="border-t border-gray-200 my-1"></div>
-                <div class="px-4 py-2 text-sm text-gray-500">
-                    Keyboard: Ctrl+Alt+A
-                </div>
-            `;
-
-            document.body.appendChild(menu);
-
-            // Close menu when clicking outside
-            setTimeout(() => {
-                document.addEventListener('click', function closeMenu() {
-                    menu.remove();
-                    document.removeEventListener('click', closeMenu);
-                });
-            }, 100);
-        }
-
-        function loadProducts() {
-            // Try to load from Firebase first
-            if (window.FirebaseService) {
-                FirebaseService.getProducts()
-                    .then(firebaseProducts => {
-                        if (firebaseProducts.length > 0) {
-                            products = firebaseProducts;
-                            displayProducts();
-                            console.log('Loaded products from Firebase:', products);
-                        } else {
-                            // Fallback to localStorage if no Firebase data
-                            loadFromLocalStorage();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading from Firebase:', error);
-                        loadFromLocalStorage();
-                    });
-            } else {
-                loadFromLocalStorage();
-            }
-        }
-
-        function loadFromLocalStorage() {
-            const storedProducts = localStorage.getItem('sShopProducts');
-            if (storedProducts) {
-                products = JSON.parse(storedProducts);
-                displayProducts();
-            } else {
-                // Fallback to products.json if no admin data
-                fetch('products.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        products = data.products;
-                        displayProducts();
-                    })
-                    .catch(error => {
-                        console.error('Error loading products:', error);
-                        // Load default products if both fail
-                        products = [];
-                        displayProducts();
-                    });
-            }
         }
         
         /**
