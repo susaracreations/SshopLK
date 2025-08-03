@@ -33,6 +33,15 @@
             background: #475569;
         }
         
+        /* Line clamp utility for truncating text */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-clamp: 2;
+        }
+        
         /* Mobile header scroll behavior */
         @media (max-width: 768px) {
             header {
@@ -51,7 +60,7 @@
     <header class="bg-slate-900 shadow-xl sticky top-0 z-50 border-b border-slate-700">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <!-- Left side: Logo -->
-            <a href="#" class="flex items-center space-x-2">
+            <a href="index.html" class="flex items-center space-x-2">
                 <svg class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
@@ -118,10 +127,6 @@
             </div>
         </div>
     </header>
-
-    <!-- Hidden Admin Access Links (Invisible but clickable) -->
-    <div class="fixed top-0 left-0 w-4 h-4 opacity-0 cursor-pointer" onclick="window.location.href='admin-login.html'" title="Secret Admin Access"></div>
-    <div class="fixed top-0 right-0 w-4 h-4 opacity-0 cursor-pointer" onclick="window.location.href='admin-login.html'" title="Secret Admin Access"></div>
 
     <!-- Hero Section -->
     <div id="heroSection" class="bg-gradient-to-r from-purple-900 to-red-900 text-white py-16 md:py-24 relative overflow-hidden">
@@ -347,10 +352,33 @@
         window.addEventListener('load', function() {
             loadProducts();
             loadHeroImages();
-            setupAdminAccess();
+            setupKeyboardShortcuts();
             setupAuthState();
             setupMobileHeaderScroll();
         });
+
+        // Setup keyboard shortcuts for admin panel access
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(event) {
+                // Ctrl + Alt + A (Windows/Linux) or Cmd + Alt + A (Mac)
+                if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 'a') {
+                    event.preventDefault();
+                    window.location.href = 'admin-login.html';
+                }
+                
+                // Ctrl + Alt + S (Windows/Linux) or Cmd + Alt + S (Mac)
+                if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 's') {
+                    event.preventDefault();
+                    window.location.href = 'admin.html';
+                }
+                
+                // F12 key (Developer Tools alternative)
+                if (event.key === 'F12') {
+                    event.preventDefault();
+                    window.location.href = 'admin-login.html';
+                }
+            });
+        }
 
         // Mobile header scroll behavior
         function setupMobileHeaderScroll() {
@@ -728,6 +756,51 @@
             isAutoPlaying = true;
         }
 
+        function loadProducts() {
+            // Try to load from Firebase first
+            if (window.FirebaseService) {
+                FirebaseService.getProducts()
+                    .then(firebaseProducts => {
+                        if (firebaseProducts.length > 0) {
+                            products = firebaseProducts;
+                            displayProducts();
+                            console.log('Loaded products from Firebase:', products);
+                        } else {
+                            // Fallback to localStorage if no Firebase data
+                            loadFromLocalStorage();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading from Firebase:', error);
+                        loadFromLocalStorage();
+                    });
+            } else {
+                loadFromLocalStorage();
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const storedProducts = localStorage.getItem('sShopProducts');
+            if (storedProducts) {
+                products = JSON.parse(storedProducts);
+                displayProducts();
+            } else {
+                // Fallback to products.json if no admin data
+                fetch('products.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        products = data.products;
+                        displayProducts();
+                    })
+                    .catch(error => {
+                        console.error('Error loading products:', error);
+                        // Load default products if both fail
+                        products = [];
+                        displayProducts();
+                    });
+            }
+        }
+        
         function displayProducts() {
             const productContainer = document.getElementById('productContainer');
             productContainer.innerHTML = '';
@@ -757,7 +830,7 @@
                     <img src="${product.image}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl border-b border-slate-700">
                     <div class="p-4">
                         <h3 class="product-title text-lg font-semibold text-white truncate mb-1">${product.name}</h3>
-                        <p class="product-description text-sm text-gray-400 mb-2">${product.description}</p>
+                        <p class="product-description text-sm text-gray-400 mb-2 line-clamp-2">${product.description}</p>
                         <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
                         <div class="flex space-x-2 mt-4">
                             <a href="${detailPage}" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors duration-300 text-center">View Details</a>
@@ -803,140 +876,6 @@
                 if (searchError) {
                     searchError.classList.add('hidden');
                 }
-            }
-        }
-
-        // Setup multiple admin panel access methods
-        function setupAdminAccess() {
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(event) {
-                // Ctrl + Alt + A (Windows/Linux) or Cmd + Alt + A (Mac)
-                if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 'a') {
-                    event.preventDefault();
-                    window.location.href = 'admin-login.html';
-                }
-                
-                // Ctrl + Alt + S (Windows/Linux) or Cmd + Alt + S (Mac)
-                if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 's') {
-                    event.preventDefault();
-                    window.location.href = 'admin.html';
-                }
-                
-                // F12 key (Developer Tools alternative)
-                if (event.key === 'F12') {
-                    event.preventDefault();
-                    window.location.href = 'admin-login.html';
-                }
-            });
-
-            // Double-click on logo to access admin
-            document.querySelector('a[href="#"]').addEventListener('dblclick', function(event) {
-                event.preventDefault();
-                window.location.href = 'admin-login.html';
-            });
-
-            // Right-click on logo for admin menu
-            document.querySelector('a[href="#"]').addEventListener('contextmenu', function(event) {
-                event.preventDefault();
-                showAdminMenu(event);
-            });
-
-            // Triple-click anywhere on the page
-            let clickCount = 0;
-            let clickTimer;
-            document.addEventListener('click', function() {
-                clickCount++;
-                clearTimeout(clickTimer);
-                clickTimer = setTimeout(function() {
-                    if (clickCount === 3) {
-                        window.location.href = 'admin-login.html';
-                    }
-                    clickCount = 0;
-                }, 500);
-            });
-        }
-
-        // Show admin menu on right-click
-        function showAdminMenu(event) {
-            // Remove existing menu
-            const existingMenu = document.getElementById('adminMenu');
-            if (existingMenu) {
-                existingMenu.remove();
-            }
-
-            // Create menu
-            const menu = document.createElement('div');
-            menu.id = 'adminMenu';
-            menu.className = 'fixed bg-white border border-gray-300 rounded-lg shadow-lg z-50 py-2';
-            menu.style.left = event.pageX + 'px';
-            menu.style.top = event.pageY + 'px';
-
-            menu.innerHTML = `
-                <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="window.location.href='admin-login.html'">
-                    🔐 Admin Login
-                </div>
-                <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="window.location.href='admin.html'">
-                    ⚙️ Admin Panel
-                </div>
-                <div class="border-t border-gray-200 my-1"></div>
-                <div class="px-4 py-2 text-sm text-gray-500">
-                    Keyboard: Ctrl+Alt+A
-                </div>
-            `;
-
-            document.body.appendChild(menu);
-
-            // Close menu when clicking outside
-            setTimeout(() => {
-                document.addEventListener('click', function closeMenu() {
-                    menu.remove();
-                    document.removeEventListener('click', closeMenu);
-                });
-            }, 100);
-        }
-
-        function loadProducts() {
-            // Try to load from Firebase first
-            if (window.FirebaseService) {
-                FirebaseService.getProducts()
-                    .then(firebaseProducts => {
-                        if (firebaseProducts.length > 0) {
-                            products = firebaseProducts;
-                            displayProducts();
-                            console.log('Loaded products from Firebase:', products);
-                        } else {
-                            // Fallback to localStorage if no Firebase data
-                            loadFromLocalStorage();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading from Firebase:', error);
-                        loadFromLocalStorage();
-                    });
-            } else {
-                loadFromLocalStorage();
-            }
-        }
-
-        function loadFromLocalStorage() {
-            const storedProducts = localStorage.getItem('sShopProducts');
-            if (storedProducts) {
-                products = JSON.parse(storedProducts);
-                displayProducts();
-            } else {
-                // Fallback to products.json if no admin data
-                fetch('products.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        products = data.products;
-                        displayProducts();
-                    })
-                    .catch(error => {
-                        console.error('Error loading products:', error);
-                        // Load default products if both fail
-                        products = [];
-                        displayProducts();
-                    });
             }
         }
         
