@@ -23,71 +23,13 @@
 </head>
 <body class="min-h-screen">
 
-    <!-- Header Section -->
-    <header class="bg-white shadow-sm border-b border-gray-200">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <!-- Left side: Logo -->
-            <a href="index.html" class="flex items-center space-x-2">
-                <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <span class="text-2xl font-extrabold text-gray-900">S Shop LK</span>
-            </a>
+    <!-- Replace header -->
+<div id="header-container"></div>
 
-            <!-- Right side: Navigation and Auth -->
-            <div class="flex items-center space-x-6">
-                <nav class="flex items-center space-x-6">
-                    <a href="index.html" class="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
-                    <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Products</a>
-                    <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
-                </nav>
-                
-                <!-- User Authentication Section -->
-                <div id="authSection" class="flex items-center space-x-3">
-                    <!-- Guest User (Not Logged In) -->
-                    <div id="guestUser" class="flex items-center space-x-2">
-                        <a href="login.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                            Sign In
-                        </a>
-                        <a href="login.html" class="text-gray-600 hover:text-gray-900 transition-colors">
-                            Sign Up
-                        </a>
-                    </div>
-                    
-                    <!-- Logged In User -->
-                    <div id="loggedInUser" class="flex items-center space-x-3 hidden">
-                        <!-- User Avatar with Dropdown -->
-                        <div class="relative group">
-                            <div id="userAvatar" class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg">
-                                <span id="avatarInitials">U</span>
-                            </div>
-                            <!-- Profile Dropdown -->
-                            <div class="absolute right-0 top-12 w-48 bg-white rounded-xl shadow-2xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100">
-                                <div class="p-4 border-b border-gray-200">
-                                    <div class="text-gray-900 font-semibold" id="dropdownUsername">User</div>
-                                    <div class="text-gray-500 text-sm mt-1" id="dropdownEmail">user@example.com</div>
-                                </div>
-                                <div class="p-2">
-                                    <a href="profile.html" class="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
-                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
-                                        <span>My Profile</span>
-                                    </a>
-                                    <button onclick="signOut()" class="w-full flex items-center space-x-3 px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                        </svg>
-                                        <span>Sign Out</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+<!-- Keep your main content here -->
+
+<!-- Add component scripts -->
+<script src="header-component.js"></script>
 
     <!-- Breadcrumbs -->
     <div class="bg-white border-b border-gray-200">
@@ -99,13 +41,7 @@
                         <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                         </svg>
-                        <a href="#" class="hover:text-blue-600">Software & Apps</a>
-                    </li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        <a href="#" class="hover:text-blue-600">Products</a>
+                        <a href="products.html" class="hover:text-blue-600" id="categoryLink">Products</a>
                     </li>
                     <li class="flex items-center">
                         <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
@@ -170,18 +106,24 @@
                     </div>
 
                     <!-- Quantity Selector -->
-                    <div class="flex items-center space-x-4">
-                        <button onclick="decreaseQuantity()" class="w-10 h-10 bg-gray-200 text-gray-600 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                            </svg>
-                        </button>
-                        <span id="quantity" class="text-xl font-semibold text-gray-900">1</span>
-                        <button onclick="increaseQuantity()" class="w-10 h-10 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                        </button>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-700">Quantity</span>
+                            <span class="text-xs text-gray-500" id="quantityInfo">Max: <span id="maxQuantity">1</span></span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <button onclick="decreaseQuantity()" class="w-10 h-10 bg-gray-200 text-gray-600 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                                </svg>
+                            </button>
+                            <span id="quantity" class="text-xl font-semibold text-gray-900">1</span>
+                            <button onclick="increaseQuantity()" class="w-10 h-10 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Unit Price -->
@@ -440,7 +382,15 @@
             document.title = `${product.name} - S Shop LK`;
 
             // Update breadcrumb
-            document.getElementById('breadcrumbCategory').textContent = product.category || 'Product';
+            const category = product.category || 'Product';
+            document.getElementById('breadcrumbCategory').textContent = product.name;
+            
+            // Update category link based on product category
+            const categoryLink = document.getElementById('categoryLink');
+            if (categoryLink) {
+                categoryLink.textContent = category;
+                categoryLink.href = getCategoryPage(category);
+            }
 
             // Update product title
             document.getElementById('productTitle').textContent = product.name;
@@ -489,11 +439,13 @@
             `;
 
             // Update purchase options
-            document.getElementById('productAvailability').textContent = product.availability || 0;
+            const availability = parseInt(product.availability) || 1;
+            document.getElementById('productAvailability').textContent = availability;
             document.getElementById('unitPrice').textContent = `LKR ${product.price.toLocaleString()}`;
             document.getElementById('redeemPoints').textContent = product.redeem_points || 0;
             document.getElementById('soldCount').textContent = `${product.sold || 0} sold`;
             document.getElementById('otherSellers').textContent = `Other sellers (${product.other_sellers || 0})`;
+            document.getElementById('maxQuantity').textContent = availability;
 
             // Update modal product name
             document.getElementById('modalProductName').textContent = product.name;
@@ -508,9 +460,17 @@
         }
 
         function increaseQuantity() {
-            quantity++;
-            document.getElementById('quantity').textContent = quantity;
-            updateTotal();
+            const availability = parseInt(currentProduct.availability) || 1;
+            if (quantity < availability) {
+                quantity++;
+                document.getElementById('quantity').textContent = quantity;
+                updateTotal();
+                document.getElementById('quantityInfo').textContent = `Max: ${availability}`;
+            } else {
+                // Show a message that maximum quantity reached
+                alert(`Maximum quantity available: ${availability}`);
+                document.getElementById('quantityInfo').textContent = `Max: ${availability}`;
+            }
         }
 
         function decreaseQuantity() {
@@ -518,6 +478,8 @@
                 quantity--;
                 document.getElementById('quantity').textContent = quantity;
                 updateTotal();
+                const availability = parseInt(currentProduct.availability) || 1;
+                document.getElementById('quantityInfo').textContent = `Max: ${availability}`;
             }
         }
 
@@ -543,6 +505,25 @@
         function closeModal() {
             const modal = document.getElementById('buyNowModal');
             modal.classList.add('hidden');
+        }
+
+        // Helper function to get category page URL
+        function getCategoryPage(category) {
+            const categoryLower = category.toLowerCase();
+            
+            // Map categories to their specific pages
+            if (categoryLower.includes('games') || categoryLower.includes('gaming')) {
+                return 'category-games.html';
+            } else if (categoryLower.includes('software') || categoryLower.includes('app')) {
+                return 'category-software-apps.html';
+            } else if (categoryLower.includes('boosting') || categoryLower.includes('coaching')) {
+                return 'category-boosting-coaching.html';
+            } else if (categoryLower.includes('gift') || categoryLower.includes('card')) {
+                return 'category-gift-cards.html';
+            } else {
+                // Default to all products page with category filter
+                return `products.html?category=${encodeURIComponent(category)}`;
+            }
         }
     </script>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S Shop LK - Your Gaming Marketplace</title>
+    <title>S Shop LK - Your Gaming & Digital Marketplace</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
     <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
@@ -56,77 +56,8 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
-    <!-- Header Section -->
-    <header class="bg-slate-900 shadow-xl sticky top-0 z-50 border-b border-slate-700">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <!-- Left side: Logo -->
-            <a href="index.html" class="flex items-center space-x-2">
-                <svg class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <span class="text-2xl font-extrabold text-white">S Shop LK</span>
-            </a>
-
-            <!-- Right side: User actions -->
-            <div class="flex items-center space-x-4">
-                <!-- User Authentication Section -->
-                <div id="authSection" class="flex items-center space-x-3">
-                    <!-- Guest User (Not Logged In) -->
-                    <div id="guestUser" class="flex items-center space-x-2">
-                        <a href="login.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                            Sign In
-                        </a>
-                        <a href="login.html" class="text-gray-300 hover:text-white transition-colors">
-                            Sign Up
-                        </a>
-                    </div>
-                    
-                    <!-- Logged In User -->
-                    <div id="loggedInUser" class="flex items-center space-x-3 hidden">
-                        <!-- User Avatar with Dropdown -->
-                        <div class="relative group">
-                            <div id="userAvatar" class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg">
-                                <span id="avatarInitials">U</span>
-                            </div>
-                            <!-- Profile Dropdown -->
-                            <div class="absolute right-0 top-12 w-48 bg-slate-800 rounded-xl shadow-2xl border border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100">
-                                <div class="p-4 border-b border-slate-700">
-                                    <div class="text-white font-semibold" id="dropdownUsername">User</div>
-                                    <div class="text-gray-400 text-sm mt-1" id="dropdownEmail">user@example.com</div>
-                                </div>
-                                <div class="p-2">
-                                    <a href="profile.html" class="flex items-center space-x-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
-                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                        </svg>
-                                        <span>My Profile</span>
-                                    </a>
-                                    <button onclick="signOut()" class="w-full flex items-center space-x-3 px-3 py-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-colors">
-                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                        </svg>
-                                        <span>Sign Out</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Notification and Menu Icons -->
-                <a href="#" class="p-2 rounded-full hover:bg-slate-800 transition-colors duration-300">
-                    <svg class="w-6 h-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                </a>
-                <a href="#" class="p-2 rounded-full hover:bg-slate-800 transition-colors duration-300">
-                    <svg class="w-6 h-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </header>
+    <!-- Replace header -->
+    <div id="header-container"></div>
 
     <!-- Hero Section -->
     <div id="heroSection" class="bg-gradient-to-r from-purple-900 to-red-900 text-white py-16 md:py-24 relative overflow-hidden">
@@ -139,10 +70,10 @@
             <!-- Left side: Text and Search -->
             <div class="flex-1 text-center lg:text-left">
                 <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight">
-                    Summer deals<br>Beyond Borders
+                    START SHOPPING<br>TODAY
                 </h1>
                 <p class="text-lg md:text-xl text-gray-200 mb-8">
-                    Play globally, save locally
+                    Join Our Buyer Community: Discover Millions of Products from Trusted Global Sellers
                 </p>
                 <div class="max-w-xl mx-auto lg:mx-0">
                     <div class="flex items-center bg-white rounded-full p-2 shadow-lg">
@@ -161,7 +92,7 @@
                         <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944c-2.88 0-5.591 1.11-7.618 3.116A12.03 12.03 0 002 12c0 3.018 1.12 5.86 3.116 7.882A11.955 11.955 0 0112 21.056c2.88 0 5.591-1.11 7.618-3.116A12.03 12.03 0 0022 12c0-3.018-1.12-5.86-3.116-7.882z" />
                         </svg>
-                        <span>ISO Certified Security</span>
+                        <span>Secure Shopping</span>
                     </div>
                     <div class="flex items-center space-x-2">
                         <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -230,6 +161,116 @@
             </div>
         </section>
 
+        <!-- New Buyer-Focused Hero Section -->
+        <section class="my-16">
+            <div class="bg-gradient-to-r from-red-600 via-red-700 to-red-800 rounded-3xl overflow-hidden shadow-2xl relative">
+                <!-- Background Pattern -->
+                <div class="absolute inset-0 opacity-10">
+                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, white 2px, transparent 2px), radial-gradient(circle at 75% 75%, white 2px, transparent 2px); background-size: 50px 50px;"></div>
+                </div>
+                
+                <div class="relative z-10 px-8 py-16 lg:px-16 lg:py-20">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <!-- Left Side: Text Content -->
+                        <div class="text-center lg:text-left">
+                            <h2 class="text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
+                                START SHOPPING<br>
+                                <span class="text-yellow-300">TODAY</span>
+                            </h2>
+                            <p class="text-xl text-red-100 mb-8 leading-relaxed">
+                                Join Our Buyer Community: Discover Millions of Products from Trusted Global Sellers
+                            </p>
+                            
+                            <!-- Call-to-Action Buttons -->
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                                <a href="products.html" class="bg-white text-red-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg text-center">
+                                    Browse Products
+                                </a>
+                                <a href="learn-more.html" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-red-600 transition-all duration-300 transform hover:scale-105 text-center">
+                                    Learn More
+                                </a>
+                            </div>
+                            
+                            <!-- Trust Indicators -->
+                            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-6 mt-8">
+                                <div class="flex items-center space-x-2 text-white">
+                                    <svg class="w-6 h-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944c-2.88 0-5.591 1.11-7.618 3.116A12.03 12.03 0 002 12c0 3.018 1.12 5.86 3.116 7.882A11.955 11.955 0 0112 21.056c2.88 0 5.591-1.11 7.618-3.116A12.03 12.03 0 0022 12c0-3.018-1.12-5.86-3.116-7.882z" />
+                                    </svg>
+                                    <span class="font-semibold">Secure Shopping</span>
+                                </div>
+                                <div class="flex items-center space-x-2 text-white">
+                                    <svg class="w-6 h-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                    </svg>
+                                    <span class="font-semibold">Best Prices</span>
+                                </div>
+                                <div class="flex items-center space-x-2 text-white">
+                                    <svg class="w-6 h-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                    <span class="font-semibold">Fast Delivery</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Side: Visual Content -->
+                        <div class="relative">
+                            <!-- Main Image Container -->
+                            <div class="relative">
+                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                                    <div class="flex items-center space-x-4 mb-4">
+                                        <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
+                                            <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                            </svg>
+                    </div>
+                                        <div>
+                                            <h3 class="text-white font-bold text-lg">Shopping Cart</h3>
+                                            <p class="text-red-100 text-sm">Ready to explore?</p>
+                        </div>
+                    </div>
+
+                                    <!-- Product Preview Cards -->
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="bg-white/20 rounded-lg p-3 backdrop-blur-sm">
+                                            <div class="w-full h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg mb-2 flex items-center justify-center">
+                                                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </div>
+                                            <div class="text-white text-xs font-semibold">Steam Accounts</div>
+                                            <div class="text-red-200 text-xs">Starting at LKR 500</div>
+                                        </div>
+                                        <div class="bg-white/20 rounded-lg p-3 backdrop-blur-sm">
+                                            <div class="w-full h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg mb-2 flex items-center justify-center">
+                                                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                                                </svg>
+                                            </div>
+                                            <div class="text-white text-xs font-semibold">Windows 11 Pro</div>
+                                            <div class="text-red-200 text-xs">Starting at LKR 400</div>
+                                        </div>
+                                    </div>
+
+                                <!-- Floating Elements -->
+                                <div class="absolute -top-4 -right-4 w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                                    <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <div class="absolute -bottom-4 -left-4 w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Product Categories Section -->
         <section>
             <h2 class="text-3xl font-bold mb-6 text-white">Product Categories</h2>
@@ -275,37 +316,10 @@
 
     </main>
 
-    <!-- Footer Section -->
-    <footer class="bg-slate-900 text-gray-400 mt-auto py-8 border-t border-slate-700">
-        <div class="container mx-auto px-4 flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
-            <!-- Left Side: Description and Links -->
-            <div class="text-center lg:text-left max-w-xl">
-                <p class="text-sm mb-4">
-                    S Shop LK is a comprehensive online marketplace for everything gaming-related. We are dedicated to providing a safe and secure community for both buyers and sellers.
-                </p>
-                <div class="text-xs text-gray-500">
-                    &copy; 2025 S Shop LK. All rights reserved. |
-                    <a href="about-us.html" class="hover:text-white transition-colors duration-200">About Us</a> |
-                    <a href="#" class="hover:text-white transition-colors duration-200">Terms of Service</a> |
-                    <a href="#" class="hover:text-white transition-colors duration-200">Privacy Policy</a> |
-                    <a href="#" class="hover:text-white transition-colors duration-200">Help Center</a>
-                </div>
-            </div>
+<!-- Keep your main content here -->
 
-            <!-- Right Side: Social Media Icons (Updated with Image URLs) -->
-            <div class="flex space-x-4">
-                <!-- WhatsApp Icon -->
-                <a href="https://wa.me/94767854069" class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-slate-900 transition-colors duration-300">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp Icon" class="h-6 w-6">
-                </a>
-                <!-- Discord Icon -->
-                <!-- The footer Discord link is a placeholder for a server invite. You can replace 'YourInviteCode' with your actual Discord server invite. -->
-                <a href="https://discord.gg/YourInviteCode" class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-slate-900 transition-colors duration-300">
-                    <img src="https://cdn-icons-png.flaticon.com/512/4945/4945973.png" alt="Discord Icon" class="h-6 w-6">
-                </a>
-            </div>
-        </div>
-    </footer>
+<!-- Replace footer -->
+<div id="footer-container"></div>
 
     <!-- Buy Now Modal (Pop-up Panel) -->
     <div id="buyNowModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
@@ -337,548 +351,439 @@
     </div>
     <!-- End of Buy Now Modal -->
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 
-    <!-- JavaScript for custom modal and search -->
+<!-- Header Component Script -->
+<script src="header-component.js"></script>
+
+<!-- Footer Component Script -->
+<script src="footer-component.js"></script>
+
+<!-- Page-specific JavaScript -->
     <script>
-        let products = [];
-        let currentCategory = 'all';
+    let products = [];
+    let currentCategory = 'all';
 
-        // Load products on page load
-        window.addEventListener('load', function() {
-            loadProducts();
-            loadHeroImages();
-            setupKeyboardShortcuts();
-            setupAuthState();
-            setupMobileHeaderScroll();
-        });
+    // Load products on page load
+    window.addEventListener('load', function() {
+        loadProducts();
+        loadHeroImages();
+        setupKeyboardShortcuts();
+    });
 
-        // Setup keyboard shortcuts for admin panel access
-        function setupKeyboardShortcuts() {
-            document.addEventListener('keydown', function(event) {
-                // Ctrl + Alt + A (Windows/Linux) or Cmd + Alt + A (Mac)
-                if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 'a') {
-                    event.preventDefault();
-                    window.location.href = 'admin-login.html';
-                }
-                
-                // Ctrl + Alt + S (Windows/Linux) or Cmd + Alt + S (Mac)
-                if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 's') {
-                    event.preventDefault();
-                    window.location.href = 'admin.html';
-                }
-                
-                // F12 key (Developer Tools alternative)
-                if (event.key === 'F12') {
-                    event.preventDefault();
-                    window.location.href = 'admin-login.html';
-                }
-            });
-        }
-
-        // Mobile header scroll behavior
-        function setupMobileHeaderScroll() {
-            let lastScrollTop = 0;
-            const header = document.querySelector('header');
-            const mobileBreakpoint = 768;
+    // Setup keyboard shortcuts for admin panel access
+    function setupKeyboardShortcuts() {
+        document.addEventListener('keydown', function(event) {
+            // Ctrl + Alt + A (Windows/Linux) or Cmd + Alt + A (Mac)
+            if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 'a') {
+                event.preventDefault();
+                window.location.href = 'admin-login.html';
+            }
             
-            window.addEventListener('scroll', function() {
-                // Only apply on mobile devices
-                if (window.innerWidth <= mobileBreakpoint) {
-                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    
-                    // Show header when scrolling up or at the top
-                    if (scrollTop <= 0) {
-                        header.classList.remove('header-hidden');
-                    } else if (scrollTop < lastScrollTop) {
-                        // Scrolling up - show header
-                        header.classList.remove('header-hidden');
-                    } else if (scrollTop > lastScrollTop && scrollTop > 100) {
-                        // Scrolling down and not at the top - hide header
-                        header.classList.add('header-hidden');
+            // Ctrl + Alt + S (Windows/Linux) or Cmd + Alt + S (Mac)
+            if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 's') {
+                event.preventDefault();
+                window.location.href = 'admin.html';
+            }
+            
+            // F12 key (Developer Tools alternative)
+            if (event.key === 'F12') {
+                event.preventDefault();
+                window.location.href = 'admin-login.html';
+            }
+        });
+    }
+
+    // Hero Image Carousel Variables
+    let heroImages = [];
+    let currentImageIndex = 0;
+    let carouselInterval;
+    let isAutoPlaying = true;
+
+    function loadHeroImages() {
+        // Try to load from Firebase first
+        if (window.FirebaseService) {
+            FirebaseService.getWebsiteSettings()
+                .then(settings => {
+                    if (settings.heroImages && settings.heroImages.length > 0) {
+                        heroImages = settings.heroImages;
+                        console.log('Loaded hero images from Firebase:', heroImages);
+                    } else {
+                        loadHeroImagesFromLocalStorage();
                     }
                     
-                    lastScrollTop = scrollTop;
-                } else {
-                    // On desktop, always show header
-                    header.classList.remove('header-hidden');
-                }
-            });
-        }
-
-        // Authentication State Management
-        function setupAuthState() {
-            if (window.AuthService) {
-                AuthService.onAuthStateChanged(function(user) {
-                    updateAuthUI(user);
-                });
-            }
-        }
-
-        function updateAuthUI(user) {
-            const guestUser = document.getElementById('guestUser');
-            const loggedInUser = document.getElementById('loggedInUser');
-            const avatarInitials = document.getElementById('avatarInitials');
-            const dropdownUsername = document.getElementById('dropdownUsername');
-            const dropdownEmail = document.getElementById('dropdownEmail');
-            
-            if (user) {
-                // User is signed in
-                guestUser.classList.add('hidden');
-                loggedInUser.classList.remove('hidden');
-                
-                // Try to get username from Firestore
-                if (window.FirebaseService) {
-                    FirebaseService.getUser(user.uid)
-                        .then(userData => {
-                            if (userData && userData.username) {
-                                const username = userData.username;
-                                const initials = getInitials(username);
-                                avatarInitials.textContent = initials;
-                                dropdownUsername.textContent = username;
-                                dropdownEmail.textContent = userData.email || user.email || 'user@example.com';
-                            } else {
-                                const email = user.email || 'User';
-                                const initials = getInitials(email);
-                                avatarInitials.textContent = initials;
-                                dropdownUsername.textContent = email;
-                                dropdownEmail.textContent = email;
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching user data:', error);
-                            const email = user.email || 'User';
-                            const initials = getInitials(email);
-                            avatarInitials.textContent = initials;
-                            dropdownUsername.textContent = email;
-                            dropdownEmail.textContent = email;
-                        });
-                } else {
-                    const email = user.email || 'User';
-                    const initials = getInitials(email);
-                    avatarInitials.textContent = initials;
-                    dropdownUsername.textContent = email;
-                    dropdownEmail.textContent = email;
-                }
-                
-                console.log('User is signed in:', user.email);
-            } else {
-                // User is signed out
-                guestUser.classList.remove('hidden');
-                loggedInUser.classList.add('hidden');
-                console.log('User is signed out');
-            }
-        }
-
-        // Get initials from name
-        function getInitials(name) {
-            if (!name) return 'U';
-            return name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2);
-        }
-
-        async function signOut() {
-            try {
-                if (window.AuthService) {
-                    await AuthService.signOut();
-                    console.log('User signed out successfully');
-                    // The UI will update automatically through the auth state listener
-                }
-            } catch (error) {
-                console.error('Error signing out:', error);
-                alert('Error signing out. Please try again.');
-            }
-        }
-
-        // Hero Image Carousel Variables
-        let heroImages = [];
-        let currentImageIndex = 0;
-        let carouselInterval;
-        let isAutoPlaying = true;
-
-        function loadHeroImages() {
-            // Try to load from Firebase first
-            if (window.FirebaseService) {
-                FirebaseService.getWebsiteSettings()
-                    .then(settings => {
-                        if (settings.heroImages && settings.heroImages.length > 0) {
-                            heroImages = settings.heroImages;
-                            console.log('Loaded hero images from Firebase:', heroImages);
-                        } else {
-                            loadHeroImagesFromLocalStorage();
-                        }
-                        
-                        // Load background image
-                        if (settings.heroBackgroundImage) {
-                            loadHeroBackgroundImage(settings.heroBackgroundImage);
-                        } else {
-                            loadHeroBackgroundImageFromLocalStorage();
-                        }
-                        
-                        // Handle hero image visibility
-                        if (settings.showHeroImages !== undefined) {
-                            toggleHeroImageVisibility(settings.showHeroImages);
-                        } else {
-                            toggleHeroImageVisibilityFromLocalStorage();
-                        }
-                        
-                        initializeCarousel();
-                    })
-                    .catch(error => {
-                        console.error('Error loading hero images from Firebase:', error);
-                        loadHeroImagesFromLocalStorage();
+                    // Load background image
+                    if (settings.heroBackgroundImage) {
+                        loadHeroBackgroundImage(settings.heroBackgroundImage);
+                    } else {
                         loadHeroBackgroundImageFromLocalStorage();
+                    }
+                    
+                    // Handle hero image visibility
+                    if (settings.showHeroImages !== undefined) {
+                        toggleHeroImageVisibility(settings.showHeroImages);
+                    } else {
                         toggleHeroImageVisibilityFromLocalStorage();
-                        initializeCarousel();
-                    });
-            } else {
-                loadHeroImagesFromLocalStorage();
-                loadHeroBackgroundImageFromLocalStorage();
-                toggleHeroImageVisibilityFromLocalStorage();
-                initializeCarousel();
-            }
+                    }
+                    
+                    initializeCarousel();
+                })
+                .catch(error => {
+                    console.error('Error loading hero images from Firebase:', error);
+                    loadHeroImagesFromLocalStorage();
+                    loadHeroBackgroundImageFromLocalStorage();
+                    toggleHeroImageVisibilityFromLocalStorage();
+                    initializeCarousel();
+                });
+        } else {
+            loadHeroImagesFromLocalStorage();
+            loadHeroBackgroundImageFromLocalStorage();
+            toggleHeroImageVisibilityFromLocalStorage();
+            initializeCarousel();
         }
+    }
 
-        function loadHeroBackgroundImage(backgroundImageUrl) {
-            const backgroundElement = document.getElementById('heroBackgroundImage');
-            if (backgroundImageUrl) {
-                if (typeof backgroundImageUrl === 'string') {
+    function loadHeroBackgroundImage(backgroundImageUrl) {
+        const backgroundElement = document.getElementById('heroBackgroundImage');
+        if (backgroundImageUrl) {
+            if (typeof backgroundImageUrl === 'string') {
+                // Legacy format - just URL string
+                backgroundElement.style.backgroundImage = `url('${backgroundImageUrl}')`;
+                backgroundElement.style.opacity = '0.2'; // Default 20% opacity
+                backgroundElement.classList.remove('hidden');
+                console.log('Loaded hero background image from Firebase (legacy format):', backgroundImageUrl);
+            } else {
+                // New format - object with URL and opacity
+                backgroundElement.style.backgroundImage = `url('${backgroundImageUrl.url}')`;
+                backgroundElement.style.opacity = (backgroundImageUrl.opacity / 100).toString();
+                backgroundElement.classList.remove('hidden');
+                console.log('Loaded hero background image from Firebase:', backgroundImageUrl);
+            }
+        } else {
+            backgroundElement.classList.add('hidden');
+        }
+    }
+
+    function loadHeroBackgroundImageFromLocalStorage() {
+        const backgroundImageData = localStorage.getItem('sShopHeroBackgroundImage');
+        if (backgroundImageData) {
+            try {
+                const settings = JSON.parse(backgroundImageData);
+                if (typeof settings === 'string') {
                     // Legacy format - just URL string
-                    backgroundElement.style.backgroundImage = `url('${backgroundImageUrl}')`;
-                    backgroundElement.style.opacity = '0.2'; // Default 20% opacity
-                    backgroundElement.classList.remove('hidden');
-                    console.log('Loaded hero background image from Firebase (legacy format):', backgroundImageUrl);
+                    loadHeroBackgroundImage(settings);
+                    console.log('Loaded hero background image from localStorage (legacy format):', settings);
                 } else {
                     // New format - object with URL and opacity
-                    backgroundElement.style.backgroundImage = `url('${backgroundImageUrl.url}')`;
-                    backgroundElement.style.opacity = (backgroundImageUrl.opacity / 100).toString();
-                    backgroundElement.classList.remove('hidden');
-                    console.log('Loaded hero background image from Firebase:', backgroundImageUrl);
+                    loadHeroBackgroundImage(settings);
+                    console.log('Loaded hero background image from localStorage:', settings);
                 }
-            } else {
-                backgroundElement.classList.add('hidden');
+            } catch (error) {
+                // Fallback to legacy format
+                loadHeroBackgroundImage(backgroundImageData);
+                console.log('Loaded hero background image from localStorage (fallback):', backgroundImageData);
             }
         }
+    }
 
-        function loadHeroBackgroundImageFromLocalStorage() {
-            const backgroundImageData = localStorage.getItem('sShopHeroBackgroundImage');
-            if (backgroundImageData) {
-                try {
-                    const settings = JSON.parse(backgroundImageData);
-                    if (typeof settings === 'string') {
-                        // Legacy format - just URL string
-                        loadHeroBackgroundImage(settings);
-                        console.log('Loaded hero background image from localStorage (legacy format):', settings);
+    function toggleHeroImageVisibility(show) {
+        const heroImageContainer = document.getElementById('heroImageContainer');
+        if (show && heroImages.length > 0) {
+            heroImageContainer.classList.remove('hidden');
+            console.log('Hero images are visible');
+            // Reinitialize carousel after making it visible
+            setTimeout(() => {
+                initializeCarousel();
+            }, 100);
+        } else {
+            heroImageContainer.classList.add('hidden');
+            console.log('Hero images are hidden');
+            // Stop auto-play when hidden
+            if (carouselInterval) {
+                clearInterval(carouselInterval);
+            }
+        }
+    }
+
+    function toggleHeroImageVisibilityFromLocalStorage() {
+        const showHeroImages = localStorage.getItem('sShopShowHeroImages');
+        if (showHeroImages !== null) {
+            toggleHeroImageVisibility(showHeroImages === 'true');
+        } else {
+            // Default to showing if images exist
+            toggleHeroImageVisibility(heroImages.length > 0);
+        }
+    }
+
+    function loadHeroImagesFromLocalStorage() {
+        const storedImages = localStorage.getItem('sShopHeroImages');
+        if (storedImages) {
+            heroImages = JSON.parse(storedImages);
+            console.log('Loaded hero images from localStorage:', heroImages);
+        } else {
+            // Default images if none are set
+            heroImages = [
+                {
+                    url: 'https://placehold.co/600x400/805ad5/ffffff?text=S+Shop+LK',
+                    alt: 'S Shop LK Hero 1',
+                    title: 'Welcome to S Shop LK'
+                },
+                {
+                    url: 'https://placehold.co/600x400/667eea/ffffff?text=Gaming+Products',
+                    alt: 'S Shop LK Hero 2',
+                    title: 'Gaming Products'
+                },
+                {
+                    url: 'https://placehold.co/600x400/764ba2/ffffff?text=Best+Deals',
+                    alt: 'S Shop LK Hero 3',
+                    title: 'Best Deals'
+                }
+            ];
+            console.log('Using default hero images:', heroImages);
+        }
+    }
+
+    function initializeCarousel() {
+        if (heroImages.length === 0) return;
+
+        const heroContainer = document.getElementById('heroImageContainer');
+        const container = document.getElementById('heroImageInnerContainer');
+        const indicators = document.getElementById('carouselIndicators');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+
+        // Check if elements exist and hero container is visible
+        if (!container || !indicators || !prevButton || !nextButton) {
+            console.error('Carousel elements not found');
+            return;
+        }
+
+        // Only initialize if hero container is visible
+        if (heroContainer.classList.contains('hidden')) {
+            console.log('Hero container is hidden, skipping carousel initialization');
+            return;
+        }
+
+        // Clear existing content
+        container.innerHTML = '';
+        indicators.innerHTML = '';
+
+        // Create image elements
+        heroImages.forEach((image, index) => {
+            const imgElement = document.createElement('img');
+            imgElement.src = image.url;
+            imgElement.alt = image.alt;
+            imgElement.className = `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
+            imgElement.onerror = function() {
+                this.src = 'https://placehold.co/600x400/805ad5/ffffff?text=Image+Error';
+            };
+            container.appendChild(imgElement);
+
+            // Create indicator
+            const indicator = document.createElement('button');
+            indicator.className = `w-3 h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white' : 'bg-white bg-opacity-50'}`;
+            indicator.onclick = () => goToImage(index);
+            indicators.appendChild(indicator);
+        });
+
+        // Setup navigation buttons
+        prevButton.onclick = () => previousImage();
+        nextButton.onclick = () => nextImage();
+
+        // Setup hover effects for navigation buttons
+        const carousel = document.getElementById('heroCarousel');
+        if (carousel) {
+            carousel.addEventListener('mouseenter', () => {
+                prevButton.classList.remove('opacity-0');
+                nextButton.classList.remove('opacity-0');
+                pauseAutoPlay();
+            });
+            carousel.addEventListener('mouseleave', () => {
+                prevButton.classList.add('opacity-0');
+                nextButton.classList.add('opacity-0');
+                resumeAutoPlay();
+            });
+        }
+
+        // Start auto-play
+        startAutoPlay();
+    }
+
+    function showImage(index) {
+        const images = document.querySelectorAll('#heroImageInnerContainer img');
+        const indicators = document.querySelectorAll('#carouselIndicators button');
+
+        // Hide all images
+        images.forEach(img => img.classList.add('opacity-0'));
+        indicators.forEach(indicator => indicator.classList.remove('bg-white', 'bg-opacity-50'));
+
+        // Show current image
+        if (images[index]) {
+            images[index].classList.remove('opacity-0');
+            indicators[index].classList.add('bg-white');
+        }
+
+        currentImageIndex = index;
+    }
+
+    function nextImage() {
+        const nextIndex = (currentImageIndex + 1) % heroImages.length;
+        showImage(nextIndex);
+    }
+
+    function previousImage() {
+        const prevIndex = (currentImageIndex - 1 + heroImages.length) % heroImages.length;
+        showImage(prevIndex);
+    }
+
+    function goToImage(index) {
+        showImage(index);
+    }
+
+    function startAutoPlay() {
+        if (carouselInterval) clearInterval(carouselInterval);
+        carouselInterval = setInterval(() => {
+            if (isAutoPlaying) {
+                nextImage();
+            }
+        }, 4000); // Change image every 4 seconds
+    }
+
+    function pauseAutoPlay() {
+        isAutoPlaying = false;
+    }
+
+    function resumeAutoPlay() {
+        isAutoPlaying = true;
+    }
+
+    function loadProducts() {
+        // Try to load from Firebase first
+        if (window.FirebaseService) {
+            FirebaseService.getProducts()
+                .then(firebaseProducts => {
+                    if (firebaseProducts.length > 0) {
+                        products = firebaseProducts;
+                        displayProducts();
+                        console.log('Loaded products from Firebase:', products);
                     } else {
-                        // New format - object with URL and opacity
-                        loadHeroBackgroundImage(settings);
-                        console.log('Loaded hero background image from localStorage:', settings);
-                    }
-                } catch (error) {
-                    // Fallback to legacy format
-                    loadHeroBackgroundImage(backgroundImageData);
-                    console.log('Loaded hero background image from localStorage (fallback):', backgroundImageData);
-                }
-            }
-        }
-
-        function toggleHeroImageVisibility(show) {
-            const heroImageContainer = document.getElementById('heroImageContainer');
-            if (show && heroImages.length > 0) {
-                heroImageContainer.classList.remove('hidden');
-                console.log('Hero images are visible');
-                // Reinitialize carousel after making it visible
-                setTimeout(() => {
-                    initializeCarousel();
-                }, 100);
-            } else {
-                heroImageContainer.classList.add('hidden');
-                console.log('Hero images are hidden');
-                // Stop auto-play when hidden
-                if (carouselInterval) {
-                    clearInterval(carouselInterval);
-                }
-            }
-        }
-
-        function toggleHeroImageVisibilityFromLocalStorage() {
-            const showHeroImages = localStorage.getItem('sShopShowHeroImages');
-            if (showHeroImages !== null) {
-                toggleHeroImageVisibility(showHeroImages === 'true');
-            } else {
-                // Default to showing if images exist
-                toggleHeroImageVisibility(heroImages.length > 0);
-            }
-        }
-
-        function loadHeroImagesFromLocalStorage() {
-            const storedImages = localStorage.getItem('sShopHeroImages');
-            if (storedImages) {
-                heroImages = JSON.parse(storedImages);
-                console.log('Loaded hero images from localStorage:', heroImages);
-            } else {
-                // Default images if none are set
-                heroImages = [
-                    {
-                        url: 'https://placehold.co/600x400/805ad5/ffffff?text=S+Shop+LK',
-                        alt: 'S Shop LK Hero 1',
-                        title: 'Welcome to S Shop LK'
-                    },
-                    {
-                        url: 'https://placehold.co/600x400/667eea/ffffff?text=Gaming+Products',
-                        alt: 'S Shop LK Hero 2',
-                        title: 'Gaming Products'
-                    },
-                    {
-                        url: 'https://placehold.co/600x400/764ba2/ffffff?text=Best+Deals',
-                        alt: 'S Shop LK Hero 3',
-                        title: 'Best Deals'
-                    }
-                ];
-                console.log('Using default hero images:', heroImages);
-            }
-        }
-
-        function initializeCarousel() {
-            if (heroImages.length === 0) return;
-
-            const heroContainer = document.getElementById('heroImageContainer');
-            const container = document.getElementById('heroImageInnerContainer');
-            const indicators = document.getElementById('carouselIndicators');
-            const prevButton = document.getElementById('prevButton');
-            const nextButton = document.getElementById('nextButton');
-
-            // Check if elements exist and hero container is visible
-            if (!container || !indicators || !prevButton || !nextButton) {
-                console.error('Carousel elements not found');
-                return;
-            }
-
-            // Only initialize if hero container is visible
-            if (heroContainer.classList.contains('hidden')) {
-                console.log('Hero container is hidden, skipping carousel initialization');
-                return;
-            }
-
-            // Clear existing content
-            container.innerHTML = '';
-            indicators.innerHTML = '';
-
-            // Create image elements
-            heroImages.forEach((image, index) => {
-                const imgElement = document.createElement('img');
-                imgElement.src = image.url;
-                imgElement.alt = image.alt;
-                imgElement.className = `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
-                imgElement.onerror = function() {
-                    this.src = 'https://placehold.co/600x400/805ad5/ffffff?text=Image+Error';
-                };
-                container.appendChild(imgElement);
-
-                // Create indicator
-                const indicator = document.createElement('button');
-                indicator.className = `w-3 h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white' : 'bg-white bg-opacity-50'}`;
-                indicator.onclick = () => goToImage(index);
-                indicators.appendChild(indicator);
-            });
-
-            // Setup navigation buttons
-            prevButton.onclick = () => previousImage();
-            nextButton.onclick = () => nextImage();
-
-            // Setup hover effects for navigation buttons
-            const carousel = document.getElementById('heroCarousel');
-            if (carousel) {
-                carousel.addEventListener('mouseenter', () => {
-                    prevButton.classList.remove('opacity-0');
-                    nextButton.classList.remove('opacity-0');
-                    pauseAutoPlay();
-                });
-                carousel.addEventListener('mouseleave', () => {
-                    prevButton.classList.add('opacity-0');
-                    nextButton.classList.add('opacity-0');
-                    resumeAutoPlay();
-                });
-            }
-
-            // Start auto-play
-            startAutoPlay();
-        }
-
-        function showImage(index) {
-            const images = document.querySelectorAll('#heroImageInnerContainer img');
-            const indicators = document.querySelectorAll('#carouselIndicators button');
-
-            // Hide all images
-            images.forEach(img => img.classList.add('opacity-0'));
-            indicators.forEach(indicator => indicator.classList.remove('bg-white', 'bg-opacity-50'));
-
-            // Show current image
-            if (images[index]) {
-                images[index].classList.remove('opacity-0');
-                indicators[index].classList.add('bg-white');
-            }
-
-            currentImageIndex = index;
-        }
-
-        function nextImage() {
-            const nextIndex = (currentImageIndex + 1) % heroImages.length;
-            showImage(nextIndex);
-        }
-
-        function previousImage() {
-            const prevIndex = (currentImageIndex - 1 + heroImages.length) % heroImages.length;
-            showImage(prevIndex);
-        }
-
-        function goToImage(index) {
-            showImage(index);
-        }
-
-        function startAutoPlay() {
-            if (carouselInterval) clearInterval(carouselInterval);
-            carouselInterval = setInterval(() => {
-                if (isAutoPlaying) {
-                    nextImage();
-                }
-            }, 4000); // Change image every 4 seconds
-        }
-
-        function pauseAutoPlay() {
-            isAutoPlaying = false;
-        }
-
-        function resumeAutoPlay() {
-            isAutoPlaying = true;
-        }
-
-        function loadProducts() {
-            // Try to load from Firebase first
-            if (window.FirebaseService) {
-                FirebaseService.getProducts()
-                    .then(firebaseProducts => {
-                        if (firebaseProducts.length > 0) {
-                            products = firebaseProducts;
-                            displayProducts();
-                            console.log('Loaded products from Firebase:', products);
-                        } else {
-                            // Fallback to localStorage if no Firebase data
-                            loadFromLocalStorage();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading from Firebase:', error);
+                        // Fallback to localStorage if no Firebase data
                         loadFromLocalStorage();
-                    });
-            } else {
-                loadFromLocalStorage();
-            }
-        }
-
-        function loadFromLocalStorage() {
-            const storedProducts = localStorage.getItem('sShopProducts');
-            if (storedProducts) {
-                products = JSON.parse(storedProducts);
-                displayProducts();
-            } else {
-                // Fallback to products.json if no admin data
-                fetch('products.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        products = data.products;
-                        displayProducts();
-                    })
-                    .catch(error => {
-                        console.error('Error loading products:', error);
-                        // Load default products if both fail
-                        products = [];
-                        displayProducts();
-                    });
-            }
-        }
-        
-        function displayProducts() {
-            const productContainer = document.getElementById('productContainer');
-            productContainer.innerHTML = '';
-
-            // Filter products based on current category
-            let filteredProducts = products;
-            if (currentCategory !== 'all') {
-                filteredProducts = products.filter(product => {
-                    const category = product.category?.toLowerCase() || '';
-                    if (currentCategory === 'games') {
-                        return category.includes('games') || category.includes('gaming') || category.includes('game');
-                    } else if (currentCategory === 'software-apps') {
-                        return category.includes('software') || category.includes('app') || category.includes('tool') || category.includes('license');
                     }
-                    return true;
+                })
+                .catch(error => {
+                    console.error('Error loading from Firebase:', error);
+                    loadFromLocalStorage();
                 });
-            }
-
-            filteredProducts.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex-shrink-0 w-64 snap-center border border-slate-700';
-                
-                // Determine detail page based on product ID
-                let detailPage = 'dynamic-product-detail.html?id=' + product.id;
-
-                productCard.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl border-b border-slate-700">
-                    <div class="p-4">
-                        <h3 class="product-title text-lg font-semibold text-white truncate mb-1">${product.name}</h3>
-                        <p class="product-description text-sm text-gray-400 mb-2 line-clamp-2">${product.description}</p>
-                        <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
-                        <div class="flex space-x-2 mt-4">
-                            <a href="${detailPage}" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors duration-300 text-center">View Details</a>
-                            <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300" onclick="showBuyNowModal('${product.name}')">Buy Now</button>
-                        </div>
-                    </div>
-                `;
-                productContainer.appendChild(productCard);
-            });
+        } else {
+            loadFromLocalStorage();
         }
+    }
 
-        // Category filtering function
-        function filterProducts(category) {
-            currentCategory = category;
-            
-            // Update filter button styles
-            const filterButtons = document.querySelectorAll('.category-filter');
-            filterButtons.forEach(button => {
-                button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                button.classList.add('bg-slate-700', 'hover:bg-slate-600');
-            });
-            
-            // Highlight active filter
-            const activeButton = document.getElementById(`filter-${category}`);
-            if (activeButton) {
-                activeButton.classList.remove('bg-slate-700', 'hover:bg-slate-600');
-                activeButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
-            }
-            
-            // Update products display
+    function loadFromLocalStorage() {
+        const storedProducts = localStorage.getItem('sShopProducts');
+        if (storedProducts) {
+            products = JSON.parse(storedProducts);
             displayProducts();
-            
-            // Update search functionality to work with filtered products
-            updateSearchFunctionality();
+        } else {
+            // Fallback to products.json if no admin data
+            fetch('products.json')
+                .then(response => response.json())
+                .then(data => {
+                    products = data.products;
+                    displayProducts();
+                })
+                .catch(error => {
+                    console.error('Error loading products:', error);
+                    // Load default products if both fail
+                    products = [];
+                    displayProducts();
+                });
+        }
+    }
+    
+    function displayProducts() {
+        const productContainer = document.getElementById('productContainer');
+        productContainer.innerHTML = '';
+
+        // Filter products based on current category
+        let filteredProducts = products;
+        if (currentCategory !== 'all') {
+            filteredProducts = products.filter(product => {
+                const category = product.category?.toLowerCase() || '';
+                if (currentCategory === 'games') {
+                    return category.includes('games') || category.includes('gaming') || category.includes('game');
+                } else if (currentCategory === 'software-apps') {
+                    return category.includes('software') || category.includes('app') || category.includes('tool') || category.includes('license');
+                }
+                return true;
+            });
         }
 
-        // Update search to work with filtered products
-        function updateSearchFunctionality() {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.value = '';
-                const searchError = document.getElementById('searchError');
-                if (searchError) {
-                    searchError.classList.add('hidden');
-                }
-            }
+        filteredProducts.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex-shrink-0 w-64 snap-center border border-slate-700';
+            
+            // Determine detail page based on product ID
+            let detailPage = 'dynamic-product-detail.html?id=' + product.id;
+
+            productCard.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl border-b border-slate-700">
+                <div class="p-4">
+                    <h3 class="product-title text-lg font-semibold text-white truncate mb-1">${product.name}</h3>
+                    <p class="product-description text-sm text-gray-400 mb-2 line-clamp-2">${product.description}</p>
+                    <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
+                    <div class="flex space-x-2 mt-4">
+                        <a href="${detailPage}" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors duration-300 text-center">View Details</a>
+                        <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300" onclick="showBuyNowModal('${product.name}')">Buy Now</button>
+                    </div>
+                </div>
+            `;
+            productContainer.appendChild(productCard);
+        });
+    }
+
+    // Category filtering function
+    function filterProducts(category) {
+        currentCategory = category;
+        
+        // Update filter button styles
+        const filterButtons = document.querySelectorAll('.category-filter');
+        filterButtons.forEach(button => {
+            button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            button.classList.add('bg-slate-700', 'hover:bg-slate-600');
+        });
+        
+        // Highlight active filter
+        const activeButton = document.getElementById(`filter-${category}`);
+        if (activeButton) {
+            activeButton.classList.remove('bg-slate-700', 'hover:bg-slate-600');
+            activeButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
         }
         
+        // Update products display
+        displayProducts();
+        
+        // Update search functionality to work with filtered products
+        updateSearchFunctionality();
+    }
+
+    // Update search to work with filtered products
+    function updateSearchFunctionality() {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.value = '';
+            const searchError = document.getElementById('searchError');
+            if (searchError) {
+                searchError.classList.add('hidden');
+            }
+        }
+    }
+    
         /**
          * This function handles the search functionality.
          * It filters the product cards based on the text entered in the search bar.
@@ -945,6 +850,13 @@
         function closeModal() {
             const modal = document.getElementById('buyNowModal');
             modal.classList.add('hidden');
+        }
+
+    function scrollToProducts() {
+        const productsSection = document.querySelector('.mb-12');
+        if (productsSection) {
+            productsSection.scrollIntoView({ behavior: 'smooth' });
+        }
         }
 
     </script>

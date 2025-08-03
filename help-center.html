@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - S Shop LK</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        /* Mobile header scroll behavior */
+        @media (max-width: 768px) {
+            header {
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            header.header-hidden {
+                transform: translateY(-100%);
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header Container -->
+    <div id="header-container"></div>
+
+    <!-- Breadcrumbs -->
+    <div class="bg-slate-800 border-b border-slate-700">
+        <div class="container mx-auto px-4 py-3">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2 text-sm text-gray-400">
+                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+                    <li class="flex items-center">
+                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-white">Help Center</span>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-16">
+        <div class="max-w-4xl mx-auto">
+            <!-- Page Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Help Center</h1>
+                <p class="text-xl text-gray-300">Find answers to common questions and get support</p>
+            </div>
+
+            <!-- Quick Contact Section -->
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 mb-8 text-center">
+                <h2 class="text-2xl font-bold text-white mb-4">Need Immediate Help?</h2>
+                <p class="text-blue-100 mb-6">Our support team is available 24/7 to assist you</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://wa.me/94767854069" class="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors flex items-center justify-center space-x-2">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp" class="w-5 h-5">
+                        <span>WhatsApp Support</span>
+                    </a>
+                    <a href="https://discord.gg/YourInviteCode" class="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4945/4945973.png" alt="Discord" class="w-5 h-5">
+                        <span>Discord Community</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="bg-slate-800 rounded-xl p-8 border border-slate-700 space-y-8">
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">Frequently Asked Questions</h2>
+                
+                <div class="space-y-6">
+                    <div class="border border-slate-700 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">How do I make a purchase?</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            Browse our products, select the item you want, and click "Buy Now". You'll be redirected to contact our support team via WhatsApp or Discord to complete your purchase securely.
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-700 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">What payment methods do you accept?</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            We accept various payment methods including bank transfers, mobile payments, and digital wallets. Payment details will be provided during the purchase process.
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-700 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">How long does delivery take?</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            Digital products are typically delivered instantly or within 24 hours. Physical items may take 3-7 business days depending on your location.
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-700 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">What if I have issues with my purchase?</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            Contact our support team immediately via WhatsApp or Discord. We provide 14-day insurance on all purchases and will assist you with any issues.
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-700 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Are your products legitimate?</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            Yes, all our products are legitimate and sourced from authorized distributors. We are a trusted seller with over 1000 successful sales and provide insurance on all purchases.
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-700 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">Can I get a refund?</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            Refunds are handled on a case-by-case basis. If you experience issues with your purchase, contact our support team within 14 days for assistance.
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-700 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">How do I create an account?</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            Click "Sign In" in the header, then "Sign Up" to create your account. You can browse products without an account, but creating one allows you to track orders and save preferences.
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-700 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-white mb-3">What regions do you serve?</h3>
+                        <p class="text-gray-300 leading-relaxed">
+                            We primarily serve Sri Lanka and surrounding regions. Some products may have regional restrictions, which will be clearly indicated on the product page.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="bg-slate-800 rounded-xl p-8 border border-slate-700 mt-8">
+                <h2 class="text-2xl font-bold text-white mb-6 text-center">Contact Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="text-center">
+                        <div class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp" class="w-8 h-8">
+                        </div>
+                        <h3 class="text-lg font-semibold text-white mb-2">WhatsApp Support</h3>
+                        <p class="text-gray-300 mb-3">24/7 Customer Support</p>
+                        <a href="https://wa.me/94767854069" class="text-green-400 hover:text-green-300 font-semibold">+94 767 854 069</a>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <img src="https://cdn-icons-png.flaticon.com/512/4945/4945973.png" alt="Discord" class="w-8 h-8">
+                        </div>
+                        <h3 class="text-lg font-semibold text-white mb-2">Discord Community</h3>
+                        <p class="text-gray-300 mb-3">Join our community</p>
+                        <a href="https://discord.gg/YourInviteCode" class="text-blue-400 hover:text-blue-300 font-semibold">Join Discord Server</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Resources -->
+            <div class="bg-slate-800 rounded-xl p-8 border border-slate-700 mt-8">
+                <h2 class="text-2xl font-bold text-white mb-6 text-center">Additional Resources</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="terms-of-service.html" class="bg-slate-700 rounded-lg p-4 text-center hover:bg-slate-600 transition-colors">
+                        <h3 class="text-lg font-semibold text-white mb-2">Terms of Service</h3>
+                        <p class="text-gray-400 text-sm">Read our terms and conditions</p>
+                    </a>
+                    <a href="privacy-policy.html" class="bg-slate-700 rounded-lg p-4 text-center hover:bg-slate-600 transition-colors">
+                        <h3 class="text-lg font-semibold text-white mb-2">Privacy Policy</h3>
+                        <p class="text-gray-400 text-sm">Learn about data protection</p>
+                    </a>
+                    <a href="about-us.html" class="bg-slate-700 rounded-lg p-4 text-center hover:bg-slate-600 transition-colors">
+                        <h3 class="text-lg font-semibold text-white mb-2">About Us</h3>
+                        <p class="text-gray-400 text-sm">Learn more about S Shop LK</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <!-- Shared Components -->
+    <script src="header-component.js"></script>
+    <script src="footer-component.js"></script>
+
+</body>
+</html> 
