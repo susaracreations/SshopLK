@@ -9,9 +9,12 @@ const firebaseConfig = {
   measurementId: "G-4XQTJVKS72"
 };
 
+// Wait for Firebase to be fully loaded
+function initializeFirebase() {
 // Check if Firebase is available
 if (typeof firebase === 'undefined') {
   console.error('Firebase is not loaded. Please check your script tags.');
+    return;
 } else {
   console.log('Firebase is loaded successfully');
 }
@@ -22,13 +25,20 @@ firebase.initializeApp(firebaseConfig);
 // Initialize Firestore with optimized settings
 const db = firebase.firestore();
 
-// Initialize Firebase Auth with error handling
+  // Initialize Firebase Auth with proper error handling
 let auth;
 try {
+    // Check if firebase.auth exists before calling it
+    if (typeof firebase.auth === 'function') {
   auth = firebase.auth();
   console.log('Firebase Auth initialized successfully');
+    } else {
+      throw new Error('firebase.auth is not a function - Firebase Auth module not loaded');
+    }
 } catch (error) {
   console.error('Error initializing Firebase Auth:', error);
+    console.log('Firebase modules available:', Object.keys(firebase));
+    
   // Fallback: create a mock auth object for development
   auth = {
     currentUser: null,
@@ -103,10 +113,10 @@ const AuthService = {
     }
   },
 
-  // Password reset
+    // Reset password
   async resetPassword(email) {
     try {
-      console.log('Attempting to reset password for:', email);
+        console.log('Attempting to send password reset email:', email);
       await auth.sendPasswordResetEmail(email);
       console.log('Successfully sent password reset email');
     } catch (error) {
@@ -319,176 +329,157 @@ const FirebaseService = {
       console.error('Error updating user data in Firebase:', error);
       throw error;
     }
-  },
+    },
 
-  // Chat Management Functions
-  async createChat(chatData) {
-    try {
-      console.log('Attempting to create chat in Firebase:', chatData);
-      const docRef = await db.collection('chats').add({
-        ...chatData,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
-        status: 'active',
-        unreadCount: 0
-      });
-      console.log('Successfully created chat with ID:', docRef.id);
-      return docRef.id;
-    } catch (error) {
-      console.error('Error creating chat in Firebase:', error);
-      throw error;
-    }
-  },
-
-  async getChats() {
-    try {
-      console.log('Attempting to fetch chats from Firebase...');
-      // Use a simpler query that doesn't require composite index
-      const snapshot = await db.collection('chats')
-        .orderBy('lastMessageAt', 'desc')
-        .get();
-      
-      const chats = [];
-      snapshot.forEach(doc => {
-        const chatData = doc.data();
-        // Filter active chats in JavaScript instead of Firestore query
-        if (chatData.status === 'active' || !chatData.status) {
-          chats.push({
-            id: doc.id,
-            ...chatData
-          });
-        }
-      });
-      console.log('Successfully fetched chats from Firebase:', chats);
-      return chats;
-    } catch (error) {
-      console.error('Error getting chats from Firebase:', error);
-      console.error('Error details:', {
-        code: error.code,
-        message: error.message,
-        stack: error.stack
-      });
-      
-      // If it's an index error, try a simpler query
-      if (error.code === 'failed-precondition') {
-        console.log('Trying simpler query without composite index...');
-        try {
-          const snapshot = await db.collection('chats').get();
-          const chats = [];
-          snapshot.forEach(doc => {
-            const chatData = doc.data();
-            if (chatData.status === 'active' || !chatData.status) {
-              chats.push({
-                id: doc.id,
-                ...chatData
-              });
-            }
-          });
-          // Sort by lastMessageAt in JavaScript
-          chats.sort((a, b) => {
-            if (!a.lastMessageAt || !b.lastMessageAt) return 0;
-            return b.lastMessageAt.toDate() - a.lastMessageAt.toDate();
-          });
-          console.log('Successfully fetched chats with fallback query:', chats);
-          return chats;
-        } catch (fallbackError) {
-          console.error('Fallback query also failed:', fallbackError);
-          return [];
-        }
+    // Chat Management Functions
+    async createChat(chatData) {
+      try {
+        console.log('Attempting to create chat in Firebase:', chatData);
+        const docRef = await db.collection('chats').add({
+          userId: chatData.userId,
+          userName: chatData.userName,
+          status: chatData.status || 'active',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
+          lastMessage: '',
+          unreadCount: 0
+        });
+        console.log('Successfully created chat with ID:', docRef.id);
+        return docRef.id;
+      } catch (error) {
+        console.error('Error creating chat in Firebase:', error);
+        throw error;
       }
-      
-      return [];
-    }
-  },
+    },
 
-  async getChat(chatId) {
-    try {
-      console.log('Attempting to fetch chat from Firebase:', chatId);
-      const doc = await db.collection('chats').doc(chatId).get();
-      if (doc.exists) {
-        const chatData = doc.data();
-        console.log('Successfully fetched chat from Firebase:', chatData);
-        return { id: doc.id, ...chatData };
-      } else {
-        console.log('No chat found in Firebase for:', chatId);
+    async getChats() {
+      try {
+        console.log('Attempting to fetch chats from Firebase...');
+        // Use a simpler query that doesn't require composite index
+        const snapshot = await db.collection('chats')
+          .orderBy('lastMessageAt', 'desc')
+          .get();
+        
+        const chats = [];
+        snapshot.forEach(doc => {
+          const chatData = doc.data();
+          // Filter active chats in JavaScript instead of Firestore query
+          if (chatData.status === 'active' || !chatData.status) {
+            chats.push({
+              id: doc.id,
+              ...chatData
+            });
+          }
+        });
+        console.log('Successfully fetched chats from Firebase:', chats);
+        return chats;
+      } catch (error) {
+        console.error('Error getting chats from Firebase:', error);
+        console.error('Error details:', {
+          code: error.code,
+          message: error.message,
+          stack: error.stack
+        });
+        
+        // If it's an index error, try a simpler query
+        if (error.code === 'failed-precondition') {
+          console.log('Trying simpler query without composite index...');
+          try {
+            const snapshot = await db.collection('chats').get();
+            const chats = [];
+            snapshot.forEach(doc => {
+              const chatData = doc.data();
+              if (chatData.status === 'active' || !chatData.status) {
+                chats.push({
+                  id: doc.id,
+                  ...chatData
+                });
+              }
+            });
+            // Sort by lastMessageAt in JavaScript
+            chats.sort((a, b) => {
+              if (!a.lastMessageAt || !b.lastMessageAt) return 0;
+              return b.lastMessageAt.toDate() - a.lastMessageAt.toDate();
+            });
+            console.log('Successfully fetched chats with fallback query:', chats);
+            return chats;
+          } catch (fallbackError) {
+            console.error('Fallback query also failed:', fallbackError);
+            return [];
+          }
+        }
+        
+        return [];
+      }
+    },
+
+    async getChat(chatId) {
+      try {
+        console.log('Attempting to fetch chat from Firebase:', chatId);
+        const doc = await db.collection('chats').doc(chatId).get();
+        if (doc.exists) {
+          const chatData = doc.data();
+          console.log('Successfully fetched chat from Firebase:', chatData);
+          return { id: doc.id, ...chatData };
+        } else {
+          console.log('No chat found in Firebase for:', chatId);
+          return null;
+        }
+      } catch (error) {
+        console.error('Error getting chat from Firebase:', error);
         return null;
       }
-    } catch (error) {
-      console.error('Error getting chat from Firebase:', error);
-      return null;
-    }
-  },
+    },
 
-  async updateChat(chatId, chatData) {
-    try {
-      console.log('Attempting to update chat in Firebase:', chatId, chatData);
-      await db.collection('chats').doc(chatId).update(chatData);
-      console.log('Successfully updated chat in Firebase:', chatId);
-      return true;
-    } catch (error) {
-      console.error('Error updating chat in Firebase:', error);
-      throw error;
-    }
-  },
+    async updateChat(chatId, chatData) {
+      try {
+        console.log('Attempting to update chat in Firebase:', chatId, chatData);
+        await db.collection('chats').doc(chatId).update(chatData);
+        console.log('Successfully updated chat in Firebase:', chatId);
+        return true;
+      } catch (error) {
+        console.error('Error updating chat in Firebase:', error);
+        throw error;
+      }
+    },
 
-  async deleteChat(chatId) {
-    try {
-      console.log('Attempting to delete chat from Firebase:', chatId);
-      await db.collection('chats').doc(chatId).delete();
-      console.log('Successfully deleted chat from Firebase:', chatId);
-      return true;
-    } catch (error) {
-      console.error('Error deleting chat from Firebase:', error);
-      throw error;
-    }
-  },
+    async deleteChat(chatId) {
+      try {
+        console.log('Attempting to delete chat from Firebase:', chatId);
+        await db.collection('chats').doc(chatId).delete();
+        console.log('Successfully deleted chat from Firebase:', chatId);
+        return true;
+      } catch (error) {
+        console.error('Error deleting chat from Firebase:', error);
+        throw error;
+      }
+    },
 
-  async addMessage(chatId, messageData) {
-    try {
-      console.log('Attempting to add message to Firebase:', chatId, messageData);
-      const docRef = await db.collection('chats').doc(chatId)
-        .collection('messages').add({
-          ...messageData,
+    async addMessage(chatId, messageData) {
+      try {
+        console.log('Attempting to add message to Firebase:', chatId, messageData);
+        const docRef = await db.collection('chats').doc(chatId).collection('messages').add({
+          text: messageData.text,
+          sender: messageData.sender,
+          userId: messageData.userId,
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-      console.log('Successfully added message with ID:', docRef.id);
-      return docRef.id;
-    } catch (error) {
-      console.error('Error adding message to Firebase:', error);
-      throw error;
-    }
-  },
+        console.log('Successfully added message with ID:', docRef.id);
+        return docRef.id;
+      } catch (error) {
+        console.error('Error adding message to Firebase:', error);
+        throw error;
+      }
+    },
 
-  async getMessages(chatId) {
-    try {
-      console.log('Attempting to fetch messages from Firebase:', chatId);
-      const snapshot = await db.collection('chats').doc(chatId)
-        .collection('messages')
-        .orderBy('timestamp', 'asc')
-        .get();
-      
-      const messages = [];
-      snapshot.forEach(doc => {
-        messages.push({
-          id: doc.id,
-          ...doc.data()
-        });
-      });
-      console.log('Successfully fetched messages from Firebase:', messages);
-      return messages;
-    } catch (error) {
-      console.error('Error getting messages from Firebase:', error);
-      return [];
-    }
-  },
-
-  // Real-time listener for chat messages
-  onChatMessagesChange(chatId, callback) {
-    console.log('Setting up real-time listener for chat messages:', chatId);
-    return db.collection('chats').doc(chatId)
-      .collection('messages')
-      .orderBy('timestamp', 'asc')
-      .onSnapshot(snapshot => {
+    async getMessages(chatId) {
+      try {
+        console.log('Attempting to fetch messages from Firebase:', chatId);
+        const snapshot = await db.collection('chats').doc(chatId)
+          .collection('messages')
+          .orderBy('timestamp', 'asc')
+          .get();
+        
         const messages = [];
         snapshot.forEach(doc => {
           messages.push({
@@ -496,14 +487,163 @@ const FirebaseService = {
             ...doc.data()
           });
         });
-        console.log('Real-time chat messages update:', messages);
-        callback(messages);
-      }, error => {
-        console.error('Error in real-time chat listener:', error);
-      });
-  }
-};
+        console.log('Successfully fetched messages from Firebase:', messages);
+        return messages;
+      } catch (error) {
+        console.error('Error getting messages from Firebase:', error);
+        return [];
+      }
+    },
 
-// Export for use in other files
+    // Real-time listener for chat messages
+    onChatMessagesChange(chatId, callback) {
+      console.log('Setting up real-time listener for chat messages:', chatId);
+      return db.collection('chats').doc(chatId)
+        .collection('messages')
+        .orderBy('timestamp', 'asc')
+        .onSnapshot(snapshot => {
+          const messages = [];
+          snapshot.forEach(doc => {
+            messages.push({
+              id: doc.id,
+              ...doc.data()
+            });
+          });
+          console.log('Real-time chat messages update:', messages);
+          callback(messages);
+        }, error => {
+          console.error('Error in chat messages listener:', error);
+        });
+    },
+
+    // Admin status tracking
+    async setAdminOnline() {
+      try {
+        console.log('Setting admin status to online...');
+        await db.collection('adminStatus').doc('current').set({
+          isOnline: true,
+          lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+          adminId: 'admin'
+        });
+        console.log('Admin status set to online successfully');
+      } catch (error) {
+        console.error('Error setting admin online:', error);
+      }
+    },
+
+    async setAdminOffline() {
+      try {
+        console.log('Setting admin status to offline...');
+        await db.collection('adminStatus').doc('current').set({
+          isOnline: false,
+          lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+          adminId: 'admin'
+        });
+        console.log('Admin status set to offline successfully');
+      } catch (error) {
+        console.error('Error setting admin offline:', error);
+      }
+    },
+
+    // Real-time listener for admin status
+    onAdminStatusChange(callback) {
+      console.log('Setting up real-time listener for admin status');
+      try {
+        return db.collection('adminStatus').doc('current')
+          .onSnapshot(snapshot => {
+            if (snapshot.exists) {
+              const data = snapshot.data();
+              const isOnline = data.isOnline || false;
+              console.log('Admin status update:', isOnline);
+              callback(isOnline);
+            } else {
+              console.log('No admin status found, defaulting to offline');
+              callback(false);
+            }
+          }, error => {
+            console.error('Error in admin status listener:', error);
+            // Check if it's an ad blocker error
+            if (error.message && error.message.includes('ERR_BLOCKED_BY_CLIENT')) {
+              console.warn('Admin status tracking blocked by ad blocker');
+              callback(false); // Default to offline
+            } else {
+              console.error('Admin status listener error:', error);
+              callback(false);
+            }
+          });
+      } catch (error) {
+        console.error('Error setting up admin status listener:', error);
+        callback(false);
+        return () => {}; // Return empty cleanup function
+      }
+    },
+
+    // Admin logging functions
+    async logAdminAction(action, details = {}) {
+      try {
+        console.log('Logging admin action:', action, details);
+        await db.collection('adminLogs').add({
+          action: action,
+          details: details,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          adminId: 'admin',
+          sessionId: sessionStorage.getItem('adminSessionId') || 'unknown'
+        });
+        console.log('Admin action logged successfully');
+      } catch (error) {
+        console.error('Error logging admin action:', error);
+      }
+    },
+
+    async getAdminLogs(limit = 100) {
+      try {
+        console.log('Fetching admin logs...');
+        const snapshot = await db.collection('adminLogs')
+          .orderBy('timestamp', 'desc')
+          .limit(limit)
+          .get();
+        
+        const logs = [];
+        snapshot.forEach(doc => {
+          logs.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        console.log('Successfully fetched admin logs:', logs);
+        return logs;
+      } catch (error) {
+        console.error('Error fetching admin logs:', error);
+        return [];
+      }
+    },
+
+    async clearAdminLogs() {
+      try {
+        console.log('Clearing admin logs...');
+        const snapshot = await db.collection('adminLogs').get();
+        const deletePromises = snapshot.docs.map(doc => doc.ref.delete());
+        await Promise.all(deletePromises);
+        console.log('Admin logs cleared successfully');
+        return true;
+      } catch (error) {
+        console.error('Error clearing admin logs:', error);
+        throw error;
+      }
+    }
+  };
+
+  // Make Firebase services globally available
 window.FirebaseService = FirebaseService;
 window.AuthService = AuthService; 
+  window.db = db;
+  window.auth = auth;
+}
+
+// Wait for DOM to be ready and Firebase scripts to load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeFirebase);
+} else {
+  // If DOM is already loaded, wait a bit for Firebase scripts
+  setTimeout(initializeFirebase, 100);
+} 

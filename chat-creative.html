@@ -120,6 +120,12 @@
                     <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                     <span id="userInfo" class="text-sm text-white">Welcome, Guest</span>
                 </div>
+                <button onclick="logout()" class="glass px-4 py-2 rounded-full text-white hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Logout</span>
+                </button>
                 <a href="index.html" class="glass px-4 py-2 rounded-full text-white hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -312,17 +318,127 @@
         });
 
         function initializeChat() {
-            currentUserId = localStorage.getItem('chatUserId');
-            if (!currentUserId) {
-                currentUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('chatUserId', currentUserId);
+            // Check if user is logged in via Firebase Auth first
+            if (window.AuthService) {
+                AuthService.onAuthStateChanged(function(user) {
+                    if (user) {
+                        // User is logged in via Firebase Auth
+                        initializeChatWithFirebaseUser(user);
+                    } else {
+                        // Check if user is logged in via chat login
+                        const userData = localStorage.getItem('chatUserData');
+                        if (!userData) {
+                            // Redirect to login if not logged in
+                            window.location.href = 'chat-login.html';
+                            return;
+                        }
+                        initializeChatWithLocalData();
+                    }
+                });
+            } else {
+                // Fallback to chat login system
+                const userData = localStorage.getItem('chatUserData');
+                if (!userData) {
+                    // Redirect to login if not logged in
+                    window.location.href = 'chat-login.html';
+                    return;
+                }
+                initializeChatWithLocalData();
             }
-
-            document.getElementById('userInfo').textContent = `User ID: ${currentUserId.substring(0, 8)}...`;
-            getOrCreateChat();
         }
 
-        async function getOrCreateChat() {
+        function initializeChatWithFirebaseUser(user) {
+            try {
+                // Use Firebase Auth user ID
+                currentUserId = user.uid;
+                
+                // Get username from user data or use email
+                let userName = user.displayName || user.email.split('@')[0];
+                
+                // Try to get username from Firestore
+                if (window.FirebaseService) {
+                    FirebaseService.getUser(user.uid)
+                        .then(userData => {
+                            if (userData && userData.username) {
+                                userName = userData.username;
+                            }
+                            document.getElementById('userInfo').textContent = `Welcome, ${userName}`;
+                            getOrCreateChat(userName);
+                        })
+                        .catch(error => {
+                            console.log('Could not fetch user data, using default name');
+                            document.getElementById('userInfo').textContent = `Welcome, ${userName}`;
+                            getOrCreateChat(userName);
+                        });
+                } else {
+                    document.getElementById('userInfo').textContent = `Welcome, ${userName}`;
+                    getOrCreateChat(userName);
+                }
+            } catch (error) {
+                console.error('Error initializing chat with Firebase user:', error);
+                // Fallback to chat login
+                window.location.href = 'chat-login.html';
+            }
+        }
+
+        function initializeChatWithLocalData() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('chatUserData'));
+                const userName = userData.username;
+                
+                currentUserId = localStorage.getItem('chatUserId');
+                if (!currentUserId) {
+                    currentUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('chatUserId', currentUserId);
+                }
+
+                document.getElementById('userInfo').textContent = `Welcome, ${userName}`;
+                getOrCreateChat(userName);
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                localStorage.removeItem('chatUserData');
+                window.location.href = 'chat-login.html';
+            }
+        }
+
+        // Generate a proper user name based on user ID
+        function generateUserName(userId) {
+            // Create a consistent name based on user ID
+            const hash = userId.split('').reduce((a, b) => {
+                a = ((a << 5) - a) + b.charCodeAt(0);
+                return a & a;
+            }, 0);
+            
+            const names = [
+                'Alex Johnson', 'Sarah Williams', 'Mike Chen', 'Emma Davis', 
+                'David Brown', 'Lisa Garcia', 'James Wilson', 'Maria Rodriguez',
+                'Robert Taylor', 'Jennifer Lee', 'Thomas Anderson', 'Amanda White',
+                'Christopher Martinez', 'Nicole Thompson', 'Daniel Jackson', 'Rachel Moore',
+                'Matthew Lewis', 'Jessica Clark', 'Anthony Hall', 'Michelle Young',
+                'Kevin Allen', 'Stephanie King', 'Brian Wright', 'Ashley Green',
+                'Steven Baker', 'Melissa Adams', 'Jason Nelson', 'Tiffany Carter',
+                'Ryan Mitchell', 'Heather Perez', 'Gary Roberts', 'Christina Turner',
+                'Timothy Phillips', 'Rebecca Campbell', 'Mark Parker', 'Laura Evans',
+                'Jeffrey Edwards', 'Shannon Collins', 'Frank Stewart', 'Tracy Morris',
+                'Raymond Rogers', 'Crystal Reed', 'Gregory Cook', 'Angela Morgan',
+                'Benjamin Bell', 'Kimberly Murphy', 'Samuel Bailey', 'Deborah Rivera',
+                'Patrick Cooper', 'Tara Richardson', 'Douglas Cox', 'Monica Ward',
+                'Ronald Torres', 'Crystal Peterson', 'George Gray', 'Brenda James',
+                'Edward Watson', 'Diana Brooks', 'Brian Kelly', 'Virginia Sanders',
+                'Ronald Price', 'Carol Bennett', 'Timothy Wood', 'Pamela Barnes',
+                'Kenneth Ross', 'Nicole Henderson', 'Stephen Coleman', 'Janet Jenkins',
+                'Andrew Perry', 'Cheryl Powell', 'Joshua Long', 'Megan Patterson',
+                'Kevin Hughes', 'Linda Hughes', 'Brian Flores', 'Donna Washington',
+                'Ronald Butler', 'Barbara Simmons', 'Steven Foster', 'Helen Gonzales',
+                'Eugene Bryant', 'Deborah Alexander', 'Russell Russell', 'Sharon Griffin',
+                'Bobby Diaz', 'Cynthia Hayes', 'Victor Myers', 'Amy Ford', 'Martin Hamilton'
+            ];
+            
+            const nameIndex = Math.abs(hash) % names.length;
+            return names[nameIndex];
+        }
+
+        async function getOrCreateChat(userName) {
             try {
                 const existingChats = await FirebaseService.getChats();
                 const userChat = existingChats.find(chat => chat.userId === currentUserId);
@@ -333,7 +449,7 @@
                 } else {
                     const chatData = {
                         userId: currentUserId,
-                        userName: `User ${currentUserId.substring(0, 8)}`,
+                        userName: userName,
                         status: 'active'
                     };
                     currentChatId = await FirebaseService.createChat(chatData);
@@ -558,6 +674,27 @@
             setTimeout(() => {
                 notification.remove();
             }, 5000);
+        }
+
+        function logout() {
+            // Clear chat session data
+            localStorage.removeItem('chatUserData');
+            localStorage.removeItem('chatUserId');
+            
+            // If user was logged in via Firebase Auth, sign them out
+            if (window.AuthService) {
+                AuthService.signOut()
+                    .then(() => {
+                        console.log('Signed out from Firebase Auth');
+                        window.location.href = 'chat-login.html';
+                    })
+                    .catch(error => {
+                        console.error('Error signing out from Firebase Auth:', error);
+                        window.location.href = 'chat-login.html';
+                    });
+            } else {
+                window.location.href = 'chat-login.html';
+            }
         }
     </script>
 

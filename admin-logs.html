@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Logs - S Shop LK</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span class="text-2xl font-extrabold text-gray-900">Admin Logs</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600">Welcome, <span id="adminUsername">Admin</span></span>
+                <button onclick="refreshLogs()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Refresh
+                </button>
+                <button onclick="clearLogs()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                    Clear All Logs
+                </button>
+                <button onclick="logout()" class="bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+                    Logout
+                </button>
+                <a href="admin.html" class="text-blue-600 hover:text-blue-800">← Back to Admin</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Admin Activity Logs</h2>
+                <div class="flex space-x-2">
+                    <select id="actionFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Actions</option>
+                        <option value="admin_login">Login</option>
+                        <option value="admin_logout">Logout</option>
+                        <option value="product_created">Product Created</option>
+                        <option value="product_updated">Product Updated</option>
+                        <option value="product_deleted">Product Deleted</option>
+                        <option value="all_products_deleted">All Products Deleted</option>
+                    </select>
+                    <button onclick="exportLogs()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                        Export CSV
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600" id="totalLogs">0</div>
+                    <div class="text-sm text-blue-600">Total Actions</div>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="text-2xl font-bold text-green-600" id="todayLogs">0</div>
+                    <div class="text-sm text-green-600">Today's Actions</div>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <div class="text-2xl font-bold text-yellow-600" id="productActions">0</div>
+                    <div class="text-sm text-yellow-600">Product Actions</div>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <div class="text-2xl font-bold text-red-600" id="deletionActions">0</div>
+                    <div class="text-sm text-red-600">Deletion Actions</div>
+                </div>
+            </div>
+
+            <!-- Logs Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3">Action</th>
+                            <th class="px-6 py-3">Details</th>
+                            <th class="px-6 py-3">Session ID</th>
+                            <th class="px-6 py-3">Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <!-- Logs will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p class="mt-2 text-gray-600">Loading admin logs...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="text-center py-8 hidden">
+                <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p class="text-gray-500">No admin logs found</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        let adminLogs = [];
+
+        // Check authentication on page load
+        window.addEventListener('load', function() {
+            checkAuth();
+            loadAdminLogs();
+        });
+
+        function checkAuth() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            const username = sessionStorage.getItem('adminUsername');
+            
+            if (isLoggedIn !== 'true') {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            if (username) {
+                document.getElementById('adminUsername').textContent = username;
+            }
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'admin-login.html';
+        }
+
+        async function loadAdminLogs() {
+            try {
+                const logs = await FirebaseService.getAdminLogs(200);
+                adminLogs = logs;
+                displayLogs();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading admin logs:', error);
+                showError('Failed to load admin logs');
+            }
+        }
+
+        function displayLogs() {
+            const tableBody = document.getElementById('logsTableBody');
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+            
+            loadingState.classList.add('hidden');
+            
+            if (adminLogs.length === 0) {
+                emptyState.classList.remove('hidden');
+                tableBody.innerHTML = '';
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            // Filter logs if filter is applied
+            const actionFilter = document.getElementById('actionFilter').value;
+            const filteredLogs = actionFilter ? adminLogs.filter(log => log.action === actionFilter) : adminLogs;
+            
+            tableBody.innerHTML = '';
+            
+            filteredLogs.forEach(log => {
+                const row = document.createElement('tr');
+                row.className = 'bg-white border-b hover:bg-gray-50';
+                
+                const timestamp = log.timestamp ? new Date(log.timestamp.toDate()).toLocaleString() : 'Unknown';
+                const details = formatLogDetails(log);
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs font-medium rounded-full ${getActionColor(log.action)}">
+                            ${formatActionName(log.action)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-gray-900">${details}</div>
+                    </td>
+                    <td class="px-6 py-4 text-xs text-gray-500">${log.sessionId || 'N/A'}</td>
+                    <td class="px-6 py-4 text-xs text-gray-500">${timestamp}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        function formatActionName(action) {
+            const actionNames = {
+                'admin_login': 'Login',
+                'admin_logout': 'Logout',
+                'product_created': 'Product Created',
+                'product_updated': 'Product Updated',
+                'product_deleted': 'Product Deleted',
+                'all_products_deleted': 'All Products Deleted'
+            };
+            return actionNames[action] || action;
+        }
+
+        function getActionColor(action) {
+            const colors = {
+                'admin_login': 'bg-green-100 text-green-800',
+                'admin_logout': 'bg-gray-100 text-gray-800',
+                'product_created': 'bg-blue-100 text-blue-800',
+                'product_updated': 'bg-yellow-100 text-yellow-800',
+                'product_deleted': 'bg-red-100 text-red-800',
+                'all_products_deleted': 'bg-red-100 text-red-800'
+            };
+            return colors[action] || 'bg-gray-100 text-gray-800';
+        }
+
+        function formatLogDetails(log) {
+            if (!log.details) return 'No details';
+            
+            const details = log.details;
+            let formatted = '';
+            
+            switch (log.action) {
+                case 'admin_login':
+                    formatted = `User: ${details.username || 'Unknown'}`;
+                    break;
+                case 'admin_logout':
+                    const duration = details.sessionDuration ? Math.round(details.sessionDuration / 1000 / 60) : 0;
+                    formatted = `Session duration: ${duration} minutes`;
+                    break;
+                case 'product_created':
+                case 'product_updated':
+                case 'product_deleted':
+                    formatted = `Product: ${details.productName || 'Unknown'} (${details.category || 'Unknown'}) - LKR ${details.price || 0}`;
+                    break;
+                case 'all_products_deleted':
+                    formatted = `Deleted ${details.totalProducts || 0} products worth LKR ${details.totalValue || 0}`;
+                    break;
+                default:
+                    formatted = JSON.stringify(details);
+            }
+            
+            return formatted;
+        }
+
+        function updateStats() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const todayLogs = adminLogs.filter(log => {
+                if (!log.timestamp) return false;
+                const logDate = new Date(log.timestamp.toDate());
+                return logDate >= today;
+            });
+            
+            const productActions = adminLogs.filter(log => 
+                log.action.includes('product')
+            );
+            
+            const deletionActions = adminLogs.filter(log => 
+                log.action.includes('deleted')
+            );
+            
+            document.getElementById('totalLogs').textContent = adminLogs.length;
+            document.getElementById('todayLogs').textContent = todayLogs.length;
+            document.getElementById('productActions').textContent = productActions.length;
+            document.getElementById('deletionActions').textContent = deletionActions.length;
+        }
+
+        function refreshLogs() {
+            loadAdminLogs();
+        }
+
+        async function clearLogs() {
+            if (confirm('Are you sure you want to clear ALL admin logs? This action cannot be undone.')) {
+                try {
+                    await FirebaseService.clearAdminLogs();
+                    alert('All admin logs cleared successfully!');
+                    loadAdminLogs();
+                } catch (error) {
+                    console.error('Error clearing logs:', error);
+                    alert('Error clearing logs. Please try again.');
+                }
+            }
+        }
+
+        function exportLogs() {
+            const actionFilter = document.getElementById('actionFilter').value;
+            const filteredLogs = actionFilter ? adminLogs.filter(log => log.action === actionFilter) : adminLogs;
+            
+            let csv = 'Action,Details,Session ID,Timestamp\n';
+            
+            filteredLogs.forEach(log => {
+                const timestamp = log.timestamp ? new Date(log.timestamp.toDate()).toLocaleString() : 'Unknown';
+                const details = formatLogDetails(log);
+                const sessionId = log.sessionId || 'N/A';
+                
+                csv += `"${formatActionName(log.action)}","${details}","${sessionId}","${timestamp}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `admin-logs-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function showError(message) {
+            alert(message);
+        }
+
+        // Add event listener for action filter
+        document.getElementById('actionFilter').addEventListener('change', function() {
+            displayLogs();
+        });
+    </script>
+
+</body>
+</html> 

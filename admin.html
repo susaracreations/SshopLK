@@ -79,7 +79,10 @@
             </div>
             <div class="flex items-center space-x-4">
                 <span class="text-sm text-gray-600">Welcome, <span id="adminUsername">Admin</span></span>
-                <a href="admin-chat.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <a href="admin-logs.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    View Logs
+                </a>
+                <a href="admin-chat.html" class="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors">
                     Chat Management
                 </a>
                 <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
@@ -460,6 +463,21 @@
                 document.getElementById('adminUsername').textContent = username;
             }
             
+            // Generate session ID for logging
+            const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem('adminSessionId', sessionId);
+            
+            // Set admin as online
+            if (window.FirebaseService) {
+                FirebaseService.setAdminOnline();
+                // Log admin login
+                FirebaseService.logAdminAction('admin_login', {
+                    username: username,
+                    sessionId: sessionId,
+                    userAgent: navigator.userAgent
+                });
+            }
+            
             // Start inactivity monitoring
             startInactivityMonitoring();
         }
@@ -486,12 +504,30 @@
         }
 
         function logout() {
+            // Log admin logout
+            if (window.FirebaseService) {
+                FirebaseService.logAdminAction('admin_logout', {
+                    username: sessionStorage.getItem('adminUsername'),
+                    sessionId: sessionStorage.getItem('adminSessionId'),
+                    sessionDuration: Date.now() - parseInt(sessionStorage.getItem('adminLoginTime'))
+                });
+                FirebaseService.setAdminOffline();
+            }
+            
             // Clear session
             sessionStorage.clear();
             
             // Redirect to login page
             window.location.href = 'admin-login.html';
         }
+
+        // Auto-logout on tab close or inactivity
+        window.addEventListener('beforeunload', function() {
+            // Set admin as offline when leaving
+            if (window.FirebaseService) {
+                FirebaseService.setAdminOffline();
+            }
+        });
 
         // Load products on page load
         window.addEventListener('load', function() {
@@ -859,10 +895,24 @@
                     if (productId) {
                         // Update existing product
                         await FirebaseService.updateProduct(productId, productData);
+                        // Log product update
+                        FirebaseService.logAdminAction('product_updated', {
+                            productId: productId,
+                            productName: productData.name,
+                            category: productData.category,
+                            price: productData.price
+                        });
                         alert('Product updated successfully in Firebase!');
                     } else {
                         // Add new product
                         const newProductId = await FirebaseService.addProduct(productData);
+                        // Log product creation
+                        FirebaseService.logAdminAction('product_created', {
+                            productId: newProductId,
+                            productName: productData.name,
+                            category: productData.category,
+                            price: productData.price
+                        });
                         alert('Product added successfully to Firebase!');
                     }
                     // Reload products from Firebase
@@ -893,9 +943,19 @@
         async function deleteProduct(productId) {
             if (confirm('Are you sure you want to delete this product?')) {
                 try {
+                    // Get product details for logging
+                    const product = products.find(p => p.id === productId);
+                    
                     if (window.FirebaseService) {
                         // Delete from Firebase
                         await FirebaseService.deleteProduct(productId);
+                        // Log product deletion
+                        FirebaseService.logAdminAction('product_deleted', {
+                            productId: productId,
+                            productName: product ? product.name : 'Unknown',
+                            category: product ? product.category : 'Unknown',
+                            price: product ? product.price : 0
+                        });
                         alert('Product deleted successfully from Firebase!');
                         loadProducts(); // Reload products from Firebase
                     } else {
@@ -937,6 +997,13 @@
             if (confirm('Are you sure you want to delete ALL products? This action cannot be undone.')) {
                 try {
                     if (window.FirebaseService) {
+                        // Log bulk deletion
+                        FirebaseService.logAdminAction('all_products_deleted', {
+                            totalProducts: products.length,
+                            categories: [...new Set(products.map(p => p.category))],
+                            totalValue: products.reduce((sum, p) => sum + (p.price || 0), 0)
+                        });
+                        
                         // Delete all products from Firebase
                         await FirebaseService.deleteAllProducts();
                         alert('All products deleted successfully from Firebase!');
