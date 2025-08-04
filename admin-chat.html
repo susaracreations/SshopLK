@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Chat Management - S Shop LK</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Message animations */
+        .message-enter {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Unread indicator */
+        .unread-indicator {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <span class="text-2xl font-extrabold text-gray-900">Chat Management</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600">Welcome, <span id="adminUsername">Admin</span></span>
+                <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                    Logout
+                </button>
+                <a href="admin.html" class="text-blue-600 hover:text-blue-800">← Back to Admin</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-200px)]">
+            
+            <!-- Left Sidebar - Chat List -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl border border-gray-200 p-6 h-full">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-900">Active Chats</h2>
+                        <div class="flex space-x-2">
+                            <button onclick="refreshChats()" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                                Refresh
+                            </button>
+                            <button onclick="markAllAsRead()" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors">
+                                Mark All Read
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Stats -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="text-2xl font-bold text-blue-600" id="totalChats">0</div>
+                            <div class="text-sm text-blue-600">Total Chats</div>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <div class="text-2xl font-bold text-red-600" id="unreadChats">0</div>
+                            <div class="text-sm text-red-600">Unread</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat List -->
+                    <div id="chatList" class="space-y-2 max-h-[calc(100vh-400px)] overflow-y-auto">
+                        <!-- Chats will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Chat Messages -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl border border-gray-200 h-full flex flex-col">
+                    
+                    <!-- Chat Header -->
+                    <div class="bg-gray-50 px-6 py-4 rounded-t-xl border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900" id="currentChatUser">Select a chat</h3>
+                                    <p class="text-sm text-gray-500" id="currentChatInfo">No chat selected</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="archiveChat()" class="bg-gray-500 text-white px-3 py-1 rounded text-sm hover:bg-gray-600 transition-colors">
+                                    Archive
+                                </button>
+                                <button onclick="deleteChat()" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages Container -->
+                    <div class="flex-1 overflow-y-auto p-6" id="messagesContainer">
+                        <div class="text-center text-gray-500 py-8">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <p>Select a chat from the list to view messages</p>
+                        </div>
+                    </div>
+
+                    <!-- Message Input -->
+                    <div class="border-t border-gray-200 p-4" id="messageInputContainer" style="display: none;">
+                        <form id="messageForm" class="flex space-x-3">
+                            <div class="flex-1">
+                                <textarea 
+                                    id="messageInput" 
+                                    placeholder="Type your response..." 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                    rows="2"
+                                    maxlength="500"
+                                ></textarea>
+                            </div>
+                            <button 
+                                type="submit" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-300 flex items-center space-x-2"
+                                id="sendButton"
+                            >
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                                <span>Send</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        let currentChatId = null;
+        let chats = [];
+        let currentChat = null;
+
+        // Check authentication
+        window.addEventListener('load', function() {
+            checkAuth();
+            loadChats();
+            setupEventListeners();
+        });
+
+        function checkAuth() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            const username = sessionStorage.getItem('adminUsername');
+            document.getElementById('adminUsername').textContent = username || 'Admin';
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'admin-login.html';
+        }
+
+        async function loadChats() {
+            try {
+                console.log('Loading chats using FirebaseService...');
+                chats = await FirebaseService.getChats();
+                displayChats();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading chats:', error);
+                showError('Failed to load chats. Please check Firebase permissions.');
+                
+                // Show helpful error message
+                const chatList = document.getElementById('chatList');
+                chatList.innerHTML = `
+                    <div class="text-center text-red-500 py-8">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                        <p class="font-semibold mb-2">Firebase Permission Error</p>
+                        <p class="text-sm">Please update your Firebase security rules to allow access to the 'chats' collection.</p>
+                        <div class="mt-4 p-3 bg-gray-100 rounded text-xs">
+                            <p class="font-semibold mb-1">Add this to your firestore.rules:</p>
+                            <code class="block bg-gray-200 p-2 rounded">
+                                match /chats/{chatId} {<br>
+                                &nbsp;&nbsp;allow read, write: if true;<br>
+                                &nbsp;&nbsp;match /messages/{messageId} {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;allow read, write: if true;<br>
+                                &nbsp;&nbsp;}<br>
+                                }
+                            </code>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function displayChats() {
+            const chatList = document.getElementById('chatList');
+            chatList.innerHTML = '';
+
+            if (chats.length === 0) {
+                chatList.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <p>No active chats</p>
+                    </div>
+                `;
+                return;
+            }
+
+            chats.forEach(chat => {
+                const chatElement = document.createElement('div');
+                chatElement.className = `p-4 border rounded-lg cursor-pointer transition-colors hover:bg-gray-50 ${chat.id === currentChatId ? 'bg-blue-50 border-blue-200' : 'border-gray-200'}`;
+                
+                const lastMessage = chat.lastMessage || 'No messages yet';
+                const time = chat.lastMessageAt ? new Date(chat.lastMessageAt.toDate()).toLocaleString() : 'Unknown';
+                const unreadCount = chat.unreadCount || 0;
+                
+                chatElement.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2">
+                                <h4 class="font-semibold text-gray-900">${chat.userName || 'Unknown User'}</h4>
+                                ${unreadCount > 0 ? `<span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full unread-indicator">${unreadCount}</span>` : ''}
+                            </div>
+                            <p class="text-sm text-gray-600 truncate">${lastMessage}</p>
+                            <p class="text-xs text-gray-400">${time}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-gray-400">ID: ${chat.userId.substring(0, 8)}...</p>
+                        </div>
+                    </div>
+                `;
+                
+                chatElement.onclick = () => selectChat(chat);
+                chatList.appendChild(chatElement);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalChats').textContent = chats.length;
+            const unreadCount = chats.reduce((sum, chat) => sum + (chat.unreadCount || 0), 0);
+            document.getElementById('unreadChats').textContent = unreadCount;
+        }
+
+        async function selectChat(chat) {
+            currentChatId = chat.id;
+            currentChat = chat;
+            
+            // Update UI
+            document.getElementById('currentChatUser').textContent = chat.userName || 'Unknown User';
+            document.getElementById('currentChatInfo').textContent = `User ID: ${chat.userId.substring(0, 8)}... • Last active: ${chat.lastMessageAt ? new Date(chat.lastMessageAt.toDate()).toLocaleString() : 'Unknown'}`;
+            document.getElementById('messageInputContainer').style.display = 'block';
+            
+            // Load messages
+            await loadMessages();
+            
+            // Mark as read
+            if (chat.unreadCount > 0) {
+                await markChatAsRead(chat.id);
+            }
+            
+            // Update chat list display
+            displayChats();
+        }
+
+        async function loadMessages() {
+            if (!currentChatId) return;
+
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.innerHTML = '';
+
+            try {
+                const messages = await FirebaseService.getMessages(currentChatId);
+                messages.forEach(message => {
+                    displayMessage(message, message.id);
+                });
+                scrollToBottom();
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                messagesContainer.innerHTML = '<div class="text-center text-red-500 py-8">Failed to load messages</div>';
+            }
+        }
+
+        function displayMessage(messageData, messageId) {
+            const messagesContainer = document.getElementById('messagesContainer');
+            const isAdmin = messageData.sender === 'admin';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${isAdmin ? 'justify-end' : 'justify-start'} mb-4 message-enter`;
+            
+            const time = messageData.timestamp ? new Date(messageData.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now';
+            
+            messageDiv.innerHTML = `
+                <div class="flex items-start space-x-3 max-w-xs lg:max-w-md ${isAdmin ? 'flex-row-reverse space-x-reverse' : ''}">
+                    <div class="w-8 h-8 ${isAdmin ? 'bg-green-500' : 'bg-blue-500'} rounded-full flex items-center justify-center flex-shrink-0">
+                        ${isAdmin ? 
+                            '<svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>' :
+                            '<svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>'
+                        }
+                    </div>
+                    <div class="bg-${isAdmin ? 'green-600' : 'blue-600'} text-white rounded-lg px-4 py-3 shadow-lg">
+                        <p class="text-sm">${messageData.text}</p>
+                        <p class="text-xs opacity-75 mt-2">${isAdmin ? 'You' : 'User'} • ${time}</p>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+        }
+
+        function setupEventListeners() {
+            const messageForm = document.getElementById('messageForm');
+            const messageInput = document.getElementById('messageInput');
+
+            messageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                sendMessage();
+            });
+
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+        }
+
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message || !currentChatId) return;
+
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+            sendButton.innerHTML = `
+                <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Sending...</span>
+            `;
+
+            try {
+                // Add message to Firebase using service
+                await FirebaseService.addMessage(currentChatId, {
+                    text: message,
+                    sender: 'admin',
+                    userId: 'admin'
+                });
+
+                // Update chat last message time
+                await FirebaseService.updateChat(currentChatId, {
+                    lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastMessage: message
+                });
+
+                // Clear input
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+
+                // Reload messages
+                await loadMessages();
+
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showError('Failed to send message');
+            } finally {
+                sendButton.disabled = false;
+                sendButton.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                    <span>Send</span>
+                `;
+            }
+        }
+
+        async function markChatAsRead(chatId) {
+            try {
+                await FirebaseService.updateChat(chatId, {
+                    unreadCount: 0
+                });
+                
+                // Update local chat data
+                const chatIndex = chats.findIndex(chat => chat.id === chatId);
+                if (chatIndex !== -1) {
+                    chats[chatIndex].unreadCount = 0;
+                }
+            } catch (error) {
+                console.error('Error marking chat as read:', error);
+            }
+        }
+
+        async function markAllAsRead() {
+            try {
+                const batch = db.batch();
+                chats.forEach(chat => {
+                    if (chat.unreadCount > 0) {
+                        const ref = db.collection('chats').doc(chat.id);
+                        batch.update(ref, { unreadCount: 0 });
+                    }
+                });
+                await batch.commit();
+                
+                // Update local data
+                chats.forEach(chat => chat.unreadCount = 0);
+                displayChats();
+                updateStats();
+            } catch (error) {
+                console.error('Error marking all as read:', error);
+                showError('Failed to mark all as read');
+            }
+        }
+
+        async function archiveChat() {
+            if (!currentChatId) return;
+            
+            if (confirm('Are you sure you want to archive this chat?')) {
+                try {
+                    await FirebaseService.updateChat(currentChatId, {
+                        status: 'archived'
+                    });
+                    
+                    // Remove from local list
+                    chats = chats.filter(chat => chat.id !== currentChatId);
+                    displayChats();
+                    updateStats();
+                    
+                    // Clear current chat
+                    currentChatId = null;
+                    currentChat = null;
+                    document.getElementById('currentChatUser').textContent = 'Select a chat';
+                    document.getElementById('currentChatInfo').textContent = 'No chat selected';
+                    document.getElementById('messageInputContainer').style.display = 'none';
+                    document.getElementById('messagesContainer').innerHTML = `
+                        <div class="text-center text-gray-500 py-8">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <p>Select a chat from the list to view messages</p>
+                        </div>
+                    `;
+                } catch (error) {
+                    console.error('Error archiving chat:', error);
+                    showError('Failed to archive chat');
+                }
+            }
+        }
+
+        async function deleteChat() {
+            if (!currentChatId) return;
+            
+            if (confirm('Are you sure you want to delete this chat? This action cannot be undone.')) {
+                try {
+                    // Delete all messages first
+                    const messagesSnapshot = await db.collection('chats').doc(currentChatId)
+                        .collection('messages').get();
+                    
+                    const batch = db.batch();
+                    messagesSnapshot.docs.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    await batch.commit();
+                    
+                    // Delete the chat document
+                    await FirebaseService.deleteChat(currentChatId);
+                    
+                    // Remove from local list
+                    chats = chats.filter(chat => chat.id !== currentChatId);
+                    displayChats();
+                    updateStats();
+                    
+                    // Clear current chat
+                    currentChatId = null;
+                    currentChat = null;
+                    document.getElementById('currentChatUser').textContent = 'Select a chat';
+                    document.getElementById('currentChatInfo').textContent = 'No chat selected';
+                    document.getElementById('messageInputContainer').style.display = 'none';
+                    document.getElementById('messagesContainer').innerHTML = `
+                        <div class="text-center text-gray-500 py-8">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <p>Select a chat from the list to view messages</p>
+                        </div>
+                    `;
+                } catch (error) {
+                    console.error('Error deleting chat:', error);
+                    showError('Failed to delete chat');
+                }
+            }
+        }
+
+        function refreshChats() {
+            loadChats();
+        }
+
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showError(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+    </script>
+
+</body>
+</html> 

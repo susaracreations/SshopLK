@@ -319,6 +319,188 @@ const FirebaseService = {
       console.error('Error updating user data in Firebase:', error);
       throw error;
     }
+  },
+
+  // Chat Management Functions
+  async createChat(chatData) {
+    try {
+      console.log('Attempting to create chat in Firebase:', chatData);
+      const docRef = await db.collection('chats').add({
+        ...chatData,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
+        status: 'active',
+        unreadCount: 0
+      });
+      console.log('Successfully created chat with ID:', docRef.id);
+      return docRef.id;
+    } catch (error) {
+      console.error('Error creating chat in Firebase:', error);
+      throw error;
+    }
+  },
+
+  async getChats() {
+    try {
+      console.log('Attempting to fetch chats from Firebase...');
+      // Use a simpler query that doesn't require composite index
+      const snapshot = await db.collection('chats')
+        .orderBy('lastMessageAt', 'desc')
+        .get();
+      
+      const chats = [];
+      snapshot.forEach(doc => {
+        const chatData = doc.data();
+        // Filter active chats in JavaScript instead of Firestore query
+        if (chatData.status === 'active' || !chatData.status) {
+          chats.push({
+            id: doc.id,
+            ...chatData
+          });
+        }
+      });
+      console.log('Successfully fetched chats from Firebase:', chats);
+      return chats;
+    } catch (error) {
+      console.error('Error getting chats from Firebase:', error);
+      console.error('Error details:', {
+        code: error.code,
+        message: error.message,
+        stack: error.stack
+      });
+      
+      // If it's an index error, try a simpler query
+      if (error.code === 'failed-precondition') {
+        console.log('Trying simpler query without composite index...');
+        try {
+          const snapshot = await db.collection('chats').get();
+          const chats = [];
+          snapshot.forEach(doc => {
+            const chatData = doc.data();
+            if (chatData.status === 'active' || !chatData.status) {
+              chats.push({
+                id: doc.id,
+                ...chatData
+              });
+            }
+          });
+          // Sort by lastMessageAt in JavaScript
+          chats.sort((a, b) => {
+            if (!a.lastMessageAt || !b.lastMessageAt) return 0;
+            return b.lastMessageAt.toDate() - a.lastMessageAt.toDate();
+          });
+          console.log('Successfully fetched chats with fallback query:', chats);
+          return chats;
+        } catch (fallbackError) {
+          console.error('Fallback query also failed:', fallbackError);
+          return [];
+        }
+      }
+      
+      return [];
+    }
+  },
+
+  async getChat(chatId) {
+    try {
+      console.log('Attempting to fetch chat from Firebase:', chatId);
+      const doc = await db.collection('chats').doc(chatId).get();
+      if (doc.exists) {
+        const chatData = doc.data();
+        console.log('Successfully fetched chat from Firebase:', chatData);
+        return { id: doc.id, ...chatData };
+      } else {
+        console.log('No chat found in Firebase for:', chatId);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error getting chat from Firebase:', error);
+      return null;
+    }
+  },
+
+  async updateChat(chatId, chatData) {
+    try {
+      console.log('Attempting to update chat in Firebase:', chatId, chatData);
+      await db.collection('chats').doc(chatId).update(chatData);
+      console.log('Successfully updated chat in Firebase:', chatId);
+      return true;
+    } catch (error) {
+      console.error('Error updating chat in Firebase:', error);
+      throw error;
+    }
+  },
+
+  async deleteChat(chatId) {
+    try {
+      console.log('Attempting to delete chat from Firebase:', chatId);
+      await db.collection('chats').doc(chatId).delete();
+      console.log('Successfully deleted chat from Firebase:', chatId);
+      return true;
+    } catch (error) {
+      console.error('Error deleting chat from Firebase:', error);
+      throw error;
+    }
+  },
+
+  async addMessage(chatId, messageData) {
+    try {
+      console.log('Attempting to add message to Firebase:', chatId, messageData);
+      const docRef = await db.collection('chats').doc(chatId)
+        .collection('messages').add({
+          ...messageData,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      console.log('Successfully added message with ID:', docRef.id);
+      return docRef.id;
+    } catch (error) {
+      console.error('Error adding message to Firebase:', error);
+      throw error;
+    }
+  },
+
+  async getMessages(chatId) {
+    try {
+      console.log('Attempting to fetch messages from Firebase:', chatId);
+      const snapshot = await db.collection('chats').doc(chatId)
+        .collection('messages')
+        .orderBy('timestamp', 'asc')
+        .get();
+      
+      const messages = [];
+      snapshot.forEach(doc => {
+        messages.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      console.log('Successfully fetched messages from Firebase:', messages);
+      return messages;
+    } catch (error) {
+      console.error('Error getting messages from Firebase:', error);
+      return [];
+    }
+  },
+
+  // Real-time listener for chat messages
+  onChatMessagesChange(chatId, callback) {
+    console.log('Setting up real-time listener for chat messages:', chatId);
+    return db.collection('chats').doc(chatId)
+      .collection('messages')
+      .orderBy('timestamp', 'asc')
+      .onSnapshot(snapshot => {
+        const messages = [];
+        snapshot.forEach(doc => {
+          messages.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        console.log('Real-time chat messages update:', messages);
+        callback(messages);
+      }, error => {
+        console.error('Error in real-time chat listener:', error);
+      });
   }
 };
 

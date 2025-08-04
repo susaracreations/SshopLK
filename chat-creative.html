@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Chat - S Shop LK</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .message-enter {
+            animation: slideInUp 0.5s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+            to { box-shadow: 0 0 20px rgba(59, 130, 246, 0.8); }
+        }
+        
+        .bounce-hover:hover {
+            animation: bounce 0.6s ease-in-out;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #64748b;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen relative overflow-hidden">
+
+    <!-- Header -->
+    <header class="glass border-b border-white/20 relative z-10">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="floating">
+                    <svg class="h-10 w-10 text-blue-300 neon-glow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-extrabold text-white neon-glow">✨ Creative Chat ✨</h1>
+                    <p class="text-blue-200 text-sm">Real-time support with style</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 glass px-3 py-2 rounded-full">
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span id="userInfo" class="text-sm text-white">Welcome, Guest</span>
+                </div>
+                <a href="index.html" class="glass px-4 py-2 rounded-full text-white hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Back to Website</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Chat Container -->
+    <main class="container mx-auto px-4 py-8 max-w-5xl relative z-10">
+        <div class="glass rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+            
+            <!-- Chat Header -->
+            <div class="bg-gradient-to-r from-blue-600/20 to-purple-600/20 px-8 py-6 border-b border-white/20">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center pulse-glow">
+                                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white neon-glow">🎉 S Shop LK Admin</h2>
+                            <p class="text-blue-200">🟢 Online & Ready to Help</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="glass px-4 py-2 rounded-full">
+                            <p class="text-sm text-white font-semibold">⚡ Response time: Usually within 5 minutes</p>
+                            <p class="text-xs text-blue-200">🕐 Available 24/7</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="h-96 overflow-y-auto p-6 bg-gradient-to-b from-white/5 to-transparent" id="messagesContainer">
+                <!-- Welcome Message -->
+                <div class="flex justify-start mb-6">
+                    <div class="flex items-start space-x-3 max-w-xs lg:max-w-md">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <div class="glass rounded-2xl px-6 py-4 shadow-xl">
+                            <p class="text-white text-sm leading-relaxed">
+                                👋 <strong>Hello there!</strong> Welcome to S Shop LK's creative support chat! I'm here to help you with anything you need. What can I assist you with today? ✨
+                            </p>
+                            <div class="flex items-center justify-between mt-3">
+                                <p class="text-xs text-blue-200">Admin</p>
+                                <p class="text-xs text-blue-200">Just now</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div id="typingIndicator" class="hidden px-6 pb-4">
+                <div class="flex items-start space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <div class="glass rounded-2xl px-6 py-4">
+                        <div class="flex items-center gap-2">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Input -->
+            <div class="border-t border-white/20 p-6 bg-gradient-to-t from-white/5 to-transparent">
+                <form id="messageForm" class="flex space-x-4">
+                    <div class="flex-1 relative">
+                        <textarea 
+                            id="messageInput" 
+                            placeholder="Type your message here... ✨" 
+                            class="w-full px-6 py-4 glass rounded-2xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none transition-all duration-300"
+                            rows="2"
+                            maxlength="500"
+                        ></textarea>
+                        <div class="absolute bottom-3 right-3 text-xs text-blue-200 glass px-2 py-1 rounded-full">
+                            <span id="charCount">0</span>/500
+                        </div>
+                    </div>
+                    <button 
+                        type="submit" 
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105 pulse-glow"
+                        id="sendButton"
+                    >
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                        <span>Send</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <button onclick="sendQuickMessage('I want to buy a product')" class="glass hover:bg-white/20 transition-all duration-300 p-6 rounded-2xl text-left group bounce-hover">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">🛒 Buy Products</h3>
+                        <p class="text-blue-200 text-sm">Ask about purchasing</p>
+                    </div>
+                </div>
+            </button>
+            
+            <button onclick="sendQuickMessage('I need help with my order')" class="glass hover:bg-white/20 transition-all duration-300 p-6 rounded-2xl text-left group bounce-hover">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">🆘 Order Help</h3>
+                        <p class="text-blue-200 text-sm">Get order support</p>
+                    </div>
+                </div>
+            </button>
+            
+            <button onclick="sendQuickMessage('What are your prices?')" class="glass hover:bg-white/20 transition-all duration-300 p-6 rounded-2xl text-left group bounce-hover">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">💰 Pricing</h3>
+                        <p class="text-blue-200 text-sm">Ask about prices</p>
+                    </div>
+                </div>
+            </button>
+        </div>
+
+        <!-- Fun Stats -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="glass p-4 rounded-xl text-center">
+                <div class="text-2xl font-bold text-white">⚡</div>
+                <div class="text-sm text-blue-200">Fast Response</div>
+            </div>
+            <div class="glass p-4 rounded-xl text-center">
+                <div class="text-2xl font-bold text-white">🛡️</div>
+                <div class="text-sm text-blue-200">Secure Chat</div>
+            </div>
+            <div class="glass p-4 rounded-xl text-center">
+                <div class="text-2xl font-bold text-white">🎯</div>
+                <div class="text-sm text-blue-200">24/7 Support</div>
+            </div>
+            <div class="glass p-4 rounded-xl text-center">
+                <div class="text-2xl font-bold text-white">💬</div>
+                <div class="text-sm text-blue-200">Real-time</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        let currentUserId = null;
+        let currentChatId = null;
+
+        window.addEventListener('load', function() {
+            initializeChat();
+            setupEventListeners();
+        });
+
+        function initializeChat() {
+            currentUserId = localStorage.getItem('chatUserId');
+            if (!currentUserId) {
+                currentUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('chatUserId', currentUserId);
+            }
+
+            document.getElementById('userInfo').textContent = `User ID: ${currentUserId.substring(0, 8)}...`;
+            getOrCreateChat();
+        }
+
+        async function getOrCreateChat() {
+            try {
+                const existingChats = await FirebaseService.getChats();
+                const userChat = existingChats.find(chat => chat.userId === currentUserId);
+
+                if (userChat) {
+                    currentChatId = userChat.id;
+                    loadMessages();
+                } else {
+                    const chatData = {
+                        userId: currentUserId,
+                        userName: `User ${currentUserId.substring(0, 8)}`,
+                        status: 'active'
+                    };
+                    currentChatId = await FirebaseService.createChat(chatData);
+                }
+
+                setupMessageListener();
+            } catch (error) {
+                console.error('Error initializing chat:', error);
+                showError('Failed to initialize chat. Please refresh the page.');
+            }
+        }
+
+        function setupMessageListener() {
+            if (!currentChatId) return;
+
+            db.collection('chats').doc(currentChatId)
+                .collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot(snapshot => {
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            displayMessage(change.doc.data(), change.doc.id);
+                        }
+                    });
+                }, error => {
+                    console.error('Error listening to messages:', error);
+                });
+        }
+
+        function setupEventListeners() {
+            const messageForm = document.getElementById('messageForm');
+            const messageInput = document.getElementById('messageInput');
+            const charCount = document.getElementById('charCount');
+
+            messageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                sendMessage();
+            });
+
+            messageInput.addEventListener('input', function() {
+                const length = this.value.length;
+                charCount.textContent = length;
+                
+                if (length > 450) {
+                    charCount.classList.add('text-red-400');
+                } else {
+                    charCount.classList.remove('text-red-400');
+                }
+            });
+
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+        }
+
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message || !currentChatId) return;
+
+            const sendButton = document.getElementById('sendButton');
+            sendButton.disabled = true;
+            sendButton.innerHTML = `
+                <svg class="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Sending...</span>
+            `;
+
+            try {
+                await FirebaseService.addMessage(currentChatId, {
+                    text: message,
+                    sender: 'user',
+                    userId: currentUserId
+                });
+
+                await FirebaseService.updateChat(currentChatId, {
+                    lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastMessage: message
+                });
+
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+                document.getElementById('charCount').textContent = '0';
+
+                setTimeout(() => {
+                    showTypingIndicator();
+                }, 1000);
+
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    sendAdminResponse(message);
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showError('Failed to send message. Please try again.');
+            } finally {
+                sendButton.disabled = false;
+                sendButton.innerHTML = `
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                    <span>Send</span>
+                `;
+            }
+        }
+
+        function sendQuickMessage(message) {
+            const messageInput = document.getElementById('messageInput');
+            messageInput.value = message;
+            messageInput.focus();
+            
+            messageInput.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                messageInput.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        function showTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            indicator.classList.remove('hidden');
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            indicator.classList.add('hidden');
+        }
+
+        function sendAdminResponse(userMessage) {
+            const responses = {
+                'I want to buy a product': '🎉 Great! I can help you with that. What specific product are you interested in? You can browse our products on the main website or tell me what you\'re looking for. I\'m here to make your shopping experience amazing!',
+                'I need help with my order': '🆘 I\'m here to help with your order! Could you please provide your order number or tell me what specific issue you\'re experiencing? I\'ll get this sorted out for you right away.',
+                'What are your prices?': '💰 Our prices vary by product and we always offer competitive rates! You can check our current prices on the main website, or tell me what specific product you\'re interested in and I can provide you with the exact price. We also have special deals running!',
+                'default': '✨ Thank you for your message! I\'ll get back to you as soon as possible. In the meantime, you can browse our amazing products on the main website. Have a fantastic day! 🌟'
+            };
+
+            let response = responses.default;
+            for (const [key, value] of Object.entries(responses)) {
+                if (userMessage.toLowerCase().includes(key.toLowerCase())) {
+                    response = value;
+                    break;
+                }
+            }
+
+            FirebaseService.addMessage(currentChatId, {
+                text: response,
+                sender: 'admin',
+                userId: 'admin'
+            }).catch(error => {
+                console.error('Error sending admin response:', error);
+            });
+        }
+
+        async function loadMessages() {
+            if (!currentChatId) return;
+
+            try {
+                const messages = await FirebaseService.getMessages(currentChatId);
+                messages.forEach(message => {
+                    displayMessage(message, message.id);
+                });
+                scrollToBottom();
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+
+        function displayMessage(messageData, messageId) {
+            const messagesContainer = document.getElementById('messagesContainer');
+            const isUser = messageData.sender === 'user';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'} mb-6 message-enter`;
+            
+            const time = messageData.timestamp ? new Date(messageData.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now';
+            
+            messageDiv.innerHTML = `
+                <div class="flex items-start space-x-3 max-w-xs lg:max-w-md ${isUser ? 'flex-row-reverse space-x-reverse' : ''}">
+                    <div class="w-10 h-10 ${isUser ? 'bg-gradient-to-br from-purple-500 to-pink-600' : 'bg-gradient-to-br from-blue-500 to-purple-600'} rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                        ${isUser ? 
+                            '<svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>' :
+                            '<svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>'
+                        }
+                    </div>
+                    <div class="glass rounded-2xl px-6 py-4 shadow-xl">
+                        <p class="text-white text-sm leading-relaxed">${messageData.text}</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <p class="text-xs text-blue-200">${isUser ? 'You' : 'Admin'}</p>
+                            <p class="text-xs text-blue-200">${time}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showError(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 glass text-white px-6 py-3 rounded-2xl shadow-lg z-50 border border-red-400/50';
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+    </script>
+
+</body>
+</html> 
