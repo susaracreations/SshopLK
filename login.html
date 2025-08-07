@@ -58,6 +58,17 @@
             </button>
         </form>
 
+        <!-- Google Sign-In Button -->
+        <div class="mt-4">
+            <button id="googleSignInBtn" type="button" class="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg shadow hover:bg-gray-50 transition-colors duration-200">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
+                Sign in with Google
+            </button>
+        </div>
+
+        <!-- Error Message -->
+        <div id="googleErrorMessage" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center"></div>
+
         <!-- Sign Up Link -->
         <div class="text-center mt-6">
             <p class="text-sm text-gray-600">
@@ -345,6 +356,58 @@
         // Auto-focus email field
         document.getElementById('email').focus();
     </script>
+
+    <script>
+// Google Sign-In logic
+const googleSignInBtn = document.getElementById('googleSignInBtn');
+const googleErrorMessage = document.getElementById('googleErrorMessage');
+if (googleSignInBtn) {
+    googleSignInBtn.onclick = async function() {
+        googleErrorMessage.classList.add('hidden');
+        try {
+            if (window.firebase && firebase.auth) {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await firebase.auth().signInWithPopup(provider);
+                
+                // Store user info in Firestore if FirebaseService is available
+                if (result.user && window.FirebaseService) {
+                    try {
+                        // Check if user already exists in Firestore
+                        const existingUser = await FirebaseService.getUser(result.user.uid);
+                        if (!existingUser) {
+                            // Store new Google user in Firestore
+                            await FirebaseService.addUser({
+                                uid: result.user.uid,
+                                username: result.user.displayName || result.user.email.split('@')[0],
+                                email: result.user.email,
+                                displayName: result.user.displayName,
+                                photoURL: result.user.photoURL,
+                                createdAt: new Date().toISOString(),
+                                provider: 'google'
+                            });
+                        }
+                    } catch (firestoreError) {
+                        console.log('Could not store user data in Firestore:', firestoreError);
+                        // Continue with login even if Firestore fails
+                    }
+                }
+                
+                window.location.href = 'index.html';
+            } else {
+                throw new Error('Firebase Auth not available');
+            }
+        } catch (error) {
+            console.error('Google sign-in error:', error);
+            let errorText = 'Google sign-in failed. Please try again.';
+            if (error.code === 'auth/popup-closed-by-user') {
+                errorText = 'Sign-in popup closed. Please try again.';
+            }
+            googleErrorMessage.textContent = errorText;
+            googleErrorMessage.classList.remove('hidden');
+        }
+    };
+}
+</script>
 
 </body>
 </html> 

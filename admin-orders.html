@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Orders - S Shop LK</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        
+        .order-card {
+            transition: all 0.3s ease;
+        }
+        
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-pending { background-color: #fef3c7; color: #92400e; }
+        .status-processing { background-color: #dbeafe; color: #1e40af; }
+        .status-completed { background-color: #d1fae5; color: #065f46; }
+        .status-cancelled { background-color: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+                <span class="text-2xl font-extrabold text-gray-900">Orders Management</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600">Welcome, <span id="adminUsername">Admin</span></span>
+                <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                    Logout
+                </button>
+                <a href="index.html" class="text-blue-600 hover:text-blue-800">← Back to Website</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-8 py-2">
+                <a href="admin-dashboard.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Dashboard
+                </a>
+                <a href="admin.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Products
+                </a>
+                <a href="admin-orders.html" class="text-blue-600 border-b-2 border-blue-600 py-2 px-1 text-sm font-medium">
+                    Orders
+                </a>
+                <a href="admin-customers.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Customers
+                </a>
+                <a href="admin-chat.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Chat
+                </a>
+                <a href="admin-logs.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Logs
+                </a>
+                <a href="admin-settings.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Settings
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Total Orders</p>
+                        <p class="text-3xl font-bold text-gray-900" id="totalOrders">0</p>
+                    </div>
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Pending</p>
+                        <p class="text-3xl font-bold text-yellow-600" id="pendingOrders">0</p>
+                    </div>
+                    <div class="p-3 bg-yellow-100 rounded-full">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Processing</p>
+                        <p class="text-3xl font-bold text-blue-600" id="processingOrders">0</p>
+                    </div>
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Completed</p>
+                        <p class="text-3xl font-bold text-green-600" id="completedOrders">0</p>
+                    </div>
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Actions -->
+        <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+                    <select id="statusFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    
+                    <input type="text" id="searchOrders" placeholder="Search orders..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    
+                    <select id="dateFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button onclick="addSampleOrder()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                        Add Sample Order
+                    </button>
+                    <button onclick="exportOrders()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                        Export CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders List -->
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Orders</h2>
+                <div class="text-sm text-gray-600">
+                    Showing <span id="showingCount">0</span> of <span id="totalCount">0</span> orders
+                </div>
+            </div>
+            
+            <div id="ordersList" class="space-y-4">
+                <!-- Orders will be loaded here -->
+            </div>
+            
+            <!-- No Orders Message -->
+            <div id="noOrdersMessage" class="text-center py-12 hidden">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
+                <p class="mt-1 text-sm text-gray-500">Get started by creating your first order.</p>
+                <div class="mt-6">
+                    <button onclick="addSampleOrder()" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                        Add Sample Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Order Details Modal -->
+    <div id="orderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Order Details</h3>
+                    <button onclick="closeOrderModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="orderModalContent">
+                    <!-- Order details will be loaded here -->
+                </div>
+                
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button onclick="closeOrderModal()" class="bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-colors">
+                        Close
+                    </button>
+                    <button onclick="updateOrderStatus()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                        Update Status
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        let orders = [];
+        let currentOrderId = null;
+
+        // Check authentication
+        window.addEventListener('load', function() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = 'admin-login-google.html';
+                return;
+            }
+            
+            // Set admin username
+            const adminUsername = sessionStorage.getItem('adminUsername') || 'Admin';
+            document.getElementById('adminUsername').textContent = adminUsername;
+            
+            // Initialize orders page
+            initializeOrders();
+        });
+
+        async function initializeOrders() {
+            try {
+                // Load orders from localStorage
+                loadOrders();
+                
+                // Set up event listeners
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Error initializing orders:', error);
+            }
+        }
+
+        function loadOrders() {
+            try {
+                // Load orders from localStorage
+                orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                
+                // If no orders, add some sample orders
+                if (orders.length === 0) {
+                    addSampleOrders();
+                }
+                
+                updateOrdersDisplay();
+                updateStatistics();
+                
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        function addSampleOrders() {
+            const sampleOrders = [
+                {
+                    id: 'ORD-001',
+                    customerName: 'John Doe',
+                    customerEmail: 'john@example.com',
+                    customerPhone: '+94 71 123 4567',
+                    productName: 'GTA V Premium Edition',
+                    productId: 'gta-v-premium',
+                    price: 2500,
+                    status: 'pending',
+                    orderDate: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+                    paymentMethod: 'Credit Card',
+                    deliveryMethod: 'Email',
+                    notes: 'Customer requested quick delivery'
+                },
+                {
+                    id: 'ORD-002',
+                    customerName: 'Jane Smith',
+                    customerEmail: 'jane@example.com',
+                    customerPhone: '+94 77 987 6543',
+                    productName: 'Microsoft Office 365',
+                    productId: 'office-365',
+                    price: 1800,
+                    status: 'processing',
+                    orderDate: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+                    paymentMethod: 'PayPal',
+                    deliveryMethod: 'WhatsApp',
+                    notes: 'License key delivery'
+                },
+                {
+                    id: 'ORD-003',
+                    customerName: 'Mike Johnson',
+                    customerEmail: 'mike@example.com',
+                    customerPhone: '+94 76 555 1234',
+                    productName: 'Steam Gift Card',
+                    productId: 'steam-gift-card',
+                    price: 1000,
+                    status: 'completed',
+                    orderDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+                    paymentMethod: 'Bank Transfer',
+                    deliveryMethod: 'Email',
+                    notes: 'Successfully delivered'
+                }
+            ];
+            
+            orders = sampleOrders;
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+
+        function addSampleOrder() {
+            // Get real products for order creation
+            const products = JSON.parse(localStorage.getItem('sShopProducts') || '[]');
+            
+            if (products.length === 0) {
+                alert('No products available. Please add some products first.');
+                return;
+            }
+            
+            // Select a random product
+            const randomProduct = products[Math.floor(Math.random() * products.length)];
+            
+            const newOrder = {
+                id: `ORD-${String(orders.length + 1).padStart(3, '0')}`,
+                customerName: 'New Customer',
+                customerEmail: 'customer@example.com',
+                customerPhone: '+94 70 000 0000',
+                productName: randomProduct.name,
+                productId: randomProduct.id,
+                price: randomProduct.price,
+                status: 'pending',
+                orderDate: new Date().toISOString(),
+                paymentMethod: 'Credit Card',
+                deliveryMethod: randomProduct.deliveryMethod || 'Email',
+                notes: 'Sample order for testing'
+            };
+            
+            orders.unshift(newOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            updateOrdersDisplay();
+            updateStatistics();
+            
+            // Log admin action
+            if (window.FirebaseService) {
+                FirebaseService.logAdminAction('order_created', {
+                    orderId: newOrder.id,
+                    productName: newOrder.productName,
+                    adminEmail: sessionStorage.getItem('adminEmail')
+                });
+            }
+        }
+
+        function createOrderFromProduct(productId) {
+            const products = JSON.parse(localStorage.getItem('sShopProducts') || '[]');
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) {
+                alert('Product not found!');
+                return;
+            }
+            
+            // Prompt for customer details
+            const customerName = prompt('Enter customer name:');
+            if (!customerName) return;
+            
+            const customerEmail = prompt('Enter customer email:');
+            if (!customerEmail) return;
+            
+            const customerPhone = prompt('Enter customer phone:');
+            if (!customerPhone) return;
+            
+            const newOrder = {
+                id: `ORD-${String(orders.length + 1).padStart(3, '0')}`,
+                customerName: customerName,
+                customerEmail: customerEmail,
+                customerPhone: customerPhone,
+                productName: product.name,
+                productId: product.id,
+                price: product.price,
+                status: 'pending',
+                orderDate: new Date().toISOString(),
+                paymentMethod: 'Credit Card',
+                deliveryMethod: product.deliveryMethod || 'Email',
+                notes: `Order created from product: ${product.name}`
+            };
+            
+            orders.unshift(newOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            updateOrdersDisplay();
+            updateStatistics();
+            
+            // Log admin action
+            if (window.FirebaseService) {
+                FirebaseService.logAdminAction('order_created', {
+                    orderId: newOrder.id,
+                    productName: newOrder.productName,
+                    adminEmail: sessionStorage.getItem('adminEmail')
+                });
+            }
+            
+            alert(`Order created successfully!\nOrder ID: ${newOrder.id}\nProduct: ${product.name}\nCustomer: ${customerName}`);
+        }
+
+        function updateOrdersDisplay() {
+            const ordersList = document.getElementById('ordersList');
+            const noOrdersMessage = document.getElementById('noOrdersMessage');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = '';
+                noOrdersMessage.classList.remove('hidden');
+                return;
+            }
+            
+            noOrdersMessage.classList.add('hidden');
+            
+            const filteredOrders = filterOrders();
+            
+            ordersList.innerHTML = filteredOrders.map(order => `
+                <div class="order-card bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">${order.id}</h3>
+                                <span class="px-2 py-1 text-xs font-medium rounded-full status-${order.status}">
+                                    ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                </span>
+                            </div>
+                            <p class="text-gray-600 mb-1"><strong>Customer:</strong> ${order.customerName}</p>
+                            <p class="text-gray-600 mb-1"><strong>Product:</strong> ${order.productName}</p>
+                            <p class="text-gray-600 mb-1"><strong>Price:</strong> LKR ${order.price.toLocaleString()}</p>
+                            <p class="text-gray-600 mb-1"><strong>Date:</strong> ${new Date(order.orderDate).toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="viewOrder('${order.id}')" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                                View
+                            </button>
+                            <button onclick="editOrder('${order.id}')" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors">
+                                Edit
+                            </button>
+                            <button onclick="deleteOrder('${order.id}')" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('showingCount').textContent = filteredOrders.length;
+            document.getElementById('totalCount').textContent = orders.length;
+        }
+
+        function filterOrders() {
+            let filtered = [...orders];
+            
+            const statusFilter = document.getElementById('statusFilter').value;
+            const searchTerm = document.getElementById('searchOrders').value.toLowerCase();
+            const dateFilter = document.getElementById('dateFilter').value;
+            
+            // Status filter
+            if (statusFilter) {
+                filtered = filtered.filter(order => order.status === statusFilter);
+            }
+            
+            // Search filter
+            if (searchTerm) {
+                filtered = filtered.filter(order => 
+                    order.id.toLowerCase().includes(searchTerm) ||
+                    order.customerName.toLowerCase().includes(searchTerm) ||
+                    order.productName.toLowerCase().includes(searchTerm) ||
+                    order.customerEmail.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Date filter
+            if (dateFilter) {
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                const monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+                
+                filtered = filtered.filter(order => {
+                    const orderDate = new Date(order.orderDate);
+                    switch (dateFilter) {
+                        case 'today':
+                            return orderDate >= today;
+                        case 'week':
+                            return orderDate >= weekAgo;
+                        case 'month':
+                            return orderDate >= monthAgo;
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            return filtered;
+        }
+
+        function updateStatistics() {
+            const total = orders.length;
+            const pending = orders.filter(order => order.status === 'pending').length;
+            const processing = orders.filter(order => order.status === 'processing').length;
+            const completed = orders.filter(order => order.status === 'completed').length;
+            
+            document.getElementById('totalOrders').textContent = total;
+            document.getElementById('pendingOrders').textContent = pending;
+            document.getElementById('processingOrders').textContent = processing;
+            document.getElementById('completedOrders').textContent = completed;
+            
+            // Update dashboard statistics if on dashboard
+            if (window.parent && window.parent.updateDashboardStats) {
+                window.parent.updateDashboardStats();
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('statusFilter').addEventListener('change', updateOrdersDisplay);
+            document.getElementById('searchOrders').addEventListener('input', updateOrdersDisplay);
+            document.getElementById('dateFilter').addEventListener('change', updateOrdersDisplay);
+        }
+
+        function viewOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            currentOrderId = orderId;
+            
+            const modalContent = document.getElementById('orderModalContent');
+            modalContent.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Order Information</h4>
+                        <div class="space-y-2 text-sm">
+                            <p><strong>Order ID:</strong> ${order.id}</p>
+                            <p><strong>Status:</strong> 
+                                <select id="orderStatus" class="ml-2 px-2 py-1 border rounded">
+                                    <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+                                    <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                    <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </p>
+                            <p><strong>Order Date:</strong> ${new Date(order.orderDate).toLocaleString()}</p>
+                            <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
+                            <p><strong>Delivery Method:</strong> ${order.deliveryMethod}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Customer Information</h4>
+                        <div class="space-y-2 text-sm">
+                            <p><strong>Name:</strong> ${order.customerName}</p>
+                            <p><strong>Email:</strong> ${order.customerEmail}</p>
+                            <p><strong>Phone:</strong> ${order.customerPhone}</p>
+                        </div>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2 mt-4">Product Information</h4>
+                        <div class="space-y-2 text-sm">
+                            <p><strong>Product:</strong> ${order.productName}</p>
+                            <p><strong>Price:</strong> LKR ${order.price.toLocaleString()}</p>
+                        </div>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2 mt-4">Notes</h4>
+                        <textarea id="orderNotes" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3">${order.notes || ''}</textarea>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('orderModal').classList.remove('hidden');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+            currentOrderId = null;
+        }
+
+        function updateOrderStatus() {
+            if (!currentOrderId) return;
+            
+            const order = orders.find(o => o.id === currentOrderId);
+            if (!order) return;
+            
+            const newStatus = document.getElementById('orderStatus').value;
+            const newNotes = document.getElementById('orderNotes').value;
+            const oldStatus = order.status;
+            
+            order.status = newStatus;
+            order.notes = newNotes;
+            order.updatedAt = new Date().toISOString();
+            
+            localStorage.setItem('orders', JSON.stringify(orders));
+            updateOrdersDisplay();
+            updateStatistics();
+            closeOrderModal();
+            
+            // Log admin action
+            if (window.FirebaseService) {
+                FirebaseService.logAdminAction('order_status_updated', {
+                    orderId: order.id,
+                    oldStatus: oldStatus,
+                    newStatus: newStatus,
+                    adminEmail: sessionStorage.getItem('adminEmail')
+                });
+            }
+            
+            alert(`Order status updated from ${oldStatus} to ${newStatus}`);
+        }
+
+        function editOrder(orderId) {
+            viewOrder(orderId);
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm('Are you sure you want to delete this order?')) {
+                orders = orders.filter(order => order.id !== orderId);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                updateOrdersDisplay();
+                updateStatistics();
+            }
+        }
+
+        function exportOrders() {
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + "Order ID,Customer Name,Email,Phone,Product,Price,Status,Order Date,Payment Method,Delivery Method,Notes\n"
+                + orders.map(order => 
+                    `${order.id},"${order.customerName}","${order.customerEmail}","${order.customerPhone}","${order.productName}",${order.price},${order.status},"${new Date(order.orderDate).toLocaleDateString()}","${order.paymentMethod}","${order.deliveryMethod}","${order.notes || ''}"`
+                ).join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "orders.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'admin-login-google.html';
+        }
+    </script>
+
+</body>
+</html> 

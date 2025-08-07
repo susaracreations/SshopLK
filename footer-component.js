@@ -1,3 +1,4 @@
+
 // Shared Footer Component for S Shop LK
 // This component provides consistent footer functionality across all pages
 

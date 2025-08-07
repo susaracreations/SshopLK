@@ -22,7 +22,7 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
                 <span class="text-2xl font-extrabold text-gray-900">Admin Logs</span>
             </div>
@@ -37,10 +37,39 @@
                 <button onclick="logout()" class="bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
                     Logout
                 </button>
-                <a href="admin.html" class="text-blue-600 hover:text-blue-800">← Back to Admin</a>
+                <a href="admin-dashboard.html" class="text-blue-600 hover:text-blue-800">← Back to Dashboard</a>
             </div>
         </div>
     </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-8 py-2">
+                <a href="admin-dashboard.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Dashboard
+                </a>
+                <a href="admin.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Products
+                </a>
+                <a href="admin-orders.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Orders
+                </a>
+                <a href="admin-customers.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Customers
+                </a>
+                <a href="admin-chat.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Chat
+                </a>
+                <a href="admin-logs.html" class="text-blue-600 border-b-2 border-blue-600 py-2 px-1 text-sm font-medium">
+                    Logs
+                </a>
+                <a href="admin-settings.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Settings
+                </a>
+            </div>
+        </div>
+    </nav>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">

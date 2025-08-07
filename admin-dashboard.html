@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - S Shop LK</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .quick-action-card {
+            transition: all 0.3s ease;
+        }
+        
+        .quick-action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-container {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span class="text-2xl font-extrabold text-gray-900">Admin Dashboard</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600">Welcome, <span id="adminUsername">Admin</span></span>
+                <div class="text-sm text-gray-500" id="currentTime"></div>
+                <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                    Logout
+                </button>
+                <a href="index.html" class="text-blue-600 hover:text-blue-800">← Back to Website</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-8 py-2">
+                <a href="admin-dashboard.html" class="text-blue-600 border-b-2 border-blue-600 py-2 px-1 text-sm font-medium">
+                    Dashboard
+                </a>
+                <a href="admin.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Products
+                </a>
+                <a href="admin-orders.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Orders
+                </a>
+                <a href="admin-customers.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Customers
+                </a>
+                <a href="admin-chat.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Chat
+                </a>
+                <a href="admin-logs.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Logs
+                </a>
+                <a href="admin-settings.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                    Settings
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card text-white p-6 rounded-xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm font-medium">Total Products</p>
+                        <p class="text-3xl font-bold" id="totalProducts">0</p>
+                    </div>
+                    <div class="p-3 bg-white bg-opacity-20 rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card text-white p-6 rounded-xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm font-medium">Total Orders</p>
+                        <p class="text-3xl font-bold" id="totalOrders">0</p>
+                    </div>
+                    <div class="p-3 bg-white bg-opacity-20 rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card text-white p-6 rounded-xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm font-medium">Active Chats</p>
+                        <p class="text-3xl font-bold" id="activeChats">0</p>
+                    </div>
+                    <div class="p-3 bg-white bg-opacity-20 rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card text-white p-6 rounded-xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm font-medium">Today's Revenue</p>
+                        <p class="text-3xl font-bold" id="todayRevenue">LKR 0</p>
+                    </div>
+                    <div class="p-3 bg-white bg-opacity-20 rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="quick-action-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-blue-100 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Add Product</h3>
+                        <p class="text-gray-600 text-sm">Create a new product listing</p>
+                    </div>
+                </div>
+                <a href="admin.html" class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Go to Products
+                </a>
+            </div>
+
+            <div class="quick-action-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Chat Management</h3>
+                        <p class="text-gray-600 text-sm">Manage customer conversations</p>
+                    </div>
+                </div>
+                <a href="admin-chat.html" class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                    View Chats
+                </a>
+            </div>
+
+            <div class="quick-action-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-purple-100 rounded-lg">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">View Logs</h3>
+                        <p class="text-gray-600 text-sm">Monitor admin activities</p>
+                    </div>
+                </div>
+                <a href="admin-logs.html" class="mt-4 inline-block bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                    View Logs
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity & Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Recent Activity</h3>
+                <div id="recentActivity" class="space-y-4">
+                    <!-- Activity items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Sales Chart -->
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Sales Overview</h3>
+                <div class="chart-container p-4 rounded-lg">
+                    <canvas id="salesChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="mt-8 bg-white rounded-xl border border-gray-200 p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">System Status</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span class="text-sm font-medium text-green-800">Website Online</span>
+                </div>
+                <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span class="text-sm font-medium text-green-800">Database Connected</span>
+                </div>
+                <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span class="text-sm font-medium text-green-800">Chat System Active</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // Check authentication
+        window.addEventListener('load', function() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = 'admin-login-google.html';
+                return;
+            }
+            
+            // Set admin username
+            const adminUsername = sessionStorage.getItem('adminUsername') || 'Admin';
+            document.getElementById('adminUsername').textContent = adminUsername;
+            
+            // Initialize dashboard
+            initializeDashboard();
+            updateCurrentTime();
+            
+            // Update time every second
+            setInterval(updateCurrentTime, 1000);
+        });
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const dateString = now.toLocaleDateString();
+            document.getElementById('currentTime').textContent = `${dateString} ${timeString}`;
+        }
+
+        async function initializeDashboard() {
+            try {
+                // Load statistics
+                await loadStatistics();
+                
+                // Load recent activity
+                await loadRecentActivity();
+                
+                // Initialize sales chart
+                initializeSalesChart();
+                
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+            }
+        }
+
+        async function loadStatistics() {
+            try {
+                // Load real products count
+                const products = JSON.parse(localStorage.getItem('products') || '[]');
+                document.getElementById('totalProducts').textContent = products.length;
+                
+                // Load real orders count
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                document.getElementById('totalOrders').textContent = orders.length;
+                
+                // Calculate today's revenue from real orders
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const todayOrders = orders.filter(order => {
+                    const orderDate = new Date(order.orderDate);
+                    return orderDate >= today && order.status === 'completed';
+                });
+                const todayRevenue = todayOrders.reduce((total, order) => total + (order.price || 0), 0);
+                document.getElementById('todayRevenue').textContent = `LKR ${todayRevenue.toLocaleString()}`;
+                
+                // Load real customers count
+                const customers = JSON.parse(localStorage.getItem('customers') || '[]');
+                const activeCustomers = customers.filter(customer => customer.status === 'active').length;
+                document.getElementById('activeChats').textContent = activeCustomers; // Using active customers as chat indicator
+                
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+
+        async function loadRecentActivity() {
+            try {
+                const activityContainer = document.getElementById('recentActivity');
+                
+                // Get real recent activities from localStorage
+                const activities = [];
+                
+                // Get recent products
+                const products = JSON.parse(localStorage.getItem('products') || '[]');
+                const recentProducts = products.slice(0, 2).map(product => ({
+                    type: 'product',
+                    message: `New product "${product.name}" added`,
+                    time: getTimeAgo(new Date(product.createdAt || Date.now())),
+                    icon: '📦'
+                }));
+                activities.push(...recentProducts);
+                
+                // Get recent orders
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const recentOrders = orders.slice(0, 2).map(order => ({
+                    type: 'order',
+                    message: `Order #${order.id} - ${order.status}`,
+                    time: getTimeAgo(new Date(order.orderDate)),
+                    icon: '✅'
+                }));
+                activities.push(...recentOrders);
+                
+                // Get recent customers
+                const customers = JSON.parse(localStorage.getItem('customers') || '[]');
+                const recentCustomers = customers.slice(0, 1).map(customer => ({
+                    type: 'customer',
+                    message: `New customer "${customer.name}" registered`,
+                    time: getTimeAgo(new Date(customer.joinDate)),
+                    icon: '👤'
+                }));
+                activities.push(...recentCustomers);
+                
+                // Sort by time (most recent first)
+                activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+                
+                // Take only the 4 most recent activities
+                const recentActivities = activities.slice(0, 4);
+                
+                if (recentActivities.length === 0) {
+                    activityContainer.innerHTML = `
+                        <div class="text-center py-8 text-gray-500">
+                            <p>No recent activity</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                activityContainer.innerHTML = recentActivities.map(activity => `
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                        <div class="text-2xl">${activity.icon}</div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">${activity.message}</p>
+                            <p class="text-xs text-gray-500">${activity.time}</p>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading recent activity:', error);
+            }
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+            return `${Math.floor(diffInSeconds / 86400)} days ago`;
+        }
+
+        function initializeSalesChart() {
+            const canvas = document.getElementById('salesChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Get real sales data from orders
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const completedOrders = orders.filter(order => order.status === 'completed');
+            
+            // Group orders by day for the last 7 days
+            const last7Days = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                date.setHours(0, 0, 0, 0);
+                last7Days.push(date);
+            }
+            
+            const salesData = last7Days.map(date => {
+                const dayOrders = completedOrders.filter(order => {
+                    const orderDate = new Date(order.orderDate);
+                    return orderDate.toDateString() === date.toDateString();
+                });
+                return dayOrders.reduce((total, order) => total + (order.price || 0), 0);
+            });
+            
+            const labels = last7Days.map(date => date.toLocaleDateString('en-US', { weekday: 'short' }));
+            
+            // Simple chart drawing
+            const maxValue = Math.max(...salesData, 1000); // Minimum max value for better visualization
+            const chartHeight = 150;
+            const chartWidth = 350;
+            const barWidth = chartWidth / labels.length - 10;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw bars
+            salesData.forEach((value, index) => {
+                const barHeight = (value / maxValue) * chartHeight;
+                const x = index * (barWidth + 10) + 25;
+                const y = chartHeight - barHeight + 25;
+                
+                ctx.fillStyle = 'rgba(59, 130, 246, 0.8)';
+                ctx.fillRect(x, y, barWidth, barHeight);
+                
+                // Draw label
+                ctx.fillStyle = '#374151';
+                ctx.font = '12px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText(labels[index], x + barWidth/2, chartHeight + 40);
+                
+                // Draw value
+                ctx.fillText(`LKR ${value.toLocaleString()}`, x + barWidth/2, y - 5);
+            });
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'admin-login-google.html';
+        }
+    </script>
+
+</body>
+</html> 
