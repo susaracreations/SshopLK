@@ -102,18 +102,18 @@
             word-wrap: break-word;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
         }
-        
+
         .message-admin {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             margin-left: auto;
         }
-        
+
         .message-user {
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
             color: white;
         }
-        
+
         /* Chat container scrolling */
         #messagesContainer {
             scrollbar-width: thin;
@@ -190,7 +190,7 @@
     <header class="glass border-b border-slate-700/50 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-2">
             <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-3">
                     <div class="flex items-center space-x-2">
                         <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                             <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -345,9 +345,9 @@
                             <div class="text-center text-slate-500 py-8" id="noChatMessage">
                                 <div class="w-16 h-16 bg-gradient-to-r from-slate-600 to-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
                                     <svg class="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                    </svg>
-                                </div>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
                                 <h3 class="text-base font-semibold text-slate-300 mb-1">No Chat Selected</h3>
                                 <p class="text-slate-500 text-sm">Select a chat from the list to view messages</p>
                             </div>
@@ -394,9 +394,9 @@
     </main>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
     <script>
@@ -1217,7 +1217,7 @@
             const message = messageInput.value.trim();
             
             if (!message || !currentChatId) return;
-            
+
             try {
                 // Clear input immediately
                 messageInput.value = '';
@@ -1233,7 +1233,7 @@
                     userId: 'admin',
                     timestamp: new Date()
                 };
-                
+
                 // Display message immediately for better UX
                 displayMessage(optimisticMessage, optimisticId);
                 

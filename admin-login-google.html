@@ -124,9 +124,9 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
     <script>
@@ -154,20 +154,31 @@
                 
                 if (timeDiff < SESSION_TIMEOUT) {
                     // Session is still valid
-                    window.location.href = 'admin.html';
+                    window.location.href = 'admin-dashboard.html';
                 } else {
                     // Session expired
                     sessionStorage.clear();
                 }
             }
             
-            // Initialize Firebase and set up Google sign-in
-            initializeGoogleSignIn();
+            // Wait for Firebase to be fully initialized before setting up Google sign-in
+            waitForFirebase();
         });
+
+        // Wait for Firebase to be fully initialized
+        function waitForFirebase() {
+            if (window.auth && window.AuthService) {
+                console.log('Firebase is ready, initializing Google sign-in');
+                initializeGoogleSignIn();
+            } else {
+                console.log('Waiting for Firebase to initialize...');
+                setTimeout(waitForFirebase, 100);
+            }
+        }
 
         // Initialize Google Sign-In
         function initializeGoogleSignIn() {
-            if (window.AuthService && window.auth) {
+            if (window.auth && typeof window.auth.signInWithPopup === 'function') {
                 // Set up Google provider
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.addScope('email');
@@ -180,12 +191,12 @@
                         this.innerHTML = `
                             <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
                             Signing in...
                         `;
                         
-                        const result = await auth.signInWithPopup(provider);
+                        const result = await window.auth.signInWithPopup(provider);
                         await handleGoogleSignIn(result.user);
                         
                     } catch (error) {
@@ -212,7 +223,7 @@
                     await completeAdminLogin(user);
                 } else {
                     // User is not an admin
-                    await auth.signOut();
+                    await window.auth.signOut();
                     showError('Access denied. This account does not have admin privileges.');
                     resetGoogleButton();
                 }
@@ -234,13 +245,18 @@
                 sessionStorage.setItem('adminLoginTime', Date.now().toString());
                 sessionStorage.setItem('adminAuthMethod', 'google');
                 
-                // Log admin login
-                if (window.FirebaseService) {
-                    await FirebaseService.logAdminAction('admin_login_google', {
-                        email: user.email,
-                        displayName: user.displayName,
-                        uid: user.uid
-                    });
+                // Log admin login (only if FirebaseService is available)
+                if (window.FirebaseService && typeof window.FirebaseService.logAdminAction === 'function') {
+                    try {
+                        await window.FirebaseService.logAdminAction('admin_login_google', {
+                            email: user.email,
+                            displayName: user.displayName,
+                            uid: user.uid
+                        });
+                    } catch (logError) {
+                        console.warn('Failed to log admin action:', logError);
+                        // Continue with login even if logging fails
+                    }
                 }
                 
                 // Show success message
@@ -313,11 +329,16 @@
                 sessionStorage.setItem('adminLoginTime', Date.now().toString());
                 sessionStorage.setItem('adminAuthMethod', 'traditional');
                 
-                // Log admin login
-                if (window.FirebaseService) {
-                    FirebaseService.logAdminAction('admin_login_traditional', {
-                        username: username
-                    });
+                // Log admin login (only if FirebaseService is available)
+                if (window.FirebaseService && typeof window.FirebaseService.logAdminAction === 'function') {
+                    try {
+                        window.FirebaseService.logAdminAction('admin_login_traditional', {
+                            username: username
+                        });
+                    } catch (logError) {
+                        console.warn('Failed to log admin action:', logError);
+                        // Continue with login even if logging fails
+                    }
                 }
                 
                 // Show success message

@@ -12,56 +12,76 @@ const firebaseConfig = {
   
   // Wait for Firebase to be fully loaded
   function initializeFirebase() {
-  // Check if Firebase is available
-  if (typeof firebase === 'undefined') {
-    console.error('Firebase is not loaded. Please check your script tags.');
+    // Check if Firebase is available
+    if (typeof firebase === 'undefined') {
+      console.error('Firebase is not loaded. Please check your script tags.');
       return;
-  } else {
-    console.log('Firebase is loaded successfully');
-  }
+    } else {
+      console.log('Firebase is loaded successfully');
+    }
   
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+    // Initialize Firebase
+    try {
+      firebase.initializeApp(firebaseConfig);
+      console.log('Firebase app initialized successfully');
+    } catch (error) {
+      if (error.code === 'app/duplicate-app') {
+        console.log('Firebase app already initialized');
+      } else {
+        console.error('Error initializing Firebase app:', error);
+        return;
+      }
+    }
   
-  // Initialize Firestore with optimized settings
-  const db = firebase.firestore();
+    // Initialize Firestore with optimized settings
+    let db;
+    try {
+      db = firebase.firestore();
+      console.log('Firestore initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Firestore:', error);
+      return;
+    }
   
     // Initialize Firebase Auth with proper error handling
-  let auth;
-  try {
+    let auth;
+    try {
       // Check if firebase.auth exists before calling it
       if (typeof firebase.auth === 'function') {
-    auth = firebase.auth();
-    console.log('Firebase Auth initialized successfully');
+        auth = firebase.auth();
+        console.log('Firebase Auth initialized successfully');
       } else {
         throw new Error('firebase.auth is not a function - Firebase Auth module not loaded');
       }
-  } catch (error) {
-    console.error('Error initializing Firebase Auth:', error);
+    } catch (error) {
+      console.error('Error initializing Firebase Auth:', error);
       console.log('Firebase modules available:', Object.keys(firebase));
       
-    // Fallback: create a mock auth object for development
-    auth = {
-      currentUser: null,
-      onAuthStateChanged: (callback) => {
-        console.log('Mock auth state listener called');
-        callback(null);
-        return () => {};
-      },
-      signInWithEmailAndPassword: async () => {
-        throw new Error('Firebase Auth not available');
-      },
-      createUserWithEmailAndPassword: async () => {
-        throw new Error('Firebase Auth not available');
-      },
-      signOut: async () => {
-        throw new Error('Firebase Auth not available');
-      },
-      sendPasswordResetEmail: async () => {
-        throw new Error('Firebase Auth not available');
-      }
-    };
-  }
+      // Fallback: create a mock auth object for development
+      auth = {
+        currentUser: null,
+        onAuthStateChanged: (callback) => {
+          console.log('Mock auth state listener called');
+          callback(null);
+          return () => {};
+        },
+        signInWithPopup: async () => {
+          throw new Error('Firebase Auth not available');
+        },
+        signInWithEmailAndPassword: async () => {
+          throw new Error('Firebase Auth not available');
+        },
+        createUserWithEmailAndPassword: async () => {
+          throw new Error('Firebase Auth not available');
+        },
+        signOut: async () => {
+          throw new Error('Firebase Auth not available');
+        },
+        sendPasswordResetEmail: async () => {
+          throw new Error('Firebase Auth not available');
+        }
+      };
+    }
   
   // Configure Firestore settings for better performance
   db.settings({
@@ -200,7 +220,32 @@ const firebaseConfig = {
     async addProduct(productData) {
       try {
         console.log('Attempting to add product to Firebase:', productData);
-        const docRef = await db.collection('products').add(productData);
+        
+        // Convert ISO string timestamps to Firestore timestamps
+        const processedData = { ...productData };
+        if (processedData.createdAt && typeof processedData.createdAt === 'string') {
+          try {
+            processedData.createdAt = firebase.firestore.Timestamp.fromDate(new Date(processedData.createdAt));
+          } catch (e) {
+            console.warn('Could not parse createdAt timestamp, using server timestamp:', e);
+            processedData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          }
+        } else if (!processedData.createdAt) {
+          processedData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        }
+        
+        if (processedData.updatedAt && typeof processedData.updatedAt === 'string') {
+          try {
+            processedData.updatedAt = firebase.firestore.Timestamp.fromDate(new Date(processedData.updatedAt));
+          } catch (e) {
+            console.warn('Could not parse updatedAt timestamp, using server timestamp:', e);
+            processedData.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+          }
+        } else if (!processedData.updatedAt) {
+          processedData.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+        }
+        
+        const docRef = await db.collection('products').add(processedData);
         console.log('Successfully added product with ID:', docRef.id);
         return docRef.id;
       } catch (error) {
@@ -213,7 +258,21 @@ const firebaseConfig = {
     async updateProduct(productId, productData) {
       try {
         console.log('Attempting to update product in Firebase:', productId, productData);
-        await db.collection('products').doc(productId).update(productData);
+        
+        // Convert ISO string timestamps to Firestore timestamps
+        const processedData = { ...productData };
+        if (processedData.updatedAt && typeof processedData.updatedAt === 'string') {
+          try {
+            processedData.updatedAt = firebase.firestore.Timestamp.fromDate(new Date(processedData.updatedAt));
+          } catch (e) {
+            console.warn('Could not parse updatedAt timestamp, using server timestamp:', e);
+            processedData.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+          }
+        } else if (!processedData.updatedAt) {
+          processedData.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+        }
+        
+        await db.collection('products').doc(productId).update(processedData);
         console.log('Successfully updated product:', productId);
         return true;
       } catch (error) {
@@ -612,7 +671,7 @@ const firebaseConfig = {
               });
             },
             error: (error) => {
-              console.error('Error in chat messages listener:', error);
+            console.error('Error in chat messages listener:', error);
             }
           });
         } catch (error) {
@@ -633,6 +692,10 @@ const firebaseConfig = {
           console.log('Admin status set to online successfully');
         } catch (error) {
           console.error('Error setting admin online:', error);
+          // Check if it's a permission error
+          if (error.code === 'permission-denied' || error.message?.includes('Missing or insufficient permissions')) {
+            console.warn('Admin status tracking failed due to permissions - this is normal for non-admin users');
+          }
         }
       },
   
@@ -647,6 +710,10 @@ const firebaseConfig = {
           console.log('Admin status set to offline successfully');
         } catch (error) {
           console.error('Error setting admin offline:', error);
+          // Check if it's a permission error
+          if (error.code === 'permission-denied' || error.message?.includes('Missing or insufficient permissions')) {
+            console.warn('Admin status tracking failed due to permissions - this is normal for non-admin users');
+          }
         }
       },
   
@@ -670,6 +737,9 @@ const firebaseConfig = {
               // Check if it's an ad blocker error
               if (error.message && error.message.includes('ERR_BLOCKED_BY_CLIENT')) {
                 console.warn('Admin status tracking blocked by ad blocker');
+                callback(false); // Default to offline
+              } else if (error.code === 'permission-denied' || error.message?.includes('Missing or insufficient permissions')) {
+                console.warn('Admin status tracking failed due to permissions - this is normal for non-admin users');
                 callback(false); // Default to offline
               } else {
                 console.error('Admin status listener error:', error);
@@ -697,6 +767,10 @@ const firebaseConfig = {
           console.log('Admin action logged successfully');
         } catch (error) {
           console.error('Error logging admin action:', error);
+          // Check if it's a permission error
+          if (error.code === 'permission-denied' || error.message?.includes('Missing or insufficient permissions')) {
+            console.warn('Admin action logging failed due to permissions - this is normal for non-admin users');
+          }
         }
       },
   

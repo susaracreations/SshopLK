@@ -492,13 +492,18 @@
             
             // Set admin as online
             if (window.FirebaseService) {
-                FirebaseService.setAdminOnline();
-                // Log admin login
-                FirebaseService.logAdminAction('admin_login', {
-                    username: username,
-                    sessionId: sessionId,
-                    userAgent: navigator.userAgent
-                });
+                try {
+                    FirebaseService.setAdminOnline();
+                    // Log admin login
+                    FirebaseService.logAdminAction('admin_login', {
+                        username: username,
+                        sessionId: sessionId,
+                        userAgent: navigator.userAgent
+                    });
+                } catch (error) {
+                    console.warn('Firebase operations failed during login:', error);
+                    // Continue with login even if Firebase operations fail
+                }
             }
             
             // Start inactivity monitoring
@@ -529,12 +534,17 @@
         function logout() {
             // Log admin logout
             if (window.FirebaseService) {
-                FirebaseService.logAdminAction('admin_logout', {
-                    username: sessionStorage.getItem('adminUsername'),
-                    sessionId: sessionStorage.getItem('adminSessionId'),
-                    sessionDuration: Date.now() - parseInt(sessionStorage.getItem('adminLoginTime'))
-                });
-                FirebaseService.setAdminOffline();
+                try {
+                    FirebaseService.logAdminAction('admin_logout', {
+                        username: sessionStorage.getItem('adminUsername'),
+                        sessionId: sessionStorage.getItem('adminSessionId'),
+                        sessionDuration: Date.now() - parseInt(sessionStorage.getItem('adminLoginTime'))
+                    });
+                    FirebaseService.setAdminOffline();
+                } catch (error) {
+                    console.warn('Firebase operations failed during logout:', error);
+                    // Continue with logout even if Firebase operations fail
+                }
             }
             
             // Clear session
@@ -548,7 +558,11 @@
         window.addEventListener('beforeunload', function() {
             // Set admin as offline when leaving
             if (window.FirebaseService) {
-                FirebaseService.setAdminOffline();
+                try {
+                    FirebaseService.setAdminOffline();
+                } catch (error) {
+                    console.warn('Failed to set admin offline:', error);
+                }
             }
         });
 
@@ -853,7 +867,7 @@
             document.getElementById('productImage').value = product.image || '';
             document.getElementById('productCategory').value = product.category || '';
             document.getElementById('productSubcategory').value = product.subcategory || '';
-            document.getElementById('productFeatures').value = product.features || '';
+            document.getElementById('productFeatures').value = Array.isArray(product.features) ? product.features.join(', ') : (product.features || '');
             document.getElementById('productRedeemPoints').value = product.redeemPoints || 0;
             document.getElementById('productOtherSellers').value = product.otherSellers || 0;
             document.getElementById('productTrustBadge').value = product.trustBadge || 'TRUSTED SELLER WITH OVER 1000 SALES';
@@ -1433,11 +1447,278 @@
             document.getElementById('heroBackgroundOpacity').value = '20';
             updateOpacityValue('20');
         }
+
+        // Export and Import Functions
+        function exportProducts() {
+            try {
+                const productsData = JSON.stringify(products, null, 2);
+                const blob = new Blob([productsData], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `s-shop-products-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert('Products exported successfully!');
+            } catch (error) {
+                console.error('Error exporting products:', error);
+                alert('Error exporting products. Please try again.');
+            }
+        }
+
+        function importProducts() {
+            try {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = function(e) {
+                    const file = e.target.files[0];
+                    if (!file) {
+                        alert('No file selected.');
+                        return;
+                    }
+                    
+                    // Check file size (max 10MB)
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('File too large. Please select a file smaller than 10MB.');
+                        return;
+                    }
+                    
+                    // Check file extension
+                    if (!file.name.toLowerCase().endsWith('.json')) {
+                        alert('Please select a valid JSON file (.json extension).');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const fileContent = e.target.result;
+                            console.log('=== IMPORT DEBUG INFO ===');
+                            console.log('File name:', file.name);
+                            console.log('File size:', file.size, 'bytes');
+                            console.log('File content preview:', fileContent.substring(0, 500) + '...');
+                            
+                            // Try to parse JSON
+                            let importedData;
+                            try {
+                                importedData = JSON.parse(fileContent);
+                                console.log('JSON parsed successfully:', importedData);
+                            } catch (parseError) {
+                                console.error('JSON parse error:', parseError);
+                                alert(`JSON parsing failed: ${parseError.message}\n\nPlease ensure your file contains valid JSON format.`);
+                                return;
+                            }
+                            
+                            // Handle different data structures
+                            let importedProducts = [];
+                            
+                            if (Array.isArray(importedData)) {
+                                // Direct array of products
+                                importedProducts = importedData;
+                                console.log('Found direct array of products:', importedProducts.length);
+                            } else if (importedData.products && Array.isArray(importedData.products)) {
+                                // Object with products array
+                                importedProducts = importedData.products;
+                                console.log('Found products array in object:', importedProducts.length);
+                            } else if (typeof importedData === 'object' && importedData !== null) {
+                                // Single product object
+                                importedProducts = [importedData];
+                                console.log('Found single product object');
+                            } else {
+                                alert('File does not contain valid product data.\n\nExpected formats:\n- Array of products: [{"name": "...", "price": "..."}, ...]\n- Object with products: {"products": [{"name": "...", "price": "..."}, ...]}\n- Single product: {"name": "...", "price": "..."}');
+                                return;
+                            }
+                            
+                            if (importedProducts.length === 0) {
+                                alert('No products found in the file.');
+                                return;
+                            }
+                            
+                            console.log('Processing', importedProducts.length, 'products...');
+                            
+                            // Process and validate each product
+                            const validProducts = [];
+                            const invalidProducts = [];
+                            const warnings = [];
+                            
+                            importedProducts.forEach((product, index) => {
+                                console.log(`Processing product ${index + 1}:`, product);
+                                
+                                if (!product || typeof product !== 'object') {
+                                    invalidProducts.push(`Product ${index + 1}: Not a valid object`);
+                                    return;
+                                }
+                                
+                                // Create a clean product object with only valid fields
+                                const cleanProduct = {};
+                                
+                                // Required fields validation
+                                if (!product.name || typeof product.name !== 'string' || product.name.trim() === '') {
+                                    invalidProducts.push(`Product ${index + 1}: Missing or invalid name`);
+                                    return;
+                                }
+                                
+                                if (!product.price) {
+                                    invalidProducts.push(`Product ${index + 1}: Missing price`);
+                                    return;
+                                }
+                                
+                                // Price validation and conversion
+                                let price;
+                                if (typeof product.price === 'string') {
+                                    price = parseFloat(product.price.replace(/[^\d.-]/g, ''));
+                                    if (isNaN(price)) {
+                                        invalidProducts.push(`Product ${index + 1}: Invalid price format`);
+                                        return;
+                                    }
+                                } else if (typeof product.price === 'number') {
+                                    price = product.price;
+                                } else {
+                                    invalidProducts.push(`Product ${index + 1}: Invalid price type`);
+                                    return;
+                                }
+                                
+                                if (price <= 0) {
+                                    invalidProducts.push(`Product ${index + 1}: Price must be greater than 0`);
+                                    return;
+                                }
+                                
+                                // Copy valid fields
+                                cleanProduct.name = product.name.trim();
+                                cleanProduct.price = price;
+                                cleanProduct.description = product.description || '';
+                                cleanProduct.availability = parseInt(product.availability) || 0;
+                                cleanProduct.soldCount = parseInt(product.soldCount) || 0;
+                                cleanProduct.image = product.image || '';
+                                cleanProduct.category = product.category || 'Uncategorized';
+                                cleanProduct.subcategory = product.subcategory || '';
+                                
+                                // Handle features field - convert string to array if needed
+                                if (product.features) {
+                                    if (Array.isArray(product.features)) {
+                                        cleanProduct.features = product.features;
+                                    } else if (typeof product.features === 'string') {
+                                        // Split by commas, semicolons, or newlines and clean up
+                                        const featuresArray = product.features
+                                            .split(/[,;\n\r]+/)
+                                            .map(feature => feature.trim())
+                                            .filter(feature => feature.length > 0);
+                                        cleanProduct.features = featuresArray.length > 0 ? featuresArray : '';
+                                    } else {
+                                        cleanProduct.features = '';
+                                    }
+                                } else {
+                                    cleanProduct.features = '';
+                                }
+                                
+                                cleanProduct.redeemPoints = parseInt(product.redeemPoints) || 0;
+                                cleanProduct.otherSellers = parseInt(product.otherSellers) || 0;
+                                cleanProduct.trustBadge = product.trustBadge || '';
+                                cleanProduct.deliverySpeed = product.deliverySpeed || 'Standard';
+                                cleanProduct.deliveryMethod = product.deliveryMethod || 'Digital';
+                                cleanProduct.activationRegion = product.activationRegion || 'Global';
+                                
+                                // Generate new ID and timestamps
+                                cleanProduct.id = 'PROD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                                cleanProduct.createdAt = new Date().toISOString();
+                                cleanProduct.updatedAt = new Date().toISOString();
+                                
+                                // Check for warnings
+                                if (!product.description) warnings.push(`Product ${index + 1}: No description`);
+                                if (!product.image) warnings.push(`Product ${index + 1}: No image URL`);
+                                if (!product.category) warnings.push(`Product ${index + 1}: No category`);
+                                
+                                validProducts.push(cleanProduct);
+                                console.log(`Product ${index + 1} processed successfully:`, cleanProduct);
+                            });
+                            
+                            console.log('Validation complete:', {
+                                total: importedProducts.length,
+                                valid: validProducts.length,
+                                invalid: invalidProducts.length,
+                                warnings: warnings.length
+                            });
+                            
+                            if (validProducts.length === 0) {
+                                alert(`No valid products found in the file.\n\nValidation errors:\n${invalidProducts.join('\n')}`);
+                                return;
+                            }
+                            
+                            // Show summary and ask for confirmation
+                            let confirmMessage = `Found ${validProducts.length} valid products to import.\n\n`;
+                            
+                            if (invalidProducts.length > 0) {
+                                confirmMessage += `⚠️ ${invalidProducts.length} products were skipped due to errors:\n${invalidProducts.slice(0, 5).join('\n')}`;
+                                if (invalidProducts.length > 5) {
+                                    confirmMessage += `\n... and ${invalidProducts.length - 5} more errors`;
+                                }
+                                confirmMessage += '\n\n';
+                            }
+                            
+                            if (warnings.length > 0) {
+                                confirmMessage += `⚠️ ${warnings.length} warnings (products will still be imported):\n${warnings.slice(0, 5).join('\n')}`;
+                                if (warnings.length > 5) {
+                                    confirmMessage += `\n... and ${warnings.length - 5} more warnings`;
+                                }
+                                confirmMessage += '\n\n';
+                            }
+                            
+                            confirmMessage += `This will replace all existing products. Continue with import?`;
+                            
+                            if (confirm(confirmMessage)) {
+                                // Update products array
+                                products = validProducts;
+                                
+                                // Save to localStorage
+                                localStorage.setItem('sShopProducts', JSON.stringify(products));
+                                
+                                // Save to Firebase if available
+                                if (window.FirebaseService) {
+                                    FirebaseService.saveProducts(products)
+                                        .then(() => {
+                                            alert(`✅ Successfully imported ${validProducts.length} products and saved to Firebase!`);
+                                            displayProducts();
+                                        })
+                                        .catch(error => {
+                                            console.error('Error saving to Firebase:', error);
+                                            alert(`✅ Products imported to localStorage (${validProducts.length} products).\n\n⚠️ Firebase save failed: ${error.message}`);
+                                            displayProducts();
+                                        });
+                                } else {
+                                    alert(`✅ Successfully imported ${validProducts.length} products to localStorage!`);
+                                    displayProducts();
+                                }
+                            }
+                            
+                        } catch (error) {
+                            console.error('Error processing imported file:', error);
+                            alert(`Error processing file: ${error.message}\n\nPlease check that your file contains valid JSON data.`);
+                        }
+                    };
+                    
+                    reader.onerror = function() {
+                        alert('Error reading file. Please try again.');
+                    };
+                    
+                    reader.readAsText(file);
+                };
+                
+                input.click();
+                
+            } catch (error) {
+                console.error('Error setting up file import:', error);
+                alert('Error setting up file import. Please try again.');
+            }
+        }
     </script>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
 </body>
