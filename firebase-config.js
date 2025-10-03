@@ -215,6 +215,29 @@ const firebaseConfig = {
         return [];
       }
     },
+
+    // Get top N selling products
+    async getTopSellingProducts(limit = 4) {
+      try {
+        console.log(`Attempting to fetch top ${limit} selling products from Firebase...`);
+        const snapshot = await db.collection('products')
+          .orderBy('soldCount', 'desc')
+          .limit(limit)
+          .get();
+        const products = [];
+        snapshot.forEach(doc => {
+          products.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        console.log(`Successfully fetched top ${limit} selling products from Firebase:`, products);
+        return products;
+      } catch (error) {
+        console.error(`Error getting top ${limit} selling products from Firebase:`, error);
+        return [];
+      }
+    },
   
     // Add a new product to Firebase
     async addProduct(productData) {

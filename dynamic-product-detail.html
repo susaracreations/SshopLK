@@ -40,7 +40,7 @@
         <div class="container mx-auto px-4 py-3">
             <nav class="flex" aria-label="Breadcrumb">
                 <ol id="breadcrumbs" class="flex items-center space-x-2 text-sm text-gray-400">
-                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+                    <li><a href="/index" class="hover:text-white transition-colors">Home</a></li>
                     <li class="flex items-center">
                         <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
@@ -71,7 +71,7 @@
             <div id="error-state" class="hidden text-center py-16 bg-red-900/20 border border-red-500/50 rounded-lg">
                 <h2 class="text-2xl font-bold text-red-400 mb-4">Product Not Found</h2>
                 <p class="text-gray-300 mb-6">Sorry, we couldn't find the product you're looking for.</p>
-                <a href="index.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <a href="/index" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                     Back to Home
                 </a>
             </div>
@@ -235,8 +235,8 @@
             // Breadcrumbs
             const categorySlug = product.category ? product.category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-') : 'products';
             const categoryLink = document.getElementById('breadcrumb-category');
-            categoryLink.textContent = product.category || 'Products';
-            categoryLink.href = `category-${categorySlug}.html`;
+            categoryLink.textContent = product.category || 'Products'; // Set category name
+            categoryLink.href = `/category-${categorySlug}`; // Set category link
             document.getElementById('breadcrumb-product-name').textContent = product.name;
 
             // Main details
@@ -311,7 +311,7 @@
             container.innerHTML = ''; // Clear previous content
 
             relatedProducts.forEach(product => {
-                const detailPage = `dynamic-product-detail.html?id=${product.id}`;
+                const detailPage = `/dynamic-product-detail?id=${product.id}`;
                 const productCard = document.createElement('div');
                 productCard.className = 'bg-slate-800 rounded-xl shadow-lg hover:shadow-blue-500/20 transition-all duration-300 border border-slate-700';
                 

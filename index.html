@@ -149,30 +149,16 @@
     <main class="flex-grow container mx-auto px-4 py-8 md:py-16">
         
         <!-- Featured Products Section -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold mb-6 text-white">Featured Products</h2>
-            
-            <!-- Category Filter Buttons -->
-            <div class="flex flex-wrap gap-4 mb-8">
-                <button onclick="filterProducts('all')" id="filter-all" class="category-filter bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                    All Products
-                </button>
-                <button onclick="filterProducts('games')" id="filter-games" class="category-filter bg-slate-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-600 transition-colors">
-                    Games
-                </button>
-                <button onclick="filterProducts('software-apps')" id="filter-software" class="category-filter bg-slate-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-600 transition-colors">
-                    Software & Apps
-                </button>
+        <section id="featured-products-section" class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-white">Featured Products</h2>
+                <a href="products.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    View All Products
+                </a>
             </div>
             
-            <!-- Container for search results and error message -->
-            <div class="relative">
-                <p id="searchError" class="hidden text-center text-red-400 font-semibold text-lg py-8">
-                    No products found for your search.
-                </p>
-                <div id="productContainer" class="flex overflow-x-scroll snap-x-mandatory pb-4 space-x-6 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
-                    <!-- Product cards will be loaded dynamically from admin panel data -->
-                </div>
+            <div id="featured-product-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Featured product cards will be loaded here -->
             </div>
         </section>
 
@@ -197,7 +183,7 @@
                             </p>
                             
                             <!-- Call-to-Action Buttons -->
-                            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start" stroke-width="2">
                                 <a href="products.html" class="bg-white text-red-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg text-center">
                                     Browse Products
                                 </a>
@@ -293,7 +279,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <!-- Category Card 1: Games -->
                 <a href="category-games.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <h3 class="text-xl font-bold text-white mb-2">Games</h3>
@@ -302,7 +288,7 @@
 
                 <!-- Category Card 2: Software & Apps -->
                 <a href="category-software-apps.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
                     </svg>
                     <h3 class="text-xl font-bold text-white mb-2">Software & Apps</h3>
@@ -311,7 +297,7 @@
                 
                 <!-- Category Card 3: Boosting & Coaching -->
                 <a href="category-boosting-coaching.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v14H9z" />
                     </svg>
                     <h3 class="text-xl font-bold text-white mb-2">Boosting & Coaching</h3>
@@ -320,7 +306,7 @@
 
                 <!-- Category Card 4: Gift Cards -->
                 <a href="category-gift-cards.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <h3 class="text-xl font-bold text-white mb-2">Gift Cards</h3>
@@ -394,20 +380,14 @@
         document.addEventListener('keydown', function(event) {
             // Ctrl + Alt + A (Windows/Linux) or Cmd + Alt + A (Mac)
             if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 'a') {
-                event.preventDefault();
+                event.preventDefault(); // Prevent default browser action
                 window.location.href = 'admin-login.html';
             }
             
             // Ctrl + Alt + S (Windows/Linux) or Cmd + Alt + S (Mac)
             if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 's') {
-                event.preventDefault();
+                event.preventDefault(); // Prevent default browser action
                 window.location.href = 'admin.html';
-            }
-            
-            // F12 key (Developer Tools alternative)
-            if (event.key === 'F12') {
-                event.preventDefault();
-                window.location.href = 'admin-login.html';
             }
         });
     }
@@ -857,32 +837,48 @@
     
     
     function displayProducts() {
-        const productContainer = document.getElementById('productContainer');
-        productContainer.innerHTML = '';
+        const featuredContainer = document.getElementById('featured-product-container');
+        featuredContainer.innerHTML = '';
 
-        // Filter products based on current category
-        let filteredProducts = products;
-        if (currentCategory !== 'all') {
-            filteredProducts = products.filter(product => {
-                const category = product.category?.toLowerCase() || '';
-                if (currentCategory === 'games') {
-                    return category.includes('games') || category.includes('gaming') || category.includes('game');
-                } else if (currentCategory === 'software-apps') {
-                    return category.includes('software') || category.includes('app') || category.includes('tool') || category.includes('license');
-                }
-                return true;
-            });
+        if (window.FirebaseService) {
+            // Fetch top 4 selling products directly from Firebase
+            FirebaseService.getTopSellingProducts(4)
+                .then(featuredProducts => {
+                    renderFeaturedProducts(featuredProducts);
+                })
+                .catch(error => {
+                    console.error("Error fetching featured products from Firebase:", error);
+                    // Fallback to local products array
+                    const localFeatured = getLocalFeaturedProducts(4);
+                    renderFeaturedProducts(localFeatured);
+                });
+        } else {
+            // Fallback if Firebase is not available
+            const localFeatured = getLocalFeaturedProducts(4);
+            renderFeaturedProducts(localFeatured);
+        }
+    }
+
+    function renderFeaturedProducts(featuredProducts) {
+        const featuredContainer = document.getElementById('featured-product-container');
+        featuredContainer.innerHTML = '';
+
+        if (featuredProducts.length === 0) {
+            featuredContainer.innerHTML = `<p class="text-center text-gray-400 col-span-full">No featured products to display yet.</p>`;
+            return;
         }
 
-        filteredProducts.forEach(product => {
+        featuredProducts.forEach(product => {
             const productCard = document.createElement('div');
-            productCard.className = 'product-card bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex-shrink-0 w-64 snap-center border border-slate-700';
+            productCard.className = 'product-card bg-slate-800 rounded-xl shadow-lg hover:shadow-blue-500/20 transition-all duration-300 border border-slate-700';
             
             // Determine detail page based on product ID
             let detailPage = 'dynamic-product-detail.html?id=' + product.id;
 
             productCard.innerHTML = `
-                <img src="${product.image}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl border-b border-slate-700">
+                <a href="${detailPage}">
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded-t-xl border-b border-slate-700">
+                </a>
                 <div class="p-4">
                     <h3 class="product-title text-lg font-semibold text-white truncate mb-1">${product.name}</h3>
                     <p class="product-description text-sm text-gray-400 mb-2 line-clamp-2">${product.description}</p>
@@ -893,95 +889,15 @@
                     </div>
                 </div>
             `;
-            productContainer.appendChild(productCard);
+            featuredContainer.appendChild(productCard);
         });
     }
 
-    // Category filtering function
-    function filterProducts(category) {
-        currentCategory = category;
-        
-        // Update filter button styles
-        const filterButtons = document.querySelectorAll('.category-filter');
-        filterButtons.forEach(button => {
-            button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-            button.classList.add('bg-slate-700', 'hover:bg-slate-600');
-        });
-        
-        // Highlight active filter
-        const activeButton = document.getElementById(`filter-${category}`);
-        if (activeButton) {
-            activeButton.classList.remove('bg-slate-700', 'hover:bg-slate-600');
-            activeButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
-        }
-        
-        // Update products display
-        displayProducts();
-        
-        // Update search functionality to work with filtered products
-        updateSearchFunctionality();
+    function getLocalFeaturedProducts(count) {
+        return [...products]
+            .sort((a, b) => (b.soldCount || 0) - (a.soldCount || 0))
+            .slice(0, count);
     }
-
-    // Update search to work with filtered products
-    function updateSearchFunctionality() {
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.value = '';
-            const searchError = document.getElementById('searchError');
-            if (searchError) {
-                searchError.classList.add('hidden');
-            }
-        }
-    }
-    
-        /**
-         * This function handles the search functionality.
-         * It filters the product cards based on the text entered in the search bar.
-         */
-        let searchTimeout;
-        function handleSearch() {
-            // Clear previous timeout
-            if (searchTimeout) {
-                clearTimeout(searchTimeout);
-            }
-            
-            // Debounce search to prevent excessive calls
-            searchTimeout = setTimeout(() => {
-                performSearch();
-            }, 300); // Wait 300ms after user stops typing
-        }
-        
-        function performSearch() {
-            // Get the search input value and convert it to lowercase for case-insensitive matching
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            // Get all product cards and the error message element
-            const productCards = document.querySelectorAll('.product-card');
-            const errorMessage = document.getElementById('searchError');
-            let foundProducts = false;
-
-            // Loop through each product card and check if it matches the search term
-            productCards.forEach(card => {
-                const title = card.querySelector('.product-title').textContent.toLowerCase();
-                const description = card.querySelector('.product-description').textContent.toLowerCase();
-
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    // If a match is found, show the card
-                    card.style.display = 'block';
-                    foundProducts = true;
-                } else {
-                    // If no match is found, hide the card
-                    card.style.display = 'none';
-                }
-            });
-
-            // Display or hide the error message based on whether any products were found
-            if (foundProducts) {
-                errorMessage.classList.add('hidden');
-            } else {
-                errorMessage.classList.remove('hidden');
-            }
-        }
         
         /**
          * This function shows the buy now modal with the specified product name.
@@ -1026,15 +942,15 @@
         if (window.AuthService) {
             AuthService.onAuthStateChanged(function(user) {
                 if (user) {
-                    // User is logged in, allow access to chat
+                    // User is logged in, allow access to chat 
                     window.location.href = 'chat-simple.html';
                 } else {
-                    // User is not logged in, redirect to login
+                    // User is not logged in, redirect to login 
                     window.location.href = 'login.html';
                 }
             });
         } else {
-            // Firebase Auth not available, redirect to login
+            // Firebase Auth not available, redirect to login 
             window.location.href = 'login.html';
         }
         }

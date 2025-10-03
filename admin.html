@@ -528,7 +528,7 @@
             function resetInactivityTimer() {
                 clearTimeout(inactivityTimer);
                 inactivityTimer = setTimeout(function() {
-                    sessionStorage.clear();
+                    sessionStorage.clear(); // Clear session on inactivity
                     window.location.href = 'admin-login.html';
                 }, SESSION_TIMEOUT);
             }
