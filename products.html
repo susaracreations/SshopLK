@@ -257,17 +257,9 @@
                 products = JSON.parse(storedProducts);
                 displayProducts();
             } else {
-                fetch('products.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        products = data.products;
-                        displayProducts();
-                    })
-                    .catch(error => {
-                        console.error('Error loading products:', error);
-                        products = [];
-                        displayProducts();
-                    });
+                console.warn('No products found in Firebase or localStorage.');
+                products = [];
+                displayProducts();
             }
         }
 
@@ -332,7 +324,7 @@
                         <p class="product-description text-sm text-gray-400 mb-3 line-clamp-2">${product.description}</p>
                         <div class="flex items-center justify-between mb-3">
                             <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
-                            <span class="text-sm text-gray-400">${product.sold || 0} sold</span>
+                            <span class="text-sm text-gray-400">${product.soldCount || 0} sold</span>
                         </div>
                         <div class="flex space-x-2">
                             <a href="${detailPage}" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors duration-300 text-center">View Details</a>

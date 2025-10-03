@@ -13,41 +13,45 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: #0f172a;
+            color: #e2e8f0;
         }
-        .product-image {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #3b82f6;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="flex flex-col min-h-screen">
 
-    <!-- Replace header -->
-<div id="header-container"></div>
-
-<!-- Keep your main content here -->
-
-<!-- Add component scripts -->
-<script src="header-component.js"></script>
+    <!-- Header Container -->
+    <div id="header-container"></div>
 
     <!-- Breadcrumbs -->
-    <div class="bg-white border-b border-gray-200">
+    <div class="bg-slate-800 border-b border-slate-700">
         <div class="container mx-auto px-4 py-3">
             <nav class="flex" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2 text-sm text-gray-500">
-                    <li><a href="index.html" class="hover:text-blue-600">Home</a></li>
+                <ol id="breadcrumbs" class="flex items-center space-x-2 text-sm text-gray-400">
+                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
                     <li class="flex items-center">
                         <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                         </svg>
-                        <a href="products.html" class="hover:text-blue-600" id="categoryLink">Products</a>
+                        <a id="breadcrumb-category" href="#" class="hover:text-white transition-colors">Category</a>
                     </li>
                     <li class="flex items-center">
                         <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                         </svg>
-                        <span class="text-gray-900" id="breadcrumbCategory">Category</span>
+                        <span id="breadcrumb-product-name" class="text-white">Product</span>
                     </li>
                 </ol>
             </nav>
@@ -55,150 +59,98 @@
     </div>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
-            <!-- Left Column - Product Information -->
-            <div class="space-y-6">
-                <!-- Product Title and Share -->
-                <div class="flex justify-between items-start">
-                    <h1 class="text-3xl font-bold text-gray-900" id="productTitle">Loading...</h1>
-                    <button class="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-                        </svg>
-                        <span>Share</span>
-                    </button>
-                </div>
-
-                <!-- Product Image -->
-                <div class="product-image rounded-xl h-80 flex items-center justify-center">
-                    <img id="productImage" src="" alt="Product Image" class="w-full h-full object-cover rounded-xl">
-                </div>
-
-                <!-- Product Info Section -->
-                <div class="bg-white rounded-xl border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Product info</h3>
-                    <div class="space-y-4" id="productInfo">
-                        <!-- Product info will be loaded dynamically -->
-                    </div>
-                </div>
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+        <div id="product-detail-container" class="max-w-4xl mx-auto">
+            <!-- Loading State -->
+            <div id="loading-state" class="text-center py-16">
+                <div class="loading-spinner mx-auto"></div>
+                <p class="mt-4 text-lg text-gray-300">Loading Product Details...</p>
             </div>
 
-            <!-- Right Column - Purchase Options -->
-            <div class="space-y-6">
-                <!-- Free Insurance Banner -->
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex justify-between items-center">
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944c-2.88 0-5.591 1.11-7.618 3.116A12.03 12.03 0 002 12c0 3.018 1.12 5.86 3.116 7.882A11.955 11.955 0 0112 21.056c2.88 0 5.591-1.11 7.618-3.116A12.03 12.03 0 0022 12c0-3.018-1.12-5.86-3.116-7.882z" />
-                        </svg>
-                        <span class="font-semibold text-blue-800">Free Insurance</span>
-                    </div>
-                    <span class="font-semibold text-blue-800">14 Day</span>
+            <!-- Error State -->
+            <div id="error-state" class="hidden text-center py-16 bg-red-900/20 border border-red-500/50 rounded-lg">
+                <h2 class="text-2xl font-bold text-red-400 mb-4">Product Not Found</h2>
+                <p class="text-gray-300 mb-6">Sorry, we couldn't find the product you're looking for.</p>
+                <a href="index.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Back to Home
+                </a>
+            </div>
+
+            <!-- Content -->
+            <div id="product-content" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                <!-- Product Image -->
+                <div>
+                    <img id="product-image" src="" alt="Product Image" class="w-full h-auto object-cover rounded-xl shadow-lg border border-slate-700">
                 </div>
 
-                <!-- Purchase Options -->
-                <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-6">
-                    <!-- Availability -->
-                    <div class="text-sm text-gray-600">
-                        <span id="productAvailability">Loading...</span> available
-                    </div>
-
-                    <!-- Quantity Selector -->
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-medium text-gray-700">Quantity</span>
-                            <span class="text-xs text-gray-500" id="quantityInfo">Max: <span id="maxQuantity">1</span></span>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <button onclick="decreaseQuantity()" class="w-10 h-10 bg-gray-200 text-gray-600 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                                </svg>
-                            </button>
-                            <span id="quantity" class="text-xl font-semibold text-gray-900">1</span>
-                            <button onclick="increaseQuantity()" class="w-10 h-10 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                            </button>
+                <!-- Product Info -->
+                <div class="flex flex-col">
+                    <!-- Trust Badge -->
+                    <div id="trust-badge-container" class="hidden mb-4">
+                        <div class="bg-green-500/10 border border-green-500/30 text-green-300 text-xs font-bold uppercase px-3 py-1.5 rounded-full inline-flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944a11.954 11.954 0 007.834 3.055l-1.966-1.966A9.955 9.955 0 0110 3.944a9.955 9.955 0 01-5.868 1.966l-1.966 1.966z" clip-rule="evenodd"></path><path d="M12.5 11a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"></path><path fill-rule="evenodd" d="M.666 10.585A12.034 12.034 0 0110 5.944a12.034 12.034 0 019.334 4.641l-1.966 1.966A9.955 9.955 0 0010 7.944a9.955 9.955 0 00-7.368 3.572l-1.966-1.931z" clip-rule="evenodd"></path></svg>
+                            <span id="trust-badge-text"></span>
                         </div>
                     </div>
 
-                    <!-- Unit Price -->
-                    <div class="text-sm text-gray-600">
-                        Unit price <span class="font-semibold" id="unitPrice">Loading...</span>
-                    </div>
+                    <h1 id="product-name" class="text-3xl md:text-4xl font-bold text-white mb-4"></h1>
+                    <p id="product-description" class="text-gray-300 leading-relaxed mb-6"></p>
 
-                    <!-- Redeem Option -->
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
-                            <span class="font-semibold" id="redeemPoints">0</span>
+                    <!-- Key Details -->
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">Product Specifications</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div id="availability-container" class="hidden"><strong class="text-gray-400 block">Availability:</strong> <span id="product-availability" class="text-white"></span></div>
+                            <div id="category-container" class="hidden"><strong class="text-gray-400 block">Category:</strong> <span id="product-category" class="text-white"></span></div>
+                            <div id="delivery-speed-container" class="hidden"><strong class="text-gray-400 block">Delivery Speed:</strong> <span id="product-delivery-speed" class="text-white"></span></div>
+                            <div id="delivery-method-container" class="hidden"><strong class="text-gray-400 block">Delivery Method:</strong> <span id="product-delivery-method" class="text-white"></span></div>
+                            <div id="activation-region-container" class="hidden"><strong class="text-gray-400 block">Activation Region:</strong> <span id="product-activation-region" class="text-white"></span></div>
                         </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" class="sr-only peer">
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                        </label>
                     </div>
 
-                    <!-- Total Amount -->
-                    <div class="flex justify-between items-center text-lg">
-                        <span class="font-semibold text-gray-900">Total Amount</span>
-                        <span id="totalAmount" class="text-2xl font-bold text-gray-900">Loading...</span>
-                    </div>
-
-                    <!-- Buy Now Button -->
-                    <button onclick="showBuyNowModal()" class="w-full bg-red-500 text-white py-4 rounded-lg font-semibold text-lg hover:bg-red-600 transition-colors">
-                        Buy now
-                    </button>
-
-                    <!-- Seller Rating -->
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
-                            <span class="font-semibold text-green-600">100.00%</span>
-                            <span class="text-gray-600" id="soldCount">0 sold</span>
+                    <div class="mt-auto">
+                        <div class="flex items-center justify-between bg-slate-800 p-4 rounded-lg border border-slate-700 mb-6">
+                            <span class="text-3xl font-extrabold text-blue-400" id="product-price"></span>
+                            <div class="text-right">
+                                <span id="product-sold" class="text-sm text-gray-400 block"></span>
+                                <div id="other-sellers-container" class="hidden">
+                                    <span class="text-xs text-gray-500"><span id="product-other-sellers"></span> other sellers</span>
+                                </div>
+                            </div>
                         </div>
-                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm" id="otherSellers">Other sellers (0)</a>
+                        <button id="buy-now-button" class="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors duration-300">
+                            Buy Now
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Related Products Section -->
+        <section id="related-products-section" class="hidden max-w-4xl mx-auto mt-12 md:mt-16">
+            <h2 class="text-2xl font-bold text-white mb-6">Related Products</h2>
+            <div id="related-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Related product cards will be injected here -->
+            </div>
+        </section>
+
     </main>
 
-    <!-- Footer Section -->
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-auto">
-        <div class="container mx-auto px-4">
-            <div class="text-center">
-                <div class="text-xs text-gray-500">
-                    &copy; 2025 S Shop LK. All rights reserved. |
-                    <a href="about-us.html" class="hover:text-white transition-colors duration-200">About Us</a> |
-                    <a href="#" class="hover:text-white transition-colors duration-200">Terms of Service</a> |
-                    <a href="#" class="hover:text-white transition-colors duration-200">Privacy Policy</a> |
-                    <a href="#" class="hover:text-white transition-colors duration-200">Help Center</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
 
     <!-- Buy Now Modal -->
     <div id="buyNowModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
-        <div class="bg-white rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-sm text-center">
+        <div class="bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-sm text-center border-2 border-blue-600 relative">
             <!-- Close Button -->
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" onclick="closeModal()">
+            <button class="absolute top-4 right-4 text-gray-400 hover:text-white" onclick="closeModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
 
-            <h3 class="text-2xl font-bold mb-2 text-gray-900">How would you like to buy?</h3>
-            <p class="text-gray-600 mb-6">Contact a seller to complete your purchase of "<span class="font-semibold text-gray-900" id="modalProductName">Product Name</span>".</p>
+            <h3 class="text-2xl font-bold mb-2 text-white" id="modalTitle">How would you like to buy?</h3>
+            <p class="text-gray-400 mb-6" id="modalDescription">Contact a seller to complete your purchase of "<span id="productNameInModal" class="font-semibold text-white">Product Name</span>".</p>
             
             <div class="flex flex-col space-y-4">
                 <!-- WhatsApp Button -->
@@ -222,286 +174,170 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
-    <!-- JavaScript -->
-    <script>
-        let currentProduct = null;
-        let quantity = 1;
-        let unitPrice = 0;
+    <!-- Shared Components -->
+    <script src="header-component.js"></script>
+    <script src="footer-component.js"></script>
 
-        // Load product on page load
-        window.addEventListener('load', function() {
-            loadProduct();
-            setupAuthState();
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProductDetails();
         });
 
-        // Authentication State Management
-        function setupAuthState() {
-            if (window.AuthService) {
-                AuthService.onAuthStateChanged(function(user) {
-                    updateAuthUI(user);
-                });
-            }
-        }
+        async function loadProductDetails() {
+            const loadingState = document.getElementById('loading-state');
+            const errorState = document.getElementById('error-state');
+            const productContent = document.getElementById('product-content');
 
-        function updateAuthUI(user) {
-            const guestUser = document.getElementById('guestUser');
-            const loggedInUser = document.getElementById('loggedInUser');
-            const avatarInitials = document.getElementById('avatarInitials');
-            const dropdownUsername = document.getElementById('dropdownUsername');
-            const dropdownEmail = document.getElementById('dropdownEmail');
-            
-            if (user) {
-                // User is signed in
-                guestUser.classList.add('hidden');
-                loggedInUser.classList.remove('hidden');
-                
-                // Try to get username from Firestore
-                if (window.FirebaseService) {
-                    FirebaseService.getUser(user.uid)
-                        .then(userData => {
-                            if (userData && userData.username) {
-                                const username = userData.username;
-                                const initials = getInitials(username);
-                                avatarInitials.textContent = initials;
-                                dropdownUsername.textContent = username;
-                                dropdownEmail.textContent = userData.email || user.email || 'user@example.com';
-                            } else {
-                                const email = user.email || 'User';
-                                const initials = getInitials(email);
-                                avatarInitials.textContent = initials;
-                                dropdownUsername.textContent = email;
-                                dropdownEmail.textContent = email;
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching user data:', error);
-                            const email = user.email || 'User';
-                            const initials = getInitials(email);
-                            avatarInitials.textContent = initials;
-                            dropdownUsername.textContent = email;
-                            dropdownEmail.textContent = email;
-                        });
-                } else {
-                    const email = user.email || 'User';
-                    const initials = getInitials(email);
-                    avatarInitials.textContent = initials;
-                    dropdownUsername.textContent = email;
-                    dropdownEmail.textContent = email;
-                }
-                
-                console.log('User is signed in:', user.email);
-            } else {
-                // User is signed out
-                guestUser.classList.remove('hidden');
-                loggedInUser.classList.add('hidden');
-                console.log('User is signed out');
-            }
-        }
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('id');
 
-        // Get initials from name
-        function getInitials(name) {
-            if (!name) return 'U';
-            return name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2);
-        }
-
-        async function signOut() {
-            try {
-                if (window.AuthService) {
-                    await AuthService.signOut();
-                    console.log('User signed out successfully');
-                    // The UI will update automatically through the auth state listener
-                }
-            } catch (error) {
-                console.error('Error signing out:', error);
-                alert('Error signing out. Please try again.');
-            }
-        }
-
-        function loadProduct() {
-            // Get product ID from URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
-            
             if (!productId) {
-                alert('No product ID provided');
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
                 return;
             }
 
-            // Try to load from Firebase first
-            if (window.FirebaseService) {
-                FirebaseService.getProducts()
-                    .then(products => {
-                        displayProduct(productId, products);
-                    })
-                    .catch(error => {
-                        console.error('Error loading from Firebase:', error);
-                        loadFromLocalStorage(productId);
-                    });
-            } else {
-                loadFromLocalStorage(productId);
+            try {
+                // Wait for Firebase to be ready
+                await new Promise(resolve => {
+                    const checkFirebase = () => {
+                        if (window.FirebaseService) {
+                            resolve();
+                        } else {
+                            setTimeout(checkFirebase, 100);
+                        }
+                    };
+                    checkFirebase();
+                });
+
+                const products = await window.FirebaseService.getProducts();
+                const product = products.find(p => p.id === productId);
+
+                if (product) {
+                    displayProduct(product);
+                    loadRelatedProducts(product, products);
+                    loadingState.classList.add('hidden');
+                    productContent.classList.remove('hidden');
+                } else {
+                    loadingState.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error("Error loading product details:", err);
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
             }
         }
 
-        function loadFromLocalStorage(productId) {
-            // Load products from localStorage or fallback
-            let products = [];
-            const storedProducts = localStorage.getItem('sShopProducts');
-            
-            if (storedProducts) {
-                products = JSON.parse(storedProducts);
-            } else {
-                // Fallback to products.json
-                fetch('products.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        products = data.products;
-                        displayProduct(productId, products);
-                    })
-                    .catch(error => {
-                        console.error('Error loading products:', error);
-                        alert('Product not found');
-                    });
-                return;
-            }
-
-            displayProduct(productId, products);
-        }
-
-        function displayProduct(productId, products) {
-            const product = products.find(p => p.id === productId);
-            
-            if (!product) {
-                alert('Product not found');
-                return;
-            }
-
-            currentProduct = product;
-            unitPrice = product.price;
-
-            // Update page title
+        function displayProduct(product) {
             document.title = `${product.name} - S Shop LK`;
-
-            // Update breadcrumb
-            const category = product.category || 'Product';
-            document.getElementById('breadcrumbCategory').textContent = product.name;
             
-            // Update category link based on product category
-            const categoryLink = document.getElementById('categoryLink');
-            if (categoryLink) {
-                categoryLink.textContent = category;
-                categoryLink.href = getCategoryPage(category);
+            // Breadcrumbs
+            const categorySlug = product.category ? product.category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-') : 'products';
+            const categoryLink = document.getElementById('breadcrumb-category');
+            categoryLink.textContent = product.category || 'Products';
+            categoryLink.href = `category-${categorySlug}.html`;
+            document.getElementById('breadcrumb-product-name').textContent = product.name;
+
+            // Main details
+            document.getElementById('product-image').src = product.image || 'https://placehold.co/600x400/1e293b/e2e8f0?text=No+Image';
+            document.getElementById('product-image').alt = product.name;
+            document.getElementById('product-name').textContent = product.name;
+            document.getElementById('product-description').textContent = product.description;
+            document.getElementById('product-price').textContent = `LKR ${product.price.toLocaleString()}`;
+            document.getElementById('product-sold').textContent = `${product.soldCount || 0} sold`;
+
+            // Trust Badge
+            if (product.trustBadge) {
+                document.getElementById('trust-badge-text').textContent = product.trustBadge;
+                document.getElementById('trust-badge-container').classList.remove('hidden');
             }
 
-            // Update product title
-            document.getElementById('productTitle').textContent = product.name;
+            // Key Details
+            if (product.availability) {
+                document.getElementById('product-availability').textContent = `${product.availability} in stock`;
+                document.getElementById('availability-container').classList.remove('hidden');
+            }
+            if (product.category) {
+                document.getElementById('product-category').textContent = product.category;
+                document.getElementById('category-container').classList.remove('hidden');
+            }
+            if (product.deliverySpeed) {
+                document.getElementById('product-delivery-speed').textContent = product.deliverySpeed;
+                document.getElementById('delivery-speed-container').classList.remove('hidden');
+            }
+            if (product.deliveryMethod) {
+                document.getElementById('product-delivery-method').textContent = product.deliveryMethod;
+                document.getElementById('delivery-method-container').classList.remove('hidden');
+            }
+            if (product.activationRegion) {
+                document.getElementById('product-activation-region').textContent = product.activationRegion;
+                document.getElementById('activation-region-container').classList.remove('hidden');
+            }
 
-            // Update product image
-            const productImage = document.getElementById('productImage');
-            productImage.src = product.image;
-            productImage.alt = product.name;
+            // Other sellers
+            if (product.otherSellers > 0) {
+                document.getElementById('product-other-sellers').textContent = product.otherSellers;
+                document.getElementById('other-sellers-container').classList.remove('hidden');
+            }
 
-            // Update product info
-            const productInfo = document.getElementById('productInfo');
-            productInfo.innerHTML = `
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
-                    <h4 class="font-semibold text-gray-900 mb-2">Product Description</h4>
-                    <p class="text-gray-700 leading-relaxed">${product.description}</p>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">Delivery speed:</span>
-                    <span class="font-semibold text-green-600">${product.delivery_speed || 'Instant'}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">Delivery method:</span>
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span class="font-semibold">${product.delivery_method || 'Auto delivery'}</span>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">Activation Region:</span>
-                    <span class="font-semibold text-green-600">${product.activation_region || 'Can activate in Sri Lanka'}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">Product Details:</span>
-                    <span class="font-semibold">${product.name}</span>
-                </div>
-                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <p class="text-green-800 font-semibold text-center">[ ${product.trust_badge || 'TRUSTED SELLER WITH OVER 1000 SALES'} ]</p>
-                </div>
-                ${product.features ? (Array.isArray(product.features) ? product.features.map(feature => `
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                        <p class="text-blue-800 font-semibold text-center">- ${feature} -</p>
-                    </div>
-                `).join('') : `
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                        <p class="text-blue-800 font-semibold text-center">- ${product.features} -</p>
-                    </div>
-                `) : ''}
-            `;
-
-            // Update purchase options
-            const availability = parseInt(product.availability) || 1;
-            document.getElementById('productAvailability').textContent = availability;
-            document.getElementById('unitPrice').textContent = `LKR ${product.price.toLocaleString()}`;
-            document.getElementById('redeemPoints').textContent = product.redeem_points || 0;
-            document.getElementById('soldCount').textContent = `${product.sold || 0} sold`;
-            document.getElementById('otherSellers').textContent = `Other sellers (${product.other_sellers || 0})`;
-            document.getElementById('maxQuantity').textContent = availability;
-
-            // Update modal product name
-            document.getElementById('modalProductName').textContent = product.name;
-
-            // Initialize total
-            updateTotal();
+            // Buy button
+            const buyNowButton = document.getElementById('buy-now-button');
+            buyNowButton.onclick = () => showBuyNowModal(product.name);
         }
 
-        function updateTotal() {
-            const total = quantity * unitPrice;
-            document.getElementById('totalAmount').textContent = 'LKR ' + total.toLocaleString();
-        }
+        function loadRelatedProducts(currentProduct, allProducts) {
+            const relatedProductsSection = document.getElementById('related-products-section');
 
-        function increaseQuantity() {
-            const availability = parseInt(currentProduct.availability) || 1;
-            if (quantity < availability) {
-                quantity++;
-                document.getElementById('quantity').textContent = quantity;
-                updateTotal();
-                document.getElementById('quantityInfo').textContent = `Max: ${availability}`;
+            if (!currentProduct.category) {
+                relatedProductsSection.classList.add('hidden');
+                return;
+            }
+
+            const relatedProducts = allProducts.filter(p => 
+                p.category === currentProduct.category && p.id !== currentProduct.id
+            ).slice(0, 4); // Get up to 4 related products
+
+            if (relatedProducts.length > 0) {
+                displayRelatedProducts(relatedProducts);
+                relatedProductsSection.classList.remove('hidden');
             } else {
-                // Show a message that maximum quantity reached
-                alert(`Maximum quantity available: ${availability}`);
-                document.getElementById('quantityInfo').textContent = `Max: ${availability}`;
+                relatedProductsSection.classList.add('hidden');
             }
         }
 
-        function decreaseQuantity() {
-            if (quantity > 1) {
-                quantity--;
-                document.getElementById('quantity').textContent = quantity;
-                updateTotal();
-                const availability = parseInt(currentProduct.availability) || 1;
-                document.getElementById('quantityInfo').textContent = `Max: ${availability}`;
-            }
+        function displayRelatedProducts(relatedProducts) {
+            const container = document.getElementById('related-products-container');
+            container.innerHTML = ''; // Clear previous content
+
+            relatedProducts.forEach(product => {
+                const detailPage = `dynamic-product-detail.html?id=${product.id}`;
+                const productCard = document.createElement('div');
+                productCard.className = 'bg-slate-800 rounded-xl shadow-lg hover:shadow-blue-500/20 transition-all duration-300 border border-slate-700';
+                
+                productCard.innerHTML = `
+                    <a href="${detailPage}">
+                        <img src="${product.image || 'https://placehold.co/400x300/1e293b/e2e8f0?text=No+Image'}" alt="${product.name}" class="w-full h-40 object-cover rounded-t-xl border-b border-slate-700">
+                    </a>
+                    <div class="p-4">
+                        <h3 class="text-md font-semibold text-white truncate mb-1"><a href="${detailPage}" class="hover:text-blue-400">${product.name}</a></h3>
+                        <span class="text-lg font-bold text-blue-400">LKR ${product.price.toLocaleString()}</span>
+                    </div>
+                `;
+                container.appendChild(productCard);
+            });
         }
 
-        function showBuyNowModal() {
-            if (!currentProduct) return;
-
+        function showBuyNowModal(productName) {
             const modal = document.getElementById('buyNowModal');
-            const whatsappLink = document.getElementById('whatsappLink');
-            const discordLink = document.getElementById('discordLink');
+            document.getElementById('productNameInModal').textContent = productName;
 
-            // Pre-fill the WhatsApp message with the product name and quantity
             const whatsappNumber = '+94767854069'; 
-            const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${currentProduct.name} - Quantity: ${quantity} - Total: LKR ${(quantity * unitPrice).toLocaleString()}`);
-            whatsappLink.href = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+            const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${productName}`);
+            document.getElementById('whatsappLink').href = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
-            // Set the Discord direct message link
             const discordUserId = '1078335412713570314'; 
-            discordLink.href = `https://discordapp.com/users/${discordUserId}`;
+            document.getElementById('discordLink').href = `https://discordapp.com/users/${discordUserId}`;
 
             modal.classList.remove('hidden');
         }
@@ -510,26 +346,7 @@
             const modal = document.getElementById('buyNowModal');
             modal.classList.add('hidden');
         }
-
-        // Helper function to get category page URL
-        function getCategoryPage(category) {
-            const categoryLower = category.toLowerCase();
-            
-            // Map categories to their specific pages
-            if (categoryLower.includes('games') || categoryLower.includes('gaming')) {
-                return 'category-games.html';
-            } else if (categoryLower.includes('software') || categoryLower.includes('app')) {
-                return 'category-software-apps.html';
-            } else if (categoryLower.includes('boosting') || categoryLower.includes('coaching')) {
-                return 'category-boosting-coaching.html';
-            } else if (categoryLower.includes('gift') || categoryLower.includes('card')) {
-                return 'category-gift-cards.html';
-            } else {
-                // Default to all products page with category filter
-                return `products.html?category=${encodeURIComponent(category)}`;
-            }
-        }
     </script>
 
 </body>
-</html> 
+</html>

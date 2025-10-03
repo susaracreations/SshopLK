@@ -10,6 +10,10 @@
     <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Rate Limiting Configuration -->
+    <script src="rate-limit-config.js"></script>
+    <!-- Status Monitor -->
+    <script src="status-monitor.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body {
@@ -381,8 +385,7 @@
 
     // Load products on page load
     window.addEventListener('load', function() {
-        loadProducts();
-        loadHeroImages();
+        initializePage();
         setupKeyboardShortcuts();
     });
 
@@ -409,52 +412,174 @@
         });
     }
 
+    // Wait for Firebase to be fully loaded
+    function waitForFirebase() {
+        if (window.auth && window.AuthService) {
+            console.log('Firebase is ready, initializing Google sign-in');
+            initializeGoogleSignIn();
+        } else {
+            console.log('Waiting for Firebase to initialize...');
+            setTimeout(waitForFirebase, 100);
+        }
+    }
+    
+    // Prevent multiple rapid page loads
+    let pageLoadCount = 0;
+    const MAX_LOADS_PER_MINUTE = 10;
+    
+    function checkPageLoadRate() {
+        const now = Date.now();
+        const oneMinuteAgo = now - (60 * 1000);
+        
+        // Clean old entries
+        pageLoadCount = Math.max(0, pageLoadCount - 1);
+        
+        if (pageLoadCount >= MAX_LOADS_PER_MINUTE) {
+            console.warn('Page load rate limit exceeded. Using cached data.');
+            return false;
+        }
+        
+        pageLoadCount++;
+        return true;
+    }
+    
+    // Cache warming mechanism
+    function warmCache() {
+        // Pre-load essential data to localStorage if not already present
+        if (!localStorage.getItem('sShopProducts')) {
+            fetch('products.json')
+                .then(response => response.json())
+                .then(data => {
+                    localStorage.setItem('sShopProducts', JSON.stringify(data.products));
+                    console.log('Cache warmed with products.json data');
+                })
+                .catch(error => {
+                    console.warn('Failed to warm cache with products.json:', error);
+                });
+        }
+        
+        // Set default hero images if not present
+        if (!localStorage.getItem('sShopHeroImages')) {
+            const defaultImages = [
+                {
+                    url: 'https://placehold.co/600x400/805ad5/ffffff?text=S+Shop+LK',
+                    alt: 'S Shop LK Hero 1',
+                    title: 'Welcome to S Shop LK'
+                },
+                {
+                    url: 'https://placehold.co/600x400/667eea/ffffff?text=Gaming+Products',
+                    alt: 'S Shop LK Hero 2',
+                    title: 'Gaming Products'
+                },
+                {
+                    url: 'https://placehold.co/600x400/764ba2/ffffff?text=Best+Deals',
+                    alt: 'S Shop LK Hero 3',
+                    title: 'Best Deals'
+                }
+            ];
+            localStorage.setItem('sShopHeroImages', JSON.stringify(defaultImages));
+            console.log('Cache warmed with default hero images');
+        }
+    }
+    
+    // Initialize page with rate limiting
+    function initializePage() {
+        // Warm cache first
+        warmCache();
+        
+        if (!checkPageLoadRate()) {
+            // Use cached data if rate limit exceeded
+            loadHeroImagesFromLocalStorage();
+            loadHeroBackgroundImageFromLocalStorage();
+            toggleHeroImageVisibilityFromLocalStorage();
+            initializeCarousel();
+            loadFromLocalStorage();
+            return;
+        }
+        
+        // Normal initialization
+        loadHeroImages();
+        loadProducts();
+    }
+
     // Hero Image Carousel Variables
     let heroImages = [];
     let currentImageIndex = 0;
     let carouselInterval;
     let isAutoPlaying = true;
+    
+    // Rate limiting variables
+    let lastFirebaseCall = 0;
+    const MIN_CALL_INTERVAL = 2000; // 2 seconds between Firebase calls
+    let isInitializing = false;
 
     function loadHeroImages() {
+        // Prevent multiple simultaneous calls
+        if (isInitializing) return;
+        isInitializing = true;
+        
+        // Check rate limiting
+        const now = Date.now();
+        if (now - lastFirebaseCall < MIN_CALL_INTERVAL) {
+            console.log('Rate limiting: skipping Firebase call, using cached data');
+            loadHeroImagesFromLocalStorage();
+            loadHeroBackgroundImageFromLocalStorage();
+            toggleHeroImageVisibilityFromLocalStorage();
+            initializeCarousel();
+            isInitializing = false;
+            return;
+        }
+        
         // Try to load from Firebase first
         if (window.FirebaseService) {
-            FirebaseService.getWebsiteSettings()
-                .then(settings => {
-                    if (settings.heroImages && settings.heroImages.length > 0) {
-                        heroImages = settings.heroImages;
-                        console.log('Loaded hero images from Firebase:', heroImages);
-                    } else {
-                        loadHeroImagesFromLocalStorage();
-                    }
-                    
-                    // Load background image
-                    if (settings.heroBackgroundImage) {
-                        loadHeroBackgroundImage(settings.heroBackgroundImage);
-                    } else {
-                        loadHeroBackgroundImageFromLocalStorage();
-                    }
-                    
-                    // Handle hero image visibility
-                    if (settings.showHeroImages !== undefined) {
-                        toggleHeroImageVisibility(settings.showHeroImages);
-                    } else {
-                        toggleHeroImageVisibilityFromLocalStorage();
-                    }
-                    
-                    initializeCarousel();
-                })
-                .catch(error => {
-                    console.error('Error loading hero images from Firebase:', error);
+            lastFirebaseCall = now;
+            safeFirebaseCall(
+                () => FirebaseService.getWebsiteSettings(),
+                () => {
                     loadHeroImagesFromLocalStorage();
                     loadHeroBackgroundImageFromLocalStorage();
                     toggleHeroImageVisibilityFromLocalStorage();
                     initializeCarousel();
-                });
+                    return null;
+                }
+            ).then(settings => {
+                if (settings && settings.heroImages && settings.heroImages.length > 0) {
+                    heroImages = settings.heroImages;
+                    console.log('Loaded hero images from Firebase:', heroImages);
+                } else {
+                    loadHeroImagesFromLocalStorage();
+                }
+                
+                // Load background image
+                if (settings && settings.heroBackgroundImage) {
+                    loadHeroBackgroundImage(settings.heroBackgroundImage);
+                } else {
+                    loadHeroBackgroundImageFromLocalStorage();
+                }
+                
+                // Handle hero image visibility
+                if (settings && settings.showHeroImages !== undefined) {
+                    toggleHeroImageVisibility(settings.showHeroImages);
+                } else {
+                    toggleHeroImageVisibilityFromLocalStorage();
+                }
+                
+                initializeCarousel();
+                isInitializing = false;
+            }).catch(error => {
+                console.error('Error loading hero images from Firebase:', error);
+                loadHeroImagesFromLocalStorage();
+                loadHeroBackgroundImageFromLocalStorage();
+                toggleHeroImageVisibilityFromLocalStorage();
+                initializeCarousel();
+                isInitializing = false;
+            });
         } else {
             loadHeroImagesFromLocalStorage();
             loadHeroBackgroundImageFromLocalStorage();
             toggleHeroImageVisibilityFromLocalStorage();
             initializeCarousel();
+            isInitializing = false;
         }
     }
 
@@ -681,23 +806,36 @@
     }
 
     function loadProducts() {
+        // Check rate limiting
+        const now = Date.now();
+        if (now - lastFirebaseCall < MIN_CALL_INTERVAL) {
+            console.log('Rate limiting: skipping Firebase call, using cached data');
+            loadFromLocalStorage();
+            return;
+        }
+        
         // Try to load from Firebase first
         if (window.FirebaseService) {
-            FirebaseService.getProducts()
-                .then(firebaseProducts => {
-                    if (firebaseProducts.length > 0) {
-                        products = firebaseProducts;
-                        displayProducts();
-                        console.log('Loaded products from Firebase:', products);
-                    } else {
-                        // Fallback to localStorage if no Firebase data
-                        loadFromLocalStorage();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading from Firebase:', error);
+            lastFirebaseCall = now;
+            safeFirebaseCall(
+                () => FirebaseService.getProducts(),
+                () => {
                     loadFromLocalStorage();
-                });
+                    return [];
+                }
+            ).then(firebaseProducts => {
+                if (firebaseProducts && firebaseProducts.length > 0) {
+                    products = firebaseProducts;
+                    displayProducts();
+                    console.log('Loaded products from Firebase:', products);
+                } else {
+                    // Fallback to localStorage if no Firebase data
+                    loadFromLocalStorage();
+                }
+            }).catch(error => {
+                console.error('Error loading from Firebase:', error);
+                loadFromLocalStorage();
+            });
         } else {
             loadFromLocalStorage();
         }
@@ -707,23 +845,16 @@
         const storedProducts = localStorage.getItem('sShopProducts');
         if (storedProducts) {
             products = JSON.parse(storedProducts);
+            console.log('Loaded products from localStorage:', products);
             displayProducts();
         } else {
-            // Fallback to products.json if no admin data
-            fetch('products.json')
-                .then(response => response.json())
-                .then(data => {
-                    products = data.products;
-                    displayProducts();
-                })
-                .catch(error => {
-                    console.error('Error loading products:', error);
-                    // Load default products if both fail
-                    products = [];
-                    displayProducts();
-                });
+            // If no products in Firebase or localStorage, show an empty state.
+            console.warn('No products found in Firebase or localStorage.');
+            products = [];
+            displayProducts();
         }
     }
+    
     
     function displayProducts() {
         const productContainer = document.getElementById('productContainer');
@@ -807,7 +938,20 @@
          * This function handles the search functionality.
          * It filters the product cards based on the text entered in the search bar.
          */
+        let searchTimeout;
         function handleSearch() {
+            // Clear previous timeout
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+            
+            // Debounce search to prevent excessive calls
+            searchTimeout = setTimeout(() => {
+                performSearch();
+            }, 300); // Wait 300ms after user stops typing
+        }
+        
+        function performSearch() {
             // Get the search input value and convert it to lowercase for case-insensitive matching
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
@@ -894,6 +1038,33 @@
             window.location.href = 'login.html';
         }
         }
+
+    // Retry mechanism with exponential backoff
+    async function retryFirebaseCall(apiCall, maxRetries = 3, baseDelay = 1000) {
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+            try {
+                return await apiCall();
+            } catch (error) {
+                if (attempt === maxRetries - 1) {
+                    throw error;
+                }
+                
+                const delay = baseDelay * Math.pow(2, attempt);
+                console.log(`Firebase call failed, retrying in ${delay}ms (attempt ${attempt + 1}/${maxRetries})`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+    }
+    
+    // Safe Firebase call wrapper
+    async function safeFirebaseCall(apiCall, fallback) {
+        try {
+            return await retryFirebaseCall(apiCall);
+        } catch (error) {
+            console.warn('Firebase call failed, using fallback:', error);
+            return fallback();
+        }
+    }
 
     </script>
 

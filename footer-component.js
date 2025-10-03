@@ -24,11 +24,11 @@ class FooterComponent {
                     <!-- Right Side: Social Media Icons -->
                     <div class="flex space-x-4">
                         <!-- WhatsApp Icon -->
-                        <a href="https://wa.me/94767854069" class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-slate-900 transition-colors duration-300">
+                        <a id="footer-whatsapp-link" href="https://wa.me/94767854069" class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-slate-900 transition-colors duration-300">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp Icon" class="h-6 w-6">
                         </a>
                         <!-- Discord Icon -->
-                        <a href="https://discord.gg/YourInviteCode" class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-slate-900 transition-colors duration-300">
+                        <a id="footer-discord-link" href="https://discord.gg/nsz5SFhXMh" class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-slate-900 transition-colors duration-300">
                             <img src="https://cdn-icons-png.flaticon.com/512/4945/4945973.png" alt="Discord Icon" class="h-6 w-6">
                         </a>
                     </div>
@@ -40,6 +40,7 @@ class FooterComponent {
     // Initialize the footer component
     init() {
         this.loadFooter();
+        this.loadSocialLinks();
     }
 
     // Load footer into the page
@@ -48,6 +49,29 @@ class FooterComponent {
         if (footerContainer) {
             footerContainer.innerHTML = this.footerHTML;
         }
+    }
+
+    // Load social links from Firebase settings
+    loadSocialLinks() {
+        const checkFirebase = () => {
+            if (window.FirebaseService) {
+                window.FirebaseService.getWebsiteSettings().then(settings => {
+                    if (settings) {
+                        const whatsappLink = document.getElementById('footer-whatsapp-link');
+                        const discordLink = document.getElementById('footer-discord-link');
+                        if (whatsappLink && settings.phoneNumber) {
+                            whatsappLink.href = `https://wa.me/${settings.phoneNumber.replace(/\s/g, '')}`;
+                        }
+                        if (discordLink && settings.discordLink) {
+                            discordLink.href = settings.discordLink;
+                        }
+                    }
+                });
+            } else {
+                setTimeout(checkFirebase, 100);
+            }
+        };
+        checkFirebase();
     }
 }
 

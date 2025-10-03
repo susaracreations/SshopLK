@@ -70,6 +70,21 @@
         input:checked + .slider:before {
             transform: translateX(26px);
         }
+
+        /* Toast Notification */
+        .toast {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast.hide {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -160,52 +175,9 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                                 <input type="text" id="phoneNumber" value="+94 71 123 4567" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Features Toggle -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Features</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Enable Chat System</label>
-                                    <p class="text-xs text-gray-500">Allow customers to chat with support</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="enableChat" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Enable Reviews</label>
-                                    <p class="text-xs text-gray-500">Allow customers to leave product reviews</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="enableReviews">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Enable Newsletter</label>
-                                    <p class="text-xs text-gray-500">Allow customers to subscribe to newsletter</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="enableNewsletter">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Maintenance Mode</label>
-                                    <p class="text-xs text-gray-500">Put website in maintenance mode</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="maintenanceMode">
-                                    <span class="slider"></span>
-                                </label>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Discord Community Link</label>
+                                <input type="url" id="discordLink" value="https://discord.gg/nsz5SFhXMh" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>
                     </div>
@@ -241,71 +213,6 @@
                         </div>
                     </div>
 
-                    <!-- Notifications -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Notifications</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Email Notifications</label>
-                                    <p class="text-xs text-gray-500">Receive email alerts for new orders</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="emailNotifications" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Chat Notifications</label>
-                                    <p class="text-xs text-gray-500">Get notified of new chat messages</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="chatNotifications" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Low Stock Alerts</label>
-                                    <p class="text-xs text-gray-500">Get notified when products are low in stock</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="lowStockAlerts">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Security -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Security</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Two-Factor Authentication</label>
-                                    <p class="text-xs text-gray-500">Enable 2FA for admin accounts</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="twoFactorAuth">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Session Timeout</label>
-                                    <p class="text-xs text-gray-500">Auto-logout after inactivity</p>
-                                </div>
-                                <select id="sessionTimeout" class="px-3 py-1 border border-gray-300 rounded text-sm">
-                                    <option value="15">15 minutes</option>
-                                    <option value="30" selected>30 minutes</option>
-                                    <option value="60">1 hour</option>
-                                    <option value="120">2 hours</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -314,43 +221,6 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-6">Payment Settings</h2>
                 
                 <div class="space-y-6">
-                    <!-- Payment Methods -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Payment Methods</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Credit Card</label>
-                                    <p class="text-xs text-gray-500">Accept credit card payments</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="creditCardEnabled" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">PayPal</label>
-                                    <p class="text-xs text-gray-500">Accept PayPal payments</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="paypalEnabled" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Bank Transfer</label>
-                                    <p class="text-xs text-gray-500">Accept bank transfers</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="bankTransferEnabled">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Currency Settings -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Currency Settings</h3>
@@ -373,74 +243,19 @@
                 </div>
             </div>
 
-            <!-- Backup & Maintenance -->
-            <div class="settings-card bg-white rounded-xl border border-gray-200 p-6">
-                <h2 class="text-xl font-bold text-gray-900 mb-6">Backup & Maintenance</h2>
-                
-                <div class="space-y-6">
-                    <!-- Backup Settings -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Backup Settings</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Auto Backup</label>
-                                    <p class="text-xs text-gray-500">Automatically backup data daily</p>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="autoBackup" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Backup Retention</label>
-                                <select id="backupRetention" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="7">7 days</option>
-                                    <option value="30" selected>30 days</option>
-                                    <option value="90">90 days</option>
-                                    <option value="365">1 year</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Maintenance Actions -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Maintenance Actions</h3>
-                        <div class="space-y-4">
-                            <button onclick="createBackup()" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                                Create Manual Backup
-                            </button>
-                            <button onclick="clearCache()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors">
-                                Clear Cache
-                            </button>
-                            <button onclick="optimizeDatabase()" class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-                                Optimize Database
-                            </button>
-                            <button onclick="resetSettings()" class="w-full bg-red-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors">
-                                Reset to Defaults
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Save Button -->
         <div class="mt-8 flex justify-center">
-            <button onclick="saveSettings()" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-lg">
-                Save All Settings
+            <button onclick="saveSettings()" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Save Changes
             </button>
         </div>
 
-        <!-- Success/Error Messages -->
-        <div id="successMessage" class="hidden mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg text-center">
-            Settings saved successfully!
-        </div>
-        <div id="errorMessage" class="hidden mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center">
-            Error saving settings. Please try again.
-        </div>
     </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[1001]"></div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -475,26 +290,13 @@
                     siteName: 'S Shop LK',
                     siteUrl: 'https://sshoplk.com',
                     contactEmail: 'contact@sshoplk.com',
-                    phoneNumber: '+94 71 123 4567',
-                    enableChat: true,
-                    enableReviews: false,
-                    enableNewsletter: false,
-                    maintenanceMode: false,
+                    phoneNumber: '+94 76 785 4069',
+                    discordLink: 'https://discord.gg/nsz5SFhXMh',
                     adminName: adminUsername,
-                    adminEmail: 'admin@sshoplk.com',
+                    adminEmail: sessionStorage.getItem('adminEmail') || 'admin@sshoplk.com',
                     timezone: 'Asia/Colombo',
-                    emailNotifications: true,
-                    chatNotifications: true,
-                    lowStockAlerts: false,
-                    twoFactorAuth: false,
-                    sessionTimeout: '30',
-                    creditCardEnabled: true,
-                    paypalEnabled: true,
-                    bankTransferEnabled: false,
                     defaultCurrency: 'LKR',
-                    currencySymbol: 'LKR',
-                    autoBackup: true,
-                    backupRetention: '30'
+                    currencySymbol: 'LKR'
                 };
                 
                 // Merge with saved settings
@@ -517,39 +319,32 @@
             }
         }
 
-        function saveSettings() {
+        async function saveSettings() {
             try {
                 const settings = {
                     siteName: document.getElementById('siteName').value,
                     siteUrl: document.getElementById('siteUrl').value,
                     contactEmail: document.getElementById('contactEmail').value,
                     phoneNumber: document.getElementById('phoneNumber').value,
-                    enableChat: document.getElementById('enableChat').checked,
-                    enableReviews: document.getElementById('enableReviews').checked,
-                    enableNewsletter: document.getElementById('enableNewsletter').checked,
-                    maintenanceMode: document.getElementById('maintenanceMode').checked,
+                    discordLink: document.getElementById('discordLink').value,
                     adminName: document.getElementById('adminName').value,
                     adminEmail: document.getElementById('adminEmail').value,
                     timezone: document.getElementById('timezone').value,
-                    emailNotifications: document.getElementById('emailNotifications').checked,
-                    chatNotifications: document.getElementById('chatNotifications').checked,
-                    lowStockAlerts: document.getElementById('lowStockAlerts').checked,
-                    twoFactorAuth: document.getElementById('twoFactorAuth').checked,
-                    sessionTimeout: document.getElementById('sessionTimeout').value,
-                    creditCardEnabled: document.getElementById('creditCardEnabled').checked,
-                    paypalEnabled: document.getElementById('paypalEnabled').checked,
-                    bankTransferEnabled: document.getElementById('bankTransferEnabled').checked,
                     defaultCurrency: document.getElementById('defaultCurrency').value,
-                    currencySymbol: document.getElementById('currencySymbol').value,
-                    autoBackup: document.getElementById('autoBackup').checked,
-                    backupRetention: document.getElementById('backupRetention').value
+                    currencySymbol: document.getElementById('currencySymbol').value
                 };
                 
-                // Save to localStorage
-                localStorage.setItem('adminSettings', JSON.stringify(settings));
-                
-                // Show success message
-                showMessage('success', 'Settings saved successfully!');
+                // Save to Firebase if available
+                if (window.FirebaseService) {
+                    await FirebaseService.updateWebsiteSettings(settings);
+                    // Also save to localStorage for quick access on this page
+                    localStorage.setItem('adminSettings', JSON.stringify(settings));
+                    showMessage('success', 'Settings saved to Firebase successfully!');
+                } else {
+                    // Fallback to localStorage only
+                    localStorage.setItem('adminSettings', JSON.stringify(settings));
+                    showMessage('warning', 'Settings saved locally. Firebase not connected.');
+                }
                 
                 // Log admin action
                 if (window.FirebaseService) {
@@ -565,99 +360,43 @@
         }
 
         function showMessage(type, message) {
-            const successDiv = document.getElementById('successMessage');
-            const errorDiv = document.getElementById('errorMessage');
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
             
-            if (type === 'success') {
-                successDiv.textContent = message;
-                successDiv.classList.remove('hidden');
-                errorDiv.classList.add('hidden');
-            } else {
-                errorDiv.textContent = message;
-                errorDiv.classList.remove('hidden');
-                successDiv.classList.add('hidden');
+            let bgColor, textColor, icon;
+
+            switch (type) {
+                case 'success':
+                    bgColor = 'bg-green-500';
+                    textColor = 'text-white';
+                    icon = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                    break;
+                case 'error':
+                    bgColor = 'bg-red-500';
+                    textColor = 'text-white';
+                    icon = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                    break;
+                case 'warning':
+                    bgColor = 'bg-yellow-500';
+                    textColor = 'text-white';
+                    icon = `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>`;
+                    break;
             }
-            
-            // Hide message after 3 seconds
+
+            toast.className = `toast flex items-center space-x-3 p-4 rounded-lg shadow-lg ${bgColor} ${textColor}`;
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+
+            toastContainer.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => toast.classList.add('show'), 10);
+
+            // Animate out and remove
             setTimeout(() => {
-                successDiv.classList.add('hidden');
-                errorDiv.classList.add('hidden');
+                toast.classList.remove('show');
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 300);
             }, 3000);
-        }
-
-        function createBackup() {
-            try {
-                const backup = {
-                    timestamp: new Date().toISOString(),
-                    products: JSON.parse(localStorage.getItem('products') || '[]'),
-                    orders: JSON.parse(localStorage.getItem('orders') || '[]'),
-                    customers: JSON.parse(localStorage.getItem('customers') || '[]'),
-                    settings: JSON.parse(localStorage.getItem('adminSettings') || '{}')
-                };
-                
-                // Save backup
-                const backups = JSON.parse(localStorage.getItem('backups') || '[]');
-                backups.unshift(backup);
-                
-                // Keep only recent backups
-                const retentionDays = parseInt(document.getElementById('backupRetention').value);
-                const cutoffDate = new Date(Date.now() - retentionDays * 24 * 60 * 60 * 1000);
-                const filteredBackups = backups.filter(backup => new Date(backup.timestamp) > cutoffDate);
-                
-                localStorage.setItem('backups', JSON.stringify(filteredBackups));
-                
-                showMessage('success', 'Backup created successfully!');
-                
-            } catch (error) {
-                console.error('Error creating backup:', error);
-                showMessage('error', 'Error creating backup. Please try again.');
-            }
-        }
-
-        function clearCache() {
-            try {
-                // Clear browser cache for this site
-                if ('caches' in window) {
-                    caches.keys().then(names => {
-                        names.forEach(name => {
-                            caches.delete(name);
-                        });
-                    });
-                }
-                
-                showMessage('success', 'Cache cleared successfully!');
-                
-            } catch (error) {
-                console.error('Error clearing cache:', error);
-                showMessage('error', 'Error clearing cache. Please try again.');
-            }
-        }
-
-        function optimizeDatabase() {
-            try {
-                // Simulate database optimization
-                setTimeout(() => {
-                    showMessage('success', 'Database optimized successfully!');
-                }, 1000);
-                
-            } catch (error) {
-                console.error('Error optimizing database:', error);
-                showMessage('error', 'Error optimizing database. Please try again.');
-            }
-        }
-
-        function resetSettings() {
-            if (confirm('Are you sure you want to reset all settings to defaults? This action cannot be undone.')) {
-                try {
-                    localStorage.removeItem('adminSettings');
-                    loadSettings();
-                    showMessage('success', 'Settings reset to defaults!');
-                    
-                } catch (error) {
-                    console.error('Error resetting settings:', error);
-                    showMessage('error', 'Error resetting settings. Please try again.');
-                }
-            }
         }
 
         function logout() {

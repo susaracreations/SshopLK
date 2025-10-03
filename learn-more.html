@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S Shop LK - Your Gaming & Digital Marketplace</title>
+    <title>Learn More - S Shop LK</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
     <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
@@ -16,31 +15,6 @@
             font-family: 'Inter', sans-serif;
             background-color: #0f172a; /* Dark blue background */
             color: #e2e8f0; /* Light gray text */
-        }
-        /* Custom scrollbar for a cleaner look on the dark theme */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
-        
-        /* Line clamp utility for truncating text */
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-clamp: 2;
         }
         
         /* Mobile header scroll behavior */
@@ -60,307 +34,133 @@
     <!-- Replace header -->
     <div id="header-container"></div>
 
-    <!-- Chat Link (Fixed Position) -->
-    <div class="fixed bottom-6 right-6 z-50">
-        <button onclick="accessChat()" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 flex items-center space-x-2">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            <span class="hidden sm:inline">Chat with Admin</span>
-        </button>
-    </div>
-
-    <!-- Hero Section -->
-    <div id="heroSection" class="bg-gradient-to-r from-purple-900 to-red-900 text-white py-16 md:py-24 relative overflow-hidden">
-        <!-- Background Image Overlay -->
-        <div id="heroBackgroundImage" class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 hidden"></div>
-        <!-- Gradient Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-red-900/80"></div>
-        
-        <div class="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between space-y-10 lg:space-y-0 lg:space-x-10 relative z-10">
-            <!-- Left side: Text and Search -->
-            <div class="flex-1 text-center lg:text-left">
-                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight">
-                    START SHOPPING<br>TODAY
-                </h1>
-                <p class="text-lg md:text-xl text-gray-200 mb-8">
-                    Join Our Buyer Community: Discover Millions of Products from Trusted Global Sellers
-                </p>
-                <div class="max-w-xl mx-auto lg:mx-0">
-                    <div class="flex items-center bg-white rounded-full p-2 shadow-lg">
-                        <!-- Added onkeyup event to trigger search on 'Enter' key press -->
-                        <input type="text" id="searchInput" placeholder="Search in S Shop" class="flex-grow px-4 py-2 bg-transparent text-gray-900 focus:outline-none placeholder-gray-500" onkeyup="if(event.key === 'Enter') handleSearch()">
-                        <button class="bg-red-600 hover:bg-red-700 text-white font-bold p-3 rounded-full transition-colors duration-300" onclick="handleSearch()">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <!-- Trust Badges -->
-                <div class="flex items-center justify-center lg:justify-start space-x-6 mt-6 text-sm text-gray-200">
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944c-2.88 0-5.591 1.11-7.618 3.116A12.03 12.03 0 002 12c0 3.018 1.12 5.86 3.116 7.882A11.955 11.955 0 0112 21.056c2.88 0 5.591-1.11 7.618-3.116A12.03 12.03 0 0022 12c0-3.018-1.12-5.86-3.116-7.882z" />
+    <!-- Breadcrumbs -->
+    <div class="bg-slate-800 border-b border-slate-700">
+        <div class="container mx-auto px-4 py-3">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2 text-sm text-gray-400">
+                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+                    <li class="flex items-center">
+                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                         </svg>
-                        <span>Secure Shopping</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Trusted by Millions</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right side: Mascot Image (Optional) -->
-            <div id="heroImageContainer" class="flex-1 flex justify-center lg:justify-end hidden">
-                <!-- Hero image carousel with auto-fading -->
-                <div id="heroCarousel" class="relative w-full max-w-lg h-80 rounded-xl shadow-2xl overflow-hidden">
-                    <div id="heroImageInnerContainer" class="w-full h-full relative">
-                        <!-- Images will be loaded dynamically -->
-                    </div>
-                    <!-- Carousel indicators -->
-                    <div id="carouselIndicators" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                        <!-- Indicators will be added dynamically -->
-                    </div>
-                    <!-- Navigation arrows -->
-                    <button id="prevButton" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-300 opacity-0 group-hover:opacity-100">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <button id="nextButton" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-300 opacity-0 group-hover:opacity-100">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+                        <span class="text-white">Learn More</span>
+                    </li>
+                </ol>
+            </nav>
         </div>
     </div>
 
     <!-- Main Content Area -->
     <main class="flex-grow container mx-auto px-4 py-8 md:py-16">
-        
-        <!-- Featured Products Section -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold mb-6 text-white">Featured Products</h2>
-            
-            <!-- Category Filter Buttons -->
-            <div class="flex flex-wrap gap-4 mb-8">
-                <button onclick="filterProducts('all')" id="filter-all" class="category-filter bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                    All Products
-                </button>
-                <button onclick="filterProducts('games')" id="filter-games" class="category-filter bg-slate-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-600 transition-colors">
-                    Games
-                </button>
-                <button onclick="filterProducts('software-apps')" id="filter-software" class="category-filter bg-slate-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-600 transition-colors">
-                    Software & Apps
-                </button>
+        <div class="max-w-4xl mx-auto">
+            <!-- Page Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">How to Get Started</h1>
+                <p class="text-xl text-gray-300">Your guide to buying digital products on S Shop LK</p>
             </div>
-            
-            <!-- Container for search results and error message -->
-            <div class="relative">
-                <p id="searchError" class="hidden text-center text-red-400 font-semibold text-lg py-8">
-                    No products found for your search.
-                </p>
-                <div id="productContainer" class="flex overflow-x-scroll snap-x-mandatory pb-4 space-x-6 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
-                    <!-- Product cards will be loaded dynamically from admin panel data -->
-                </div>
-            </div>
-        </section>
 
-        <!-- New Buyer-Focused Hero Section -->
-        <section class="my-16">
-            <div class="bg-gradient-to-r from-red-600 via-red-700 to-red-800 rounded-3xl overflow-hidden shadow-2xl relative">
-                <!-- Background Pattern -->
-                <div class="absolute inset-0 opacity-10">
-                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, white 2px, transparent 2px), radial-gradient(circle at 75% 75%, white 2px, transparent 2px); background-size: 50px 50px;"></div>
-                </div>
-                
-                <div class="relative z-10 px-8 py-16 lg:px-16 lg:py-20">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        <!-- Left Side: Text Content -->
-                        <div class="text-center lg:text-left">
-                            <h2 class="text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
-                                START SHOPPING<br>
-                                <span class="text-yellow-300">TODAY</span>
-                            </h2>
-                            <p class="text-xl text-red-100 mb-8 leading-relaxed">
-                                Join Our Buyer Community: Discover Millions of Products from Trusted Global Sellers
-                            </p>
-                            
-                            <!-- Call-to-Action Buttons -->
-                            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                <a href="products.html" class="bg-white text-red-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg text-center">
-                                    Browse Products
-                                </a>
-                                <a href="learn-more.html" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-red-600 transition-all duration-300 transform hover:scale-105 text-center">
-                                    Learn More
-                                </a>
-                            </div>
-                            
-                            <!-- Trust Indicators -->
-                            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-6 mt-8">
-                                <div class="flex items-center space-x-2 text-white">
-                                    <svg class="w-6 h-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944c-2.88 0-5.591 1.11-7.618 3.116A12.03 12.03 0 002 12c0 3.018 1.12 5.86 3.116 7.882A11.955 11.955 0 0112 21.056c2.88 0 5.591-1.11 7.618-3.116A12.03 12.03 0 0022 12c0-3.018-1.12-5.86-3.116-7.882z" />
-                                    </svg>
-                                    <span class="font-semibold">Secure Shopping</span>
-                                </div>
-                                <div class="flex items-center space-x-2 text-white">
-                                    <svg class="w-6 h-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                                    </svg>
-                                    <span class="font-semibold">Best Prices</span>
-                                </div>
-                                <div class="flex items-center space-x-2 text-white">
-                                    <svg class="w-6 h-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                    </svg>
-                                    <span class="font-semibold">Fast Delivery</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Right Side: Visual Content -->
-                        <div class="relative">
-                            <!-- Main Image Container -->
-                            <div class="relative">
-                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                                    <div class="flex items-center space-x-4 mb-4">
-                                        <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
-                                            <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                            </svg>
+            <!-- How It Works Section -->
+            <section class="bg-slate-800 rounded-xl p-8 border border-slate-700 mb-12">
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">How It Works</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">1</div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Browse Products</h3>
+                        <p class="text-gray-300">Explore our wide range of gaming accounts, software, and digital goods.</p>
                     </div>
-                                        <div>
-                                            <h3 class="text-white font-bold text-lg">Shopping Cart</h3>
-                                            <p class="text-red-100 text-sm">Ready to explore?</p>
+                    <!-- Step 2 -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">2</div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Contact Us</h3>
+                        <p class="text-gray-300">Click "Buy Now" to contact our team via WhatsApp or Discord to arrange your purchase.</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">3</div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Receive Your Product</h3>
+                        <p class="text-gray-300">Once payment is confirmed, your digital product will be delivered instantly.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Choose Us Section -->
+            <section class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">Why Choose S Shop LK?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700 flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white">Trusted Seller</h3>
+                            <p class="text-gray-400">With over 1000+ successful sales, we are a trusted name in the Sri Lankan gaming community.</p>
                         </div>
                     </div>
-
-                                    <!-- Product Preview Cards -->
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div class="bg-white/20 rounded-lg p-3 backdrop-blur-sm">
-                                            <div class="w-full h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg mb-2 flex items-center justify-center">
-                                                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                            </div>
-                                            <div class="text-white text-xs font-semibold">Steam Accounts</div>
-                                            <div class="text-red-200 text-xs">Starting at LKR 500</div>
-                                        </div>
-                                        <div class="bg-white/20 rounded-lg p-3 backdrop-blur-sm">
-                                            <div class="w-full h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg mb-2 flex items-center justify-center">
-                                                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                                                </svg>
-                                            </div>
-                                            <div class="text-white text-xs font-semibold">Windows 11 Pro</div>
-                                            <div class="text-red-200 text-xs">Starting at LKR 400</div>
-                                        </div>
-                                    </div>
-
-                                <!-- Floating Elements -->
-                                <div class="absolute -top-4 -right-4 w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg animate-bounce">
-                                    <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                </div>
-                                <div class="absolute -bottom-4 -left-4 w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                                    </svg>
-                                </div>
-                            </div>
+                    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700 flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white">Instant Delivery</h3>
+                            <p class="text-gray-400">Most digital products are delivered instantly after payment confirmation.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700 flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white">24/7 Support</h3>
+                            <p class="text-gray-400">Our support team is available around the clock to assist you with any questions.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700 flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-7.618 3.116m15.236 7.882A11.955 11.955 0 0112 21.056a11.955 11.955 0 01-7.618-3.116m15.236-7.882A12.03 12.03 0 0022 12c0-3.018-1.12-5.86-3.116-7.882" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white">Secure Payments</h3>
+                            <p class="text-gray-400">We offer secure payment options to protect your financial information.</p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Product Categories Section -->
-        <section>
-            <h2 class="text-3xl font-bold mb-6 text-white">Product Categories</h2>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Category Card 1: Games -->
-                <a href="category-games.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h3 class="text-xl font-bold text-white mb-2">Games</h3>
-                    <p class="text-sm text-gray-400">Gaming accounts, in-game items, and gaming services.</p>
-                </a>
+            <!-- FAQ Section -->
+            <section>
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">Frequently Asked Questions</h2>
+                <div class="space-y-4">
+                    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                        <h3 class="text-lg font-semibold text-white mb-2">What payment methods do you accept?</h3>
+                        <p class="text-gray-400">We accept various local payment methods, including bank transfers and mobile payments. Our team will provide details when you contact us.</p>
+                    </div>
+                    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                        <h3 class="text-lg font-semibold text-white mb-2">Is it safe to buy from S Shop LK?</h3>
+                        <p class="text-gray-400">Yes! We are a registered business in Sri Lanka and have a long history of satisfied customers. All purchases come with a 14-day insurance period.</p>
+                    </div>
+                    <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                        <h3 class="text-lg font-semibold text-white mb-2">How do I get support if I have an issue?</h3>
+                        <p class="text-gray-400">You can contact our support team 24/7 via WhatsApp or Discord. We are always ready to help you with any problems.</p>
+                    </div>
+                </div>
+            </section>
 
-                <!-- Category Card 2: Software & Apps -->
-                <a href="category-software-apps.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                    </svg>
-                    <h3 class="text-xl font-bold text-white mb-2">Software & Apps</h3>
-                    <p class="text-sm text-gray-400">Software licenses, app subscriptions, and digital tools.</p>
-                </a>
-                
-                <!-- Category Card 3: Boosting & Coaching -->
-                <a href="category-boosting-coaching.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v14H9z" />
-                    </svg>
-                    <h3 class="text-xl font-bold text-white mb-2">Boosting & Coaching</h3>
-                    <p class="text-sm text-gray-400">Improve your skills with professional player coaching.</p>
-                </a>
-
-                <!-- Category Card 4: Gift Cards -->
-                <a href="category-gift-cards.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h3 class="text-xl font-bold text-white mb-2">Gift Cards</h3>
-                    <p class="text-sm text-gray-400">Digital gift cards for various gaming platforms.</p>
+            <!-- Call to Action -->
+            <section class="mt-16 text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">Ready to Start Shopping?</h2>
+                <p class="text-lg text-gray-300 mb-8">Browse our products and find the best deals on digital goods.</p>
+                <a href="products.html" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Browse All Products
                 </a>
             </div>
-        </section>
-
+            </section>
+        </div>
     </main>
-
-<!-- Keep your main content here -->
 
 <!-- Replace footer -->
 <div id="footer-container"></div>
-
-    <!-- Buy Now Modal (Pop-up Panel) -->
-    <div id="buyNowModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
-        <div class="bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-sm text-center border-2 border-blue-600 relative">
-            <!-- Close Button -->
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-white" onclick="closeModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-
-            <h3 class="text-2xl font-bold mb-2 text-white" id="modalTitle">How would you like to buy?</h3>
-            <p class="text-gray-400 mb-6" id="modalDescription">Contact a seller to complete your purchase of "<span id="productNameInModal" class="font-semibold text-white">Product Name</span>".</p>
-            
-            <div class="flex flex-col space-y-4">
-                <!-- WhatsApp Button -->
-                <a href="#" id="whatsappLink" class="flex items-center justify-center space-x-2 bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300">
-                    <img src="https://image.similarpng.com/file/similarpng/original-picture/2021/01/Whatsapp-icon-with-black-color-on-transparent-background-PNG.png" alt="WhatsApp Icon" class="h-6 w-6">
-                    <span>Buy on WhatsApp</span>
-                </a>
-
-                <!-- Discord Button -->
-                <a href="#" id="discordLink" class="flex items-center justify-center space-x-2 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
-                    <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/discord-round-black-icon.png" alt="Discord Icon" class="h-6 w-6">
-                    <span>Buy on Discord</span>
-                </a>
-            </div>
-        </div>
-    </div>
-    <!-- End of Buy Now Modal -->
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
@@ -375,519 +175,10 @@
 <script src="footer-component.js"></script>
 
 <!-- Page-specific JavaScript -->
-    <script>
-    let products = [];
-    let currentCategory = 'all';
-
-    // Load products on page load
-    window.addEventListener('load', function() {
-        loadProducts();
-        loadHeroImages();
-        setupKeyboardShortcuts();
-    });
-
-    // Setup keyboard shortcuts for admin panel access
-    function setupKeyboardShortcuts() {
-        document.addEventListener('keydown', function(event) {
-            // Ctrl + Alt + A (Windows/Linux) or Cmd + Alt + A (Mac)
-            if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 'a') {
-                event.preventDefault();
-                window.location.href = 'admin-login.html';
-            }
-            
-            // Ctrl + Alt + S (Windows/Linux) or Cmd + Alt + S (Mac)
-            if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 's') {
-                event.preventDefault();
-                window.location.href = 'admin.html';
-            }
-            
-            // F12 key (Developer Tools alternative)
-            if (event.key === 'F12') {
-                event.preventDefault();
-                window.location.href = 'admin-login.html';
-            }
-        });
-    }
-
-    // Hero Image Carousel Variables
-    let heroImages = [];
-    let currentImageIndex = 0;
-    let carouselInterval;
-    let isAutoPlaying = true;
-
-    function loadHeroImages() {
-        // Try to load from Firebase first
-        if (window.FirebaseService) {
-            FirebaseService.getWebsiteSettings()
-                .then(settings => {
-                    if (settings.heroImages && settings.heroImages.length > 0) {
-                        heroImages = settings.heroImages;
-                        console.log('Loaded hero images from Firebase:', heroImages);
-                    } else {
-                        loadHeroImagesFromLocalStorage();
-                    }
-                    
-                    // Load background image
-                    if (settings.heroBackgroundImage) {
-                        loadHeroBackgroundImage(settings.heroBackgroundImage);
-                    } else {
-                        loadHeroBackgroundImageFromLocalStorage();
-                    }
-                    
-                    // Handle hero image visibility
-                    if (settings.showHeroImages !== undefined) {
-                        toggleHeroImageVisibility(settings.showHeroImages);
-                    } else {
-                        toggleHeroImageVisibilityFromLocalStorage();
-                    }
-                    
-                    initializeCarousel();
-                })
-                .catch(error => {
-                    console.error('Error loading hero images from Firebase:', error);
-                    loadHeroImagesFromLocalStorage();
-                    loadHeroBackgroundImageFromLocalStorage();
-                    toggleHeroImageVisibilityFromLocalStorage();
-                    initializeCarousel();
-                });
-        } else {
-            loadHeroImagesFromLocalStorage();
-            loadHeroBackgroundImageFromLocalStorage();
-            toggleHeroImageVisibilityFromLocalStorage();
-            initializeCarousel();
-        }
-    }
-
-    function loadHeroBackgroundImage(backgroundImageUrl) {
-        const backgroundElement = document.getElementById('heroBackgroundImage');
-        if (backgroundImageUrl) {
-            if (typeof backgroundImageUrl === 'string') {
-                // Legacy format - just URL string
-                backgroundElement.style.backgroundImage = `url('${backgroundImageUrl}')`;
-                backgroundElement.style.opacity = '0.2'; // Default 20% opacity
-                backgroundElement.classList.remove('hidden');
-                console.log('Loaded hero background image from Firebase (legacy format):', backgroundImageUrl);
-            } else {
-                // New format - object with URL and opacity
-                backgroundElement.style.backgroundImage = `url('${backgroundImageUrl.url}')`;
-                backgroundElement.style.opacity = (backgroundImageUrl.opacity / 100).toString();
-                backgroundElement.classList.remove('hidden');
-                console.log('Loaded hero background image from Firebase:', backgroundImageUrl);
-            }
-        } else {
-            backgroundElement.classList.add('hidden');
-        }
-    }
-
-    function loadHeroBackgroundImageFromLocalStorage() {
-        const backgroundImageData = localStorage.getItem('sShopHeroBackgroundImage');
-        if (backgroundImageData) {
-            try {
-                const settings = JSON.parse(backgroundImageData);
-                if (typeof settings === 'string') {
-                    // Legacy format - just URL string
-                    loadHeroBackgroundImage(settings);
-                    console.log('Loaded hero background image from localStorage (legacy format):', settings);
-                } else {
-                    // New format - object with URL and opacity
-                    loadHeroBackgroundImage(settings);
-                    console.log('Loaded hero background image from localStorage:', settings);
-                }
-            } catch (error) {
-                // Fallback to legacy format
-                loadHeroBackgroundImage(backgroundImageData);
-                console.log('Loaded hero background image from localStorage (fallback):', backgroundImageData);
-            }
-        }
-    }
-
-    function toggleHeroImageVisibility(show) {
-        const heroImageContainer = document.getElementById('heroImageContainer');
-        if (show && heroImages.length > 0) {
-            heroImageContainer.classList.remove('hidden');
-            console.log('Hero images are visible');
-            // Reinitialize carousel after making it visible
-            setTimeout(() => {
-                initializeCarousel();
-            }, 100);
-        } else {
-            heroImageContainer.classList.add('hidden');
-            console.log('Hero images are hidden');
-            // Stop auto-play when hidden
-            if (carouselInterval) {
-                clearInterval(carouselInterval);
-            }
-        }
-    }
-
-    function toggleHeroImageVisibilityFromLocalStorage() {
-        const showHeroImages = localStorage.getItem('sShopShowHeroImages');
-        if (showHeroImages !== null) {
-            toggleHeroImageVisibility(showHeroImages === 'true');
-        } else {
-            // Default to showing if images exist
-            toggleHeroImageVisibility(heroImages.length > 0);
-        }
-    }
-
-    function loadHeroImagesFromLocalStorage() {
-        const storedImages = localStorage.getItem('sShopHeroImages');
-        if (storedImages) {
-            heroImages = JSON.parse(storedImages);
-            console.log('Loaded hero images from localStorage:', heroImages);
-        } else {
-            // Default images if none are set
-            heroImages = [
-                {
-                    url: 'https://placehold.co/600x400/805ad5/ffffff?text=S+Shop+LK',
-                    alt: 'S Shop LK Hero 1',
-                    title: 'Welcome to S Shop LK'
-                },
-                {
-                    url: 'https://placehold.co/600x400/667eea/ffffff?text=Gaming+Products',
-                    alt: 'S Shop LK Hero 2',
-                    title: 'Gaming Products'
-                },
-                {
-                    url: 'https://placehold.co/600x400/764ba2/ffffff?text=Best+Deals',
-                    alt: 'S Shop LK Hero 3',
-                    title: 'Best Deals'
-                }
-            ];
-            console.log('Using default hero images:', heroImages);
-        }
-    }
-
-    function initializeCarousel() {
-        if (heroImages.length === 0) return;
-
-        const heroContainer = document.getElementById('heroImageContainer');
-        const container = document.getElementById('heroImageInnerContainer');
-        const indicators = document.getElementById('carouselIndicators');
-        const prevButton = document.getElementById('prevButton');
-        const nextButton = document.getElementById('nextButton');
-
-        // Check if elements exist and hero container is visible
-        if (!container || !indicators || !prevButton || !nextButton) {
-            console.error('Carousel elements not found');
-            return;
-        }
-
-        // Only initialize if hero container is visible
-        if (heroContainer.classList.contains('hidden')) {
-            console.log('Hero container is hidden, skipping carousel initialization');
-            return;
-        }
-
-        // Clear existing content
-        container.innerHTML = '';
-        indicators.innerHTML = '';
-
-        // Create image elements
-        heroImages.forEach((image, index) => {
-            const imgElement = document.createElement('img');
-            imgElement.src = image.url;
-            imgElement.alt = image.alt;
-            imgElement.className = `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
-            imgElement.onerror = function() {
-                this.src = 'https://placehold.co/600x400/805ad5/ffffff?text=Image+Error';
-            };
-            container.appendChild(imgElement);
-
-            // Create indicator
-            const indicator = document.createElement('button');
-            indicator.className = `w-3 h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white' : 'bg-white bg-opacity-50'}`;
-            indicator.onclick = () => goToImage(index);
-            indicators.appendChild(indicator);
-        });
-
-        // Setup navigation buttons
-        prevButton.onclick = () => previousImage();
-        nextButton.onclick = () => nextImage();
-
-        // Setup hover effects for navigation buttons
-        const carousel = document.getElementById('heroCarousel');
-        if (carousel) {
-            carousel.addEventListener('mouseenter', () => {
-                prevButton.classList.remove('opacity-0');
-                nextButton.classList.remove('opacity-0');
-                pauseAutoPlay();
-            });
-            carousel.addEventListener('mouseleave', () => {
-                prevButton.classList.add('opacity-0');
-                nextButton.classList.add('opacity-0');
-                resumeAutoPlay();
-            });
-        }
-
-        // Start auto-play
-        startAutoPlay();
-    }
-
-    function showImage(index) {
-        const images = document.querySelectorAll('#heroImageInnerContainer img');
-        const indicators = document.querySelectorAll('#carouselIndicators button');
-
-        // Hide all images
-        images.forEach(img => img.classList.add('opacity-0'));
-        indicators.forEach(indicator => indicator.classList.remove('bg-white', 'bg-opacity-50'));
-
-        // Show current image
-        if (images[index]) {
-            images[index].classList.remove('opacity-0');
-            indicators[index].classList.add('bg-white');
-        }
-
-        currentImageIndex = index;
-    }
-
-    function nextImage() {
-        const nextIndex = (currentImageIndex + 1) % heroImages.length;
-        showImage(nextIndex);
-    }
-
-    function previousImage() {
-        const prevIndex = (currentImageIndex - 1 + heroImages.length) % heroImages.length;
-        showImage(prevIndex);
-    }
-
-    function goToImage(index) {
-        showImage(index);
-    }
-
-    function startAutoPlay() {
-        if (carouselInterval) clearInterval(carouselInterval);
-        carouselInterval = setInterval(() => {
-            if (isAutoPlaying) {
-                nextImage();
-            }
-        }, 4000); // Change image every 4 seconds
-    }
-
-    function pauseAutoPlay() {
-        isAutoPlaying = false;
-    }
-
-    function resumeAutoPlay() {
-        isAutoPlaying = true;
-    }
-
-    function loadProducts() {
-        // Try to load from Firebase first
-        if (window.FirebaseService) {
-            FirebaseService.getProducts()
-                .then(firebaseProducts => {
-                    if (firebaseProducts.length > 0) {
-                        products = firebaseProducts;
-                        displayProducts();
-                        console.log('Loaded products from Firebase:', products);
-                    } else {
-                        // Fallback to localStorage if no Firebase data
-                        loadFromLocalStorage();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading from Firebase:', error);
-                    loadFromLocalStorage();
-                });
-        } else {
-            loadFromLocalStorage();
-        }
-    }
-
-    function loadFromLocalStorage() {
-        const storedProducts = localStorage.getItem('sShopProducts');
-        if (storedProducts) {
-            products = JSON.parse(storedProducts);
-            displayProducts();
-        } else {
-            // Fallback to products.json if no admin data
-            fetch('products.json')
-                .then(response => response.json())
-                .then(data => {
-                    products = data.products;
-                    displayProducts();
-                })
-                .catch(error => {
-                    console.error('Error loading products:', error);
-                    // Load default products if both fail
-                    products = [];
-                    displayProducts();
-                });
-        }
-    }
-    
-    function displayProducts() {
-        const productContainer = document.getElementById('productContainer');
-        productContainer.innerHTML = '';
-
-        // Filter products based on current category
-        let filteredProducts = products;
-        if (currentCategory !== 'all') {
-            filteredProducts = products.filter(product => {
-                const category = product.category?.toLowerCase() || '';
-                if (currentCategory === 'games') {
-                    return category.includes('games') || category.includes('gaming') || category.includes('game');
-                } else if (currentCategory === 'software-apps') {
-                    return category.includes('software') || category.includes('app') || category.includes('tool') || category.includes('license');
-                }
-                return true;
-            });
-        }
-
-        filteredProducts.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.className = 'product-card bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex-shrink-0 w-64 snap-center border border-slate-700';
-            
-            // Determine detail page based on product ID
-            let detailPage = 'dynamic-product-detail.html?id=' + product.id;
-
-            productCard.innerHTML = `
-                <img src="${product.image}" alt="${product.name}" class="w-full h-32 object-cover rounded-t-xl border-b border-slate-700">
-                <div class="p-4">
-                    <h3 class="product-title text-lg font-semibold text-white truncate mb-1">${product.name}</h3>
-                    <p class="product-description text-sm text-gray-400 mb-2 line-clamp-2">${product.description}</p>
-                    <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
-                    <div class="flex space-x-2 mt-4">
-                        <a href="${detailPage}" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors duration-300 text-center">View Details</a>
-                        <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300" onclick="showBuyNowModal('${product.name}')">Buy Now</button>
-                    </div>
-                </div>
-            `;
-            productContainer.appendChild(productCard);
-        });
-    }
-
-    // Category filtering function
-    function filterProducts(category) {
-        currentCategory = category;
-        
-        // Update filter button styles
-        const filterButtons = document.querySelectorAll('.category-filter');
-        filterButtons.forEach(button => {
-            button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-            button.classList.add('bg-slate-700', 'hover:bg-slate-600');
-        });
-        
-        // Highlight active filter
-        const activeButton = document.getElementById(`filter-${category}`);
-        if (activeButton) {
-            activeButton.classList.remove('bg-slate-700', 'hover:bg-slate-600');
-            activeButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
-        }
-        
-        // Update products display
-        displayProducts();
-        
-        // Update search functionality to work with filtered products
-        updateSearchFunctionality();
-    }
-
-    // Update search to work with filtered products
-    function updateSearchFunctionality() {
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.value = '';
-            const searchError = document.getElementById('searchError');
-            if (searchError) {
-                searchError.classList.add('hidden');
-            }
-        }
-    }
-    
-        /**
-         * This function handles the search functionality.
-         * It filters the product cards based on the text entered in the search bar.
-         */
-        function handleSearch() {
-            // Get the search input value and convert it to lowercase for case-insensitive matching
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            // Get all product cards and the error message element
-            const productCards = document.querySelectorAll('.product-card');
-            const errorMessage = document.getElementById('searchError');
-            let foundProducts = false;
-
-            // Loop through each product card and check if it matches the search term
-            productCards.forEach(card => {
-                const title = card.querySelector('.product-title').textContent.toLowerCase();
-                const description = card.querySelector('.product-description').textContent.toLowerCase();
-
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    // If a match is found, show the card
-                    card.style.display = 'block';
-                    foundProducts = true;
-                } else {
-                    // If no match is found, hide the card
-                    card.style.display = 'none';
-                }
-            });
-
-            // Display or hide the error message based on whether any products were found
-            if (foundProducts) {
-                errorMessage.classList.add('hidden');
-            } else {
-                errorMessage.classList.remove('hidden');
-            }
-        }
-        
-        /**
-         * This function shows the buy now modal with the specified product name.
-         * @param {string} productName The name of the product being purchased.
-         */
-        function showBuyNowModal(productName) {
-            const modal = document.getElementById('buyNowModal');
-            const productNameSpan = document.getElementById('productNameInModal');
-            const whatsappLink = document.getElementById('whatsappLink');
-            const discordLink = document.getElementById('discordLink');
-
-            productNameSpan.textContent = productName;
-
-            // Pre-fill the WhatsApp message with the product name.
-            const whatsappNumber = '+94767854069'; 
-            const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${productName}`);
-            whatsappLink.href = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-
-            // Set the Discord direct message link using the provided user ID.
-            const discordUserId = '1078335412713570314'; 
-            discordLink.href = `https://discordapp.com/users/${discordUserId}`;
-
-            modal.classList.remove('hidden');
-        }
-
-        /**
-         * This function closes the buy now modal.
-         */
-        function closeModal() {
-            const modal = document.getElementById('buyNowModal');
-            modal.classList.add('hidden');
-        }
-
-    function scrollToProducts() {
-        const productsSection = document.querySelector('.mb-12');
-        if (productsSection) {
-            productsSection.scrollIntoView({ behavior: 'smooth' });
-        }
-        }
-
-    function accessChat() {
-        if (window.AuthService) {
-            AuthService.onAuthStateChanged(function(user) {
-                if (user) {
-                    // User is logged in, allow access to chat
-                    window.location.href = 'chat-simple.html';
-                } else {
-                    // User is not logged in, redirect to login
-                    window.location.href = 'login.html';
-                }
-            });
-        } else {
-            // Firebase Auth not available, redirect to login
-            window.location.href = 'login.html';
-        }
-        }
-
-    </script>
+<script>
+    // This page is static, so no complex JS is needed.
+    // The header and footer components will handle their own logic.
+</script>
 
 </body>
 </html>

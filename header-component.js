@@ -6,7 +6,7 @@ class HeaderComponent {
         this.headerHTML = `
             <header class="bg-slate-900 shadow-xl sticky top-0 z-50 border-b border-slate-700">
                 <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-                    <!-- Left side: Logo -->
+                    <!-- Left side: Logo and Site Name -->
                     <a href="index.html" class="flex items-center space-x-2">
                         <svg class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -219,6 +219,7 @@ class HeaderComponent {
         this.setupAuthState();
         this.setupMobileHeaderScroll();
         this.setupDropdowns();
+        this.loadSiteSettings();
     }
 
     // Load header into the page
@@ -227,6 +228,23 @@ class HeaderComponent {
         if (headerContainer) {
             headerContainer.innerHTML = this.headerHTML;
         }
+    }
+
+    // Load site settings from Firebase
+    loadSiteSettings() {
+        // Wait for Firebase to be ready
+        const checkFirebase = () => {
+            if (window.FirebaseService) {
+                window.FirebaseService.getWebsiteSettings().then(settings => {
+                    if (settings && settings.siteName) {
+                        document.querySelector('header .text-2xl.font-extrabold.text-white').textContent = settings.siteName;
+                    }
+                });
+            } else {
+                setTimeout(checkFirebase, 100);
+            }
+        };
+        checkFirebase();
     }
 
     // Mobile header scroll behavior
