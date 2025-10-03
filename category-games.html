@@ -162,7 +162,7 @@
 
     <!-- Buy Now Modal -->
     <div id="buyNowModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
-        <div class="bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-sm text-center border-2 border-blue-600 relative">
+        <div class="bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-md text-left border-2 border-blue-600 relative">
             <!-- Close Button -->
             <button class="absolute top-4 right-4 text-gray-400 hover:text-white" onclick="closeModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -170,21 +170,30 @@
                 </svg>
             </button>
 
-            <h3 class="text-2xl font-bold mb-2 text-white" id="modalTitle">How would you like to buy?</h3>
-            <p class="text-gray-400 mb-6" id="modalDescription">Contact a seller to complete your purchase of "<span id="productNameInModal" class="font-semibold text-white">Product Name</span>".</p>
+            <h3 class="text-2xl font-bold mb-2 text-white" id="modalTitle">Complete Your Purchase</h3>
+            <p class="text-gray-400 mb-6" id="modalDescription">Enter your details to proceed with your purchase of "<span id="productNameInModal" class="font-semibold text-white">Product Name</span>".</p>
             
-            <div class="flex flex-col space-y-4">
-                <!-- WhatsApp Button -->
-                <a href="#" id="whatsappLink" class="flex items-center justify-center space-x-2 bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300">
-                    <img src="https://image.similarpng.com/file/similarpng/original-picture/2021/01/Whatsapp-icon-with-black-color-on-transparent-background-PNG.png" alt="WhatsApp Icon" class="h-6 w-6">
-                    <span>Buy on WhatsApp</span>
-                </a>
-
-                <!-- Discord Button -->
-                <a href="#" id="discordLink" class="flex items-center justify-center space-x-2 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
-                    <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/discord-round-black-icon.png" alt="Discord Icon" class="h-6 w-6">
-                    <span>Buy on Discord</span>
-                </a>
+            <form id="buyNowForm" class="space-y-4">
+                <div>
+                    <label for="customerName" class="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+                    <input type="text" id="customerName" name="customerName" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label for="customerEmail" class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+                    <input type="email" id="customerEmail" name="customerEmail" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label for="customerPhone" class="block text-sm font-medium text-gray-300 mb-1">Phone Number (WhatsApp)</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <button type="button" onclick="proceedToWhatsApp()" class="w-full flex items-center justify-center space-x-2 bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300 mt-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp Icon" class="h-6 w-6">
+                    <span>Proceed to WhatsApp</span>
+                </button>
+            </form>
+            <div id="formError" class="text-red-400 text-sm mt-2 text-center hidden">Please fill out all fields.</div>
+            <div class="text-center mt-4">
+                <p class="text-xs text-gray-500">Or contact us directly on Discord: <a href="https://discord.gg/nsz5SFhXMh" target="_blank" class="text-blue-400 hover:underline">S Shop LK Community</a></p>
             </div>
         </div>
     </div>
@@ -381,13 +390,15 @@
 
             products.forEach(product => {
                 const productCard = document.createElement('div');
-                productCard.className = 'product-card bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-700';
+                productCard.className = 'product-card relative bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-700';
                 
                 // Determine detail page based on product ID
                 let detailPage = 'dynamic-product-detail.html?id=' + product.id;
+                const isSoldOut = !product.availability || product.availability <= 0;
 
                 productCard.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded-t-xl border-b border-slate-700">
+                    ${isSoldOut ? `<div class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md transform rotate-12 shadow-lg z-10">SOLD OUT</div>` : ''}
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded-t-xl border-b border-slate-700 ${isSoldOut ? 'opacity-50' : ''}">
                     <div class="p-4">
                         <h3 class="product-title text-lg font-semibold text-white mb-2">${product.name}</h3>
                         <p class="product-description text-sm text-gray-400 mb-3 line-clamp-2">${product.description}</p>
@@ -395,9 +406,10 @@
                             <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
                             <span class="text-sm text-gray-400">${product.soldCount || 0} sold</span>
                         </div>
-                        <div class="flex space-x-2">
-                            <a href="${detailPage}" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors duration-300 text-center">View Details</a>
-                            <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300" onclick="showBuyNowModal('${product.name}')">Buy Now</button>
+                        <div>
+                            <a href="${detailPage}" class="w-full block bg-slate-600 text-white py-2 rounded-lg font-semibold hover:bg-slate-700 transition-colors duration-300 text-center">
+                                View Details
+                            </a>
                         </div>
                     </div>
                 `;
@@ -432,22 +444,42 @@
 
         function showBuyNowModal(productName) {
             const modal = document.getElementById('buyNowModal');
-            const productNameSpan = document.getElementById('productNameInModal');
-            const whatsappLink = document.getElementById('whatsappLink');
-            const discordLink = document.getElementById('discordLink');
-
-            productNameSpan.textContent = productName;
-
-            // Pre-fill the WhatsApp message with the product name.
-            const whatsappNumber = '+94767854069'; 
-            const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${productName}`);
-            whatsappLink.href = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-
-            // Set the Discord direct message link using the provided user ID.
-            const discordUserId = '1078335412713570314'; 
-            discordLink.href = `https://discordapp.com/users/${discordUserId}`;
-
+            document.getElementById('productNameInModal').textContent = productName;
+            document.getElementById('formError').classList.add('hidden'); // Hide error on open
+            document.getElementById('buyNowForm').reset(); // Reset form
             modal.classList.remove('hidden');
+        }
+
+        function proceedToWhatsApp() {
+            const form = document.getElementById('buyNowForm');
+            const formError = document.getElementById('formError');
+            if (!form.checkValidity()) {
+                formError.classList.remove('hidden');
+                return;
+            }
+            formError.classList.add('hidden');
+
+            const productName = document.getElementById('productNameInModal').textContent;
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+
+            const whatsappNumber = '+94767854069';
+            const message = `Hello S Shop LK,
+
+I would like to purchase the following item:
+*Product:* ${productName}
+
+*My Details:*
+- *Name:* ${customerName}
+- *Email:* ${customerEmail}
+- *Phone:* ${customerPhone}
+
+Please let me know the next steps. Thank you!`;
+
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            closeModal();
         }
 
         function closeModal() {

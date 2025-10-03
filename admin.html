@@ -97,12 +97,6 @@
                 <a href="admin.html" class="text-blue-600 border-b-2 border-blue-600 py-2 px-1 text-sm font-medium">
                     Products
                 </a>
-                <a href="admin-orders.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
-                    Orders
-                </a>
-                <a href="admin-customers.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
-                    Customers
-                </a>
                 <a href="admin-chat.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
                     Chat
                 </a>
@@ -195,10 +189,6 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Redeem Points</label>
                                 <input type="number" id="productRedeemPoints" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Other Sellers</label>
-                                <input type="number" id="productOtherSellers" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
                             </div>
                         </div>
                         
@@ -768,7 +758,6 @@
                 features: document.getElementById('productFeatures').value.trim(),
                 options: document.getElementById('productOptions').value.trim(),
                 redeemPoints: parseInt(document.getElementById('productRedeemPoints').value) || 0,
-                otherSellers: parseInt(document.getElementById('productOtherSellers').value) || 0,
                 trustBadge: document.getElementById('productTrustBadge').value.trim(),
                 deliverySpeed: getDeliverySpeedValue(),
                 deliveryMethod: getDeliveryMethodValue(),
@@ -888,7 +877,6 @@
             document.getElementById('productOptions').value = product.options || '';
             document.getElementById('productFeatures').value = Array.isArray(product.features) ? product.features.join(', ') : (product.features || '');
             document.getElementById('productRedeemPoints').value = product.redeemPoints || 0;
-            document.getElementById('productOtherSellers').value = product.otherSellers || 0;
             document.getElementById('productTrustBadge').value = product.trustBadge || 'TRUSTED SELLER WITH OVER 1000 SALES';
             
             // Set delivery speed

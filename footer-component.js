@@ -10,7 +10,7 @@ class FooterComponent {
                     <!-- Left Side: Description and Links -->
                     <div class="text-center lg:text-left max-w-xl">
                         <p class="text-sm mb-4">
-                            S Shop LK is a comprehensive online marketplace for everything gaming-related. We are dedicated to providing a safe and secure community for both buyers and sellers.
+                            S Shop LK is your premier destination for digital products and gaming services in Sri Lanka. We are dedicated to providing a safe, secure, and exceptional shopping experience.
                         </p>
                         <div class="text-xs text-gray-500">
                             &copy; 2025 S Shop LK. All rights reserved. |

@@ -40,7 +40,7 @@
         <div class="container mx-auto px-4 py-3">
             <nav class="flex" aria-label="Breadcrumb">
                 <ol id="breadcrumbs" class="flex items-center space-x-2 text-sm text-gray-400">
-                    <li><a href="/index" class="hover:text-white transition-colors">Home</a></li>
+                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
                     <li class="flex items-center">
                         <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
@@ -71,7 +71,7 @@
             <div id="error-state" class="hidden text-center py-16 bg-red-900/20 border border-red-500/50 rounded-lg">
                 <h2 class="text-2xl font-bold text-red-400 mb-4">Product Not Found</h2>
                 <p class="text-gray-300 mb-6">Sorry, we couldn't find the product you're looking for.</p>
-                <a href="/index" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <a href="index.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                     Back to Home
                 </a>
             </div>
@@ -113,9 +113,6 @@
                             <span class="text-3xl font-extrabold text-blue-400" id="product-price"></span>
                             <div class="text-right">
                                 <span id="product-sold" class="text-sm text-gray-400 block"></span>
-                                <div id="other-sellers-container" class="hidden">
-                                    <span class="text-xs text-gray-500"><span id="product-other-sellers"></span> other sellers</span>
-                                </div>
                             </div>
                         </div>
                         <button id="buy-now-button" class="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors duration-300">
@@ -141,7 +138,7 @@
 
     <!-- Buy Now Modal -->
     <div id="buyNowModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
-        <div class="bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-sm text-center border-2 border-blue-600 relative">
+        <div class="bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-md text-left border-2 border-blue-600 relative">
             <!-- Close Button -->
             <button class="absolute top-4 right-4 text-gray-400 hover:text-white" onclick="closeModal()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -149,21 +146,30 @@
                 </svg>
             </button>
 
-            <h3 class="text-2xl font-bold mb-2 text-white" id="modalTitle">How would you like to buy?</h3>
-            <p class="text-gray-400 mb-6" id="modalDescription">Contact a seller to complete your purchase of "<span id="productNameInModal" class="font-semibold text-white">Product Name</span>".</p>
+            <h3 class="text-2xl font-bold mb-2 text-white" id="modalTitle">Complete Your Purchase</h3>
+            <p class="text-gray-400 mb-6" id="modalDescription">Enter your details to proceed with your purchase of "<span id="productNameInModal" class="font-semibold text-white">Product Name</span>".</p>
             
-            <div class="flex flex-col space-y-4">
-                <!-- WhatsApp Button -->
-                <a href="#" id="whatsappLink" class="flex items-center justify-center space-x-2 bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300">
-                    <img src="https://image.similarpng.com/file/similarpng/original-picture/2021/01/Whatsapp-icon-with-black-color-on-transparent-background-PNG.png" alt="WhatsApp Icon" class="h-6 w-6">
-                    <span>Buy on WhatsApp</span>
-                </a>
-
-                <!-- Discord Button -->
-                <a href="#" id="discordLink" class="flex items-center justify-center space-x-2 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
-                    <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/discord-round-black-icon.png" alt="Discord Icon" class="h-6 w-6">
-                    <span>Buy on Discord</span>
-                </a>
+            <form id="buyNowForm" class="space-y-4">
+                <div>
+                    <label for="customerName" class="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+                    <input type="text" id="customerName" name="customerName" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label for="customerEmail" class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+                    <input type="email" id="customerEmail" name="customerEmail" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label for="customerPhone" class="block text-sm font-medium text-gray-300 mb-1">Phone Number (WhatsApp)</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <button type="button" onclick="proceedToWhatsApp()" class="w-full flex items-center justify-center space-x-2 bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300 mt-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp Icon" class="h-6 w-6">
+                    <span>Proceed to WhatsApp</span>
+                </button>
+            </form>
+            <div id="formError" class="text-red-400 text-sm mt-2 text-center hidden">Please fill out all fields.</div>
+            <div class="text-center mt-4">
+                <p class="text-xs text-gray-500">Or contact us directly on Discord: <a href="https://discord.gg/nsz5SFhXMh" target="_blank" class="text-blue-400 hover:underline">S Shop LK Community</a></p>
             </div>
         </div>
     </div>
@@ -235,8 +241,8 @@
             // Breadcrumbs
             const categorySlug = product.category ? product.category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-') : 'products';
             const categoryLink = document.getElementById('breadcrumb-category');
-            categoryLink.textContent = product.category || 'Products'; // Set category name
-            categoryLink.href = `/category-${categorySlug}`; // Set category link
+            categoryLink.textContent = product.category || 'Products';
+            categoryLink.href = `category-${categorySlug}.html`;
             document.getElementById('breadcrumb-product-name').textContent = product.name;
 
             // Main details
@@ -245,7 +251,6 @@
             document.getElementById('product-name').textContent = product.name;
             document.getElementById('product-description').textContent = product.description;
             document.getElementById('product-price').textContent = `LKR ${product.price.toLocaleString()}`;
-            document.getElementById('product-sold').textContent = `${product.soldCount || 0} sold`;
 
             // Trust Badge
             if (product.trustBadge) {
@@ -275,15 +280,17 @@
                 document.getElementById('activation-region-container').classList.remove('hidden');
             }
 
-            // Other sellers
-            if (product.otherSellers > 0) {
-                document.getElementById('product-other-sellers').textContent = product.otherSellers;
-                document.getElementById('other-sellers-container').classList.remove('hidden');
-            }
-
             // Buy button
             const buyNowButton = document.getElementById('buy-now-button');
-            buyNowButton.onclick = () => showBuyNowModal(product.name);
+            const isSoldOut = !product.availability || product.availability <= 0;
+            if (isSoldOut) {
+                buyNowButton.textContent = 'Sold Out';
+                buyNowButton.disabled = true;
+                buyNowButton.classList.add('bg-gray-500', 'cursor-not-allowed');
+                buyNowButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            } else {
+                buyNowButton.onclick = () => showBuyNowModal(product.name);
+            }
         }
 
         function loadRelatedProducts(currentProduct, allProducts) {
@@ -311,7 +318,7 @@
             container.innerHTML = ''; // Clear previous content
 
             relatedProducts.forEach(product => {
-                const detailPage = `/dynamic-product-detail?id=${product.id}`;
+                const detailPage = `dynamic-product-detail.html?id=${product.id}`;
                 const productCard = document.createElement('div');
                 productCard.className = 'bg-slate-800 rounded-xl shadow-lg hover:shadow-blue-500/20 transition-all duration-300 border border-slate-700';
                 
@@ -331,15 +338,46 @@
         function showBuyNowModal(productName) {
             const modal = document.getElementById('buyNowModal');
             document.getElementById('productNameInModal').textContent = productName;
-
-            const whatsappNumber = '+94767854069'; 
-            const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${productName}`);
-            document.getElementById('whatsappLink').href = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-
-            const discordUserId = '1078335412713570314'; 
-            document.getElementById('discordLink').href = `https://discordapp.com/users/${discordUserId}`;
-
+            document.getElementById('formError').classList.add('hidden'); // Hide error on open
+            document.getElementById('buyNowForm').reset(); // Reset form
             modal.classList.remove('hidden');
+        }
+
+        function proceedToWhatsApp() {
+            const form = document.getElementById('buyNowForm');
+            const formError = document.getElementById('formError');
+            if (!form.checkValidity()) {
+                formError.classList.remove('hidden');
+                return;
+            }
+            formError.classList.add('hidden');
+
+            const productName = document.getElementById('productNameInModal').textContent;
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+
+            if (window.FirebaseService) {
+                FirebaseService.getWebsiteSettings().then(settings => {
+                    const whatsappNumber = settings.phoneNumber || '+94767854069';
+                    const message = `Hello S Shop LK,
+
+I would like to purchase the following item:
+*Product:* ${productName}
+
+*My Details:*
+- *Name:* ${customerName}
+- *Email:* ${customerEmail}
+- *Phone:* ${customerPhone}
+
+Please let me know the next steps. Thank you!`;
+
+                    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\s/g, '')}?text=${encodeURIComponent(message)}`;
+                    window.open(whatsappUrl, '_blank');
+                    closeModal();
+                });
+            }
+
         }
 
         function closeModal() {

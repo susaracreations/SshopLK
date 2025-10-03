@@ -313,12 +313,14 @@
 
             productsToShow.forEach(product => {
                 const productCard = document.createElement('div');
-                productCard.className = 'product-card bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-700';
+                productCard.className = 'product-card relative bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-700';
                 
                 let detailPage = 'dynamic-product-detail.html?id=' + product.id;
+                const isSoldOut = !product.availability || product.availability <= 0;
 
                 productCard.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded-t-xl border-b border-slate-700">
+                    ${isSoldOut ? `<div class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md transform rotate-12 shadow-lg z-10">SOLD OUT</div>` : ''}
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded-t-xl border-b border-slate-700 ${isSoldOut ? 'opacity-50' : ''}">
                     <div class="p-4">
                         <h3 class="product-title text-lg font-semibold text-white mb-2">${product.name}</h3>
                         <p class="product-description text-sm text-gray-400 mb-3 line-clamp-2">${product.description}</p>
@@ -328,7 +330,9 @@
                         </div>
                         <div class="flex space-x-2">
                             <a href="${detailPage}" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors duration-300 text-center">View Details</a>
-                            <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300" onclick="showBuyNowModal('${product.name}')">Buy Now</button>
+                            <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed" ${isSoldOut ? 'disabled' : ''} onclick="showBuyNowModal('${product.name}')">
+                                ${isSoldOut ? 'Sold Out' : 'Buy Now'}
+                            </button>
                         </div>
                     </div>
                 `;
@@ -420,13 +424,23 @@
             const discordLink = document.getElementById('discordLink');
 
             productNameSpan.textContent = productName;
-
-            const whatsappNumber = '+94767854069'; 
-            const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${productName}`);
-            whatsappLink.href = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-
-            const discordUserId = '1078335412713570314'; 
-            discordLink.href = `https://discordapp.com/users/${discordUserId}`;
+            
+            // Fetch settings from Firebase to get the latest contact info
+            if (window.FirebaseService) {
+                FirebaseService.getWebsiteSettings().then(settings => {
+                    const whatsappNumber = settings.phoneNumber || '+94767854069';
+                    const discordUrl = settings.discordLink || 'https://discord.gg/nsz5SFhXMh';
+                    
+                    const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${productName}`);
+                    whatsappLink.href = `https://wa.me/${whatsappNumber.replace(/\s/g, '')}?text=${whatsappMessage}`;
+                    discordLink.href = discordUrl;
+                });
+            } else {
+                // Fallback for when Firebase is not available
+                const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${productName}`);
+                whatsappLink.href = `https://wa.me/94767854069?text=${whatsappMessage}`;
+                discordLink.href = 'https://discord.gg/nsz5SFhXMh';
+            }
 
             modal.classList.remove('hidden');
         }

@@ -239,6 +239,42 @@ const firebaseConfig = {
       }
     },
   
+    // Get total number of products
+    async getTotalProductsCount() {
+      try {
+        console.log('Attempting to fetch total products count from Firebase...');
+        const snapshot = await db.collection('products').get();
+        console.log(`Successfully fetched total products count: ${snapshot.size}`);
+        return snapshot.size;
+      } catch (error) {
+        console.error('Error getting total products count from Firebase:', error);
+        return 0;
+      }
+    },
+
+    // Get newest N products
+    async getNewestProducts(limit = 4) {
+      try {
+        console.log(`Attempting to fetch newest ${limit} products from Firebase...`);
+        const snapshot = await db.collection('products')
+          .orderBy('createdAt', 'desc')
+          .limit(limit)
+          .get();
+        const products = [];
+        snapshot.forEach(doc => {
+          products.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        console.log(`Successfully fetched newest ${limit} products from Firebase:`, products);
+        return products;
+      } catch (error) {
+        console.error(`Error getting newest ${limit} products from Firebase:`, error);
+        return [];
+      }
+    },
+  
     // Add a new product to Firebase
     async addProduct(productData) {
       try {
@@ -449,6 +485,19 @@ const firebaseConfig = {
         console.error('Error updating user data in Firebase:', error);
         throw error;
       }
+      },
+
+      // Get total number of users
+      async getTotalUsersCount() {
+        try {
+          console.log('Attempting to fetch total users count from Firebase...');
+          const snapshot = await db.collection('users').get();
+          console.log(`Successfully fetched total users count: ${snapshot.size}`);
+          return snapshot.size;
+        } catch (error) {
+          console.error('Error getting total users count from Firebase:', error);
+          return 0;
+        }
       },
   
       // Chat Management Functions
@@ -832,6 +881,50 @@ const firebaseConfig = {
           console.error('Error clearing admin logs:', error);
           throw error;
         }
+      },
+
+      // User Presence Functions
+      async setUserOnline(userId, userName) {
+        try {
+          const userStatusRef = db.collection('userStatus').doc(userId);
+          await userStatusRef.set({
+            isOnline: true,
+            name: userName,
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          console.log(`User ${userId} is online.`);
+        } catch (error) {
+          console.error('Error setting user online:', error);
+        }
+      },
+
+      async setUserOffline(userId) {
+        try {
+          const userStatusRef = db.collection('userStatus').doc(userId);
+          await userStatusRef.update({
+            isOnline: false,
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          console.log(`User ${userId} is offline.`);
+        } catch (error) {
+          // It might fail if the tab is closed, which is okay.
+        }
+      },
+
+      onOnlineUsersChange(callback) {
+        return db.collection('userStatus').where('isOnline', '==', true)
+          .onSnapshot(snapshot => {
+            const onlineUsers = [];
+            snapshot.forEach(doc => {
+              onlineUsers.push({
+                id: doc.id,
+                ...doc.data()
+              });
+            });
+            callback(onlineUsers);
+          }, error => {
+            console.error("Error listening to online users:", error);
+          });
       }
     };
   

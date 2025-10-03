@@ -396,9 +396,10 @@
                             <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
                             <span class="text-sm text-gray-400">${product.soldCount || 0} sold</span>
                         </div>
-                        <div class="flex space-x-2">
-                            <a href="${detailPage}" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors duration-300 text-center">View Details</a>
-                            <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300" onclick="showBuyNowModal('${product.name}')">Buy Now</button>
+                        <div>
+                            <a href="${detailPage}" class="w-full block bg-slate-600 text-white py-2 rounded-lg font-semibold hover:bg-slate-700 transition-colors duration-300 text-center">
+                                View Details
+                            </a>
                         </div>
                     </div>
                 `;

@@ -220,6 +220,13 @@ class HeaderComponent {
         this.setupMobileHeaderScroll();
         this.setupDropdowns();
         this.loadSiteSettings();
+
+        // Set user offline on page close
+        window.addEventListener('beforeunload', () => {
+            if (window.AuthService && AuthService.getCurrentUser()) {
+                FirebaseService.setUserOffline(AuthService.getCurrentUser().uid);
+            }
+        });
     }
 
     // Load header into the page
@@ -304,6 +311,11 @@ class HeaderComponent {
                 if (avatarInitials) avatarInitials.textContent = initials;
                 if (dropdownUsername) dropdownUsername.textContent = displayName;
                 if (dropdownEmail) dropdownEmail.textContent = user.email || 'user@example.com';
+
+                // Set user as online
+                if (window.FirebaseService) {
+                    FirebaseService.setUserOnline(user.uid, displayName);
+                }
             } else if (window.FirebaseService) {
                 // For regular users, try to get username from Firestore
                 FirebaseService.getUser(user.uid)
@@ -314,12 +326,22 @@ class HeaderComponent {
                             if (avatarInitials) avatarInitials.textContent = initials;
                             if (dropdownUsername) dropdownUsername.textContent = username;
                             if (dropdownEmail) dropdownEmail.textContent = userData.email || user.email || 'user@example.com';
+
+                            // Set user as online
+                            if (window.FirebaseService) {
+                                FirebaseService.setUserOnline(user.uid, username);
+                            }
                         } else {
                             const email = user.email || 'User';
                             const initials = this.getInitials(email);
                             if (avatarInitials) avatarInitials.textContent = initials;
                             if (dropdownUsername) dropdownUsername.textContent = email;
                             if (dropdownEmail) dropdownEmail.textContent = email;
+
+                            // Set user as online
+                            if (window.FirebaseService) {
+                                FirebaseService.setUserOnline(user.uid, email);
+                            }
                         }
                     })
                     .catch(error => {
