@@ -82,6 +82,13 @@
             animation: move-bg 20s ease infinite;
         }
 
+        /* Accessibility: Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            .animated-hero-bg {
+                animation: none;
+            }
+        }
+
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -100,7 +107,7 @@
     </div>
 
     <!-- Hero Section -->
-    <div id="heroSection" class="animated-hero-bg text-white py-16 md:py-28 relative overflow-hidden">
+    <section id="heroSection" aria-labelledby="hero-heading" class="animated-hero-bg text-white py-16 md:py-28 relative overflow-hidden">
         <!-- Background Image Overlay -->
         <div id="heroBackgroundImage" class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 hidden"></div>
         <!-- Gradient Overlay -->
@@ -109,36 +116,36 @@
         <div class="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0 lg:space-x-10 relative z-10">
             <!-- Left side: Text and Search -->
             <div class="flex-1 text-center lg:text-left">
-                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300" style="text-shadow: 0 0 20px rgba(196, 181, 253, 0.3);">
+                <h1 id="hero-heading" class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300" style="text-shadow: 0 0 20px rgba(196, 181, 253, 0.3);">
                     Your Digital Marketplace<br>Starts Here.
                 </h1>
                 <p class="text-lg md:text-xl text-gray-200 mb-8">
                     Your one-stop shop for the best digital products and gaming services in Sri Lanka.
                 </p>
-                <div class="max-w-xl mx-auto lg:mx-0 relative">
+                <form role="search" onsubmit="handleSearch(); return false;" class="max-w-xl mx-auto lg:mx-0 relative">
                     <div class="flex items-center bg-white/10 backdrop-blur-md rounded-full p-2 shadow-lg border border-white/20 focus-within:ring-2 focus-within:ring-blue-400 transition-all">
-                        <input type="text" id="searchInput" placeholder="Search for products..." class="flex-grow px-4 py-2 bg-transparent text-white focus:outline-none placeholder-gray-300" autocomplete="off">
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-full transition-colors duration-300" onclick="handleSearch()">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <input type="text" id="searchInput" placeholder="Search for products..." aria-label="Search for products" class="flex-grow px-4 py-2 bg-transparent text-white focus:outline-none placeholder-gray-300" autocomplete="off">
+                        <button type="submit" aria-label="Submit search" class="bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-blue-400">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                             </svg>
                         </button>
                     </div>
                     <!-- Autocomplete suggestions container -->
-                    <div id="autocomplete-suggestions" class="absolute mt-2 w-full bg-slate-800/90 backdrop-blur-md rounded-xl shadow-lg border border-slate-700 z-50 hidden max-h-72 overflow-y-auto">
+                    <div id="autocomplete-suggestions" role="listbox" class="absolute mt-2 w-full bg-slate-800/90 backdrop-blur-md rounded-xl shadow-lg border border-slate-700 z-50 hidden max-h-72 overflow-y-auto">
                         <!-- Suggestions will be injected here -->
                     </div>
-                </div>
+                </form>
                 <!-- Trust Badges -->
                 <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-8 mt-8 text-sm text-gray-300">
                     <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944c-2.88 0-5.591 1.11-7.618 3.116A12.03 12.03 0 002 12c0 3.018 1.12 5.86 3.116 7.882A11.955 11.955 0 0112 21.056c2.88 0 5.591-1.11 7.618-3.116A12.03 12.03 0 0022 12c0-3.018-1.12-5.86-3.116-7.882z" />
                         </svg>
                         <span>Secure Shopping</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <span>Trusted by Millions</span>
@@ -147,31 +154,31 @@
             </div>
 
             <!-- Right side: Mascot Image (Optional) -->
-            <div id="heroImageContainer" class="flex-1 flex justify-center lg:justify-end group">
+            <div id="heroImageContainer" class="flex-1 flex justify-center lg:justify-end group" role="region" aria-label="Featured Content Carousel">
                 <!-- Hero image carousel with auto-fading -->
                 <div id="heroCarousel" class="relative w-full max-w-xs sm:max-w-sm md:max-w-lg h-48 sm:h-64 md:h-80 rounded-2xl shadow-2xl overflow-hidden bg-white/10 backdrop-blur-lg border border-white/20">
                     <div id="heroImageInnerContainer" class="w-full h-full relative">
                         <!-- Images will be loaded dynamically -->
                     </div>
                     <!-- Carousel indicators -->
-                    <div id="carouselIndicators" class="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                    <div id="carouselIndicators" role="tablist" aria-label="Carousel Slides" class="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                         <!-- Indicators will be added dynamically -->
                     </div>
                     <!-- Navigation arrows -->
-                    <button id="prevButton" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <button id="prevButton" aria-label="Previous slide" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
-                    <button id="nextButton" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <button id="nextButton" aria-label="Next slide" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- Main Content Area -->
     <main class="flex-grow container mx-auto px-4 py-8 md:py-16">
@@ -299,42 +306,50 @@
 
         <!-- Product Categories Section -->
         <section>
-            <h2 class="text-3xl font-bold mb-6 text-white">Product Categories</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">Browse by Category</h2>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <!-- Category Card 1: Games -->
-                <a href="category-games.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <a href="category-games.html" aria-label="Browse Games category" class="group bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center transition-all duration-300 hover:border-blue-500/50 hover:shadow-blue-500/20 hover:-translate-y-2">
+                    <div class="w-16 h-16 text-blue-400 mb-4 transition-transform duration-300 group-hover:scale-110">
+                        <svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h3 class="text-xl font-bold text-white mb-2">Games</h3>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Games</h3>
                     <p class="text-sm text-gray-400">Gaming accounts, in-game items, and gaming services.</p>
                 </a>
 
                 <!-- Category Card 2: Software & Apps -->
-                <a href="category-software-apps.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <a href="category-software-apps.html" aria-label="Browse Software and Apps category" class="group bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center transition-all duration-300 hover:border-blue-500/50 hover:shadow-blue-500/20 hover:-translate-y-2">
+                    <div class="w-16 h-16 text-blue-400 mb-4 transition-transform duration-300 group-hover:scale-110">
+                        <svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                    </svg>
-                    <h3 class="text-xl font-bold text-white mb-2">Software & Apps</h3>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Software & Apps</h3>
                     <p class="text-sm text-gray-400">Software licenses, app subscriptions, and digital tools.</p>
                 </a>
                 
                 <!-- Category Card 3: Boosting & Coaching -->
-                <a href="category-boosting-coaching.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <a href="category-boosting-coaching.html" aria-label="Browse Boosting and Coaching category" class="group bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center transition-all duration-300 hover:border-blue-500/50 hover:shadow-blue-500/20 hover:-translate-y-2">
+                    <div class="w-16 h-16 text-blue-400 mb-4 transition-transform duration-300 group-hover:scale-110">
+                        <svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v14H9z" />
-                    </svg>
-                    <h3 class="text-xl font-bold text-white mb-2">Boosting & Coaching</h3>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Boosting & Coaching</h3>
                     <p class="text-sm text-gray-400">Improve your skills with professional player coaching.</p>
                 </a>
 
                 <!-- Category Card 4: Gift Cards -->
-                <a href="category-gift-cards.html" class="bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center hover:bg-slate-700 transition-colors duration-300 cursor-pointer">
-                    <svg class="w-16 h-16 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <a href="category-gift-cards.html" aria-label="Browse Gift Cards category" class="group bg-slate-800 rounded-xl shadow-lg border border-slate-700 p-6 flex flex-col items-center text-center transition-all duration-300 hover:border-blue-500/50 hover:shadow-blue-500/20 hover:-translate-y-2">
+                    <div class="w-16 h-16 text-blue-400 mb-4 transition-transform duration-300 group-hover:scale-110">
+                        <svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h3 class="text-xl font-bold text-white mb-2">Gift Cards</h3>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Gift Cards</h3>
                     <p class="text-sm text-gray-400">Digital gift cards for various gaming platforms.</p>
                 </a>
             </div>
@@ -461,7 +476,7 @@
 
         searchInput.addEventListener('keydown', function(e) {
             const suggestions = suggestionsContainer.querySelectorAll('.suggestion-item');
-            if (suggestions.length === 0) return;
+            if (!suggestions || suggestions.length === 0) return;
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -829,8 +844,8 @@
         // Create image elements
         heroImages.forEach((image, index) => {
             const imgElement = document.createElement('img');
-            imgElement.src = image.url;
-            imgElement.alt = image.alt;
+            imgElement.src = image.url || 'https://placehold.co/600x400/805ad5/ffffff?text=Image+Missing';
+            imgElement.alt = image.title || image.alt || `Featured content ${index + 1}`;
             imgElement.className = `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
             imgElement.onerror = function() {
                 this.src = 'https://placehold.co/600x400/805ad5/ffffff?text=Image+Error';
@@ -839,7 +854,10 @@
 
             // Create indicator
             const indicator = document.createElement('button');
+            indicator.setAttribute('role', 'tab');
+            indicator.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
             indicator.className = `w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white' : 'bg-white bg-opacity-50'}`;
+            indicator.setAttribute('aria-label', `Go to slide ${index + 1}`);
             indicator.onclick = () => goToImage(index);
             indicators.appendChild(indicator);
         });
@@ -879,12 +897,17 @@
 
         // Hide all images
         images.forEach(img => img.classList.add('opacity-0'));
-        indicators.forEach(indicator => indicator.classList.remove('bg-white', 'bg-opacity-50'));
+        indicators.forEach(indicator => {
+            indicator.classList.remove('bg-white');
+            indicator.classList.add('bg-white', 'bg-opacity-50');
+            indicator.setAttribute('aria-selected', 'false');
+        });
 
         // Show current image
         if (images[index]) {
             images[index].classList.remove('opacity-0');
-            indicators[index].classList.add('bg-white');
+            indicators[index].classList.remove('bg-opacity-50');
+            indicators[index].setAttribute('aria-selected', 'true');
         }
 
         currentImageIndex = index;
