@@ -121,6 +121,11 @@
             </div>
         </section>
 
+        <!-- Pagination Section -->
+        <section id="paginationContainer" class="flex justify-center items-center space-x-2 mt-8">
+            <!-- Pagination buttons will be loaded here -->
+        </section>
+
         <!-- Category Navigation -->
         <section class="mt-16">
             <h2 class="text-2xl font-bold mb-6 text-white text-center">Browse Other Categories</h2>
@@ -199,6 +204,8 @@
     <!-- JavaScript -->
     <script>
         let products = [];
+        const productsPerPage = 8;
+        let currentPage = 1;
 
         // Load products on page load
         window.addEventListener('load', function() {
@@ -380,31 +387,81 @@
                 return;
             }
 
-            products.forEach(product => {
+            // Show products for the current page
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const productsToShow = products.slice(startIndex, startIndex + productsPerPage);
+
+            productsToShow.forEach(product => {
                 const productCard = document.createElement('div');
-                productCard.className = 'product-card bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-700';
+                productCard.className = 'product-card group relative bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-700 transition-all duration-300 hover:shadow-blue-500/20 hover:-translate-y-1';
                 
                 // Determine detail page based on product ID
                 let detailPage = 'dynamic-product-detail.html?id=' + product.id;
+                const isSoldOut = !product.availability || product.availability <= 0;
 
-                productCard.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded-t-xl border-b border-slate-700">
-                    <div class="p-4">
-                        <h3 class="product-title text-lg font-semibold text-white mb-2">${product.name}</h3>
-                        <p class="product-description text-sm text-gray-400 mb-3 line-clamp-2">${product.description}</p>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
-                            <span class="text-sm text-gray-400">${product.soldCount || 0} sold</span>
-                        </div>
-                        <div>
-                            <a href="${detailPage}" class="w-full block bg-slate-600 text-white py-2 rounded-lg font-semibold hover:bg-slate-700 transition-colors duration-300 text-center">
-                                View Details
+                productCard.innerHTML = /*html*/`
+                    <div class="relative">
+                        <a href="${detailPage}">
+                            <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105 ${isSoldOut ? 'opacity-50' : ''}">
+                        </a>
+                        ${isSoldOut ? `<div class="absolute top-3 right-3 bg-red-600/90 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">SOLD OUT</div>` : ''}
+                        <div class="absolute top-3 left-3 bg-black/50 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm">${product.category || 'General'}</div>
+                    </div>
+                    <div class="p-4 flex flex-col h-[calc(100%-12rem)]">
+                        <h3 class="product-title text-lg font-bold text-white truncate mb-2 group-hover:text-blue-400 transition-colors">${product.name}</h3>
+                        <p class="product-description text-sm text-gray-400 mb-4 line-clamp-2 flex-grow">${product.description}</p>
+                        <div class="flex items-center justify-between mt-auto">
+                            <div>
+                                <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
+                                <p class="text-xs text-gray-500">${product.soldCount || 0} sold</p>
+                            </div>
+                            <a href="${detailPage}" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0">
+                                View
                             </a>
                         </div>
                     </div>
                 `;
                 productContainer.appendChild(productCard);
             });
+
+            renderPagination(products.length);
+        }
+
+        function renderPagination(totalProducts) {
+            const paginationContainer = document.getElementById('paginationContainer');
+            paginationContainer.innerHTML = '';
+            const totalPages = Math.ceil(totalProducts / productsPerPage);
+
+            if (totalPages <= 1) return;
+
+            // Previous button
+            const prevButton = document.createElement('button');
+            prevButton.innerHTML = '&laquo;';
+            prevButton.className = 'px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed';
+            prevButton.disabled = currentPage === 1;
+            prevButton.onclick = () => changePage(currentPage - 1);
+            paginationContainer.appendChild(prevButton);
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                if (i === currentPage) {
+                    pageButton.className = 'px-4 py-2 rounded-lg bg-blue-600 text-white font-bold';
+                } else {
+                    pageButton.className = 'px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600';
+                }
+                pageButton.onclick = () => changePage(i);
+                paginationContainer.appendChild(pageButton);
+            }
+
+            // Next button
+            const nextButton = document.createElement('button');
+            nextButton.innerHTML = '&raquo;';
+            nextButton.className = 'px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.onclick = () => changePage(currentPage + 1);
+            paginationContainer.appendChild(nextButton);
         }
 
         function handleSearch() {
@@ -430,6 +487,16 @@
             } else {
                 errorMessage.classList.remove('hidden');
             }
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(products.length / productsPerPage);
+            if (page < 1) page = 1;
+            if (page > totalPages) page = totalPages;
+
+            currentPage = page;
+            displayProducts();
+            window.scrollTo({ top: document.getElementById('productContainer').offsetTop - 100, behavior: 'smooth' });
         }
 
         function showBuyNowModal(productName) {

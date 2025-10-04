@@ -244,6 +244,7 @@ const firebaseConfig = {
       try {
         console.log('Attempting to fetch total products count from Firebase...');
         const snapshot = await db.collection('products').get();
+
         console.log(`Successfully fetched total products count: ${snapshot.size}`);
         return snapshot.size;
       } catch (error) {

@@ -57,6 +57,31 @@
                 transform: translateY(-100%);
             }
         }
+
+        /* Autocomplete styles */
+        .suggestion-item {
+            transition: background-color 0.2s ease;
+        }
+        .suggestion-item:hover {
+            background-color: #334155;
+        }
+        .suggestion-item.selected {
+            background-color: #475569;
+            color: #fff;
+        }
+
+        /* Animated background for hero section */
+        @keyframes move-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-hero-bg {
+            background: linear-gradient(-45deg, #1e3a8a, #3b0764, #0f172a, #4c1d95);
+            background-size: 400% 400%;
+            animation: move-bg 20s ease infinite;
+        }
+
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -75,34 +100,37 @@
     </div>
 
     <!-- Hero Section -->
-    <div id="heroSection" class="bg-gradient-to-r from-purple-900 to-red-900 text-white py-12 md:py-24 relative overflow-hidden">
+    <div id="heroSection" class="animated-hero-bg text-white py-16 md:py-28 relative overflow-hidden">
         <!-- Background Image Overlay -->
         <div id="heroBackgroundImage" class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 hidden"></div>
         <!-- Gradient Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-red-900/80"></div>
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
         
         <div class="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0 lg:space-x-10 relative z-10">
             <!-- Left side: Text and Search -->
             <div class="flex-1 text-center lg:text-left">
-                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight">
-                    START SHOPPING<br>TODAY
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300" style="text-shadow: 0 0 20px rgba(196, 181, 253, 0.3);">
+                    Your Digital Marketplace<br>Starts Here.
                 </h1>
                 <p class="text-lg md:text-xl text-gray-200 mb-8">
                     Your one-stop shop for the best digital products and gaming services in Sri Lanka.
                 </p>
-                <div class="max-w-xl mx-auto lg:mx-0">
-                    <div class="flex items-center bg-white rounded-full p-2 shadow-lg">
-                        <!-- Added onkeyup event to trigger search on 'Enter' key press -->
-                        <input type="text" id="searchInput" placeholder="Search in S Shop" class="flex-grow px-4 py-2 bg-transparent text-gray-900 focus:outline-none placeholder-gray-500" onkeyup="if(event.key === 'Enter') handleSearch()">
-                        <button class="bg-red-600 hover:bg-red-700 text-white font-bold p-3 rounded-full transition-colors duration-300" onclick="handleSearch()">
+                <div class="max-w-xl mx-auto lg:mx-0 relative">
+                    <div class="flex items-center bg-white/10 backdrop-blur-md rounded-full p-2 shadow-lg border border-white/20 focus-within:ring-2 focus-within:ring-blue-400 transition-all">
+                        <input type="text" id="searchInput" placeholder="Search for products..." class="flex-grow px-4 py-2 bg-transparent text-white focus:outline-none placeholder-gray-300" autocomplete="off">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-full transition-colors duration-300" onclick="handleSearch()">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                             </svg>
                         </button>
                     </div>
+                    <!-- Autocomplete suggestions container -->
+                    <div id="autocomplete-suggestions" class="absolute mt-2 w-full bg-slate-800/90 backdrop-blur-md rounded-xl shadow-lg border border-slate-700 z-50 hidden max-h-72 overflow-y-auto">
+                        <!-- Suggestions will be injected here -->
+                    </div>
                 </div>
                 <!-- Trust Badges -->
-                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-2 sm:space-y-0 sm:space-x-6 mt-6 text-sm text-gray-200">
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-8 mt-8 text-sm text-gray-300">
                     <div class="flex items-center space-x-2">
                         <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944c-2.88 0-5.591 1.11-7.618 3.116A12.03 12.03 0 002 12c0 3.018 1.12 5.86 3.116 7.882A11.955 11.955 0 0112 21.056c2.88 0 5.591-1.11 7.618-3.116A12.03 12.03 0 0022 12c0-3.018-1.12-5.86-3.116-7.882z" />
@@ -119,23 +147,23 @@
             </div>
 
             <!-- Right side: Mascot Image (Optional) -->
-            <div id="heroImageContainer" class="flex-1 flex justify-center lg:justify-end">
+            <div id="heroImageContainer" class="flex-1 flex justify-center lg:justify-end group">
                 <!-- Hero image carousel with auto-fading -->
-                <div id="heroCarousel" class="relative w-full max-w-xs sm:max-w-sm md:max-w-lg h-48 sm:h-64 md:h-80 rounded-xl shadow-2xl overflow-hidden">
+                <div id="heroCarousel" class="relative w-full max-w-xs sm:max-w-sm md:max-w-lg h-48 sm:h-64 md:h-80 rounded-2xl shadow-2xl overflow-hidden bg-white/10 backdrop-blur-lg border border-white/20">
                     <div id="heroImageInnerContainer" class="w-full h-full relative">
                         <!-- Images will be loaded dynamically -->
                     </div>
                     <!-- Carousel indicators -->
-                    <div id="carouselIndicators" class="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1 sm:space-x-2">
+                    <div id="carouselIndicators" class="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                         <!-- Indicators will be added dynamically -->
                     </div>
                     <!-- Navigation arrows -->
-                    <button id="prevButton" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100">
+                    <button id="prevButton" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
-                    <button id="nextButton" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100">
+                    <button id="nextButton" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
@@ -163,51 +191,48 @@
         </section>
 
         <!-- New Buyer-Focused Hero Section -->
-        <section class="my-16">
-            <div class="bg-gradient-to-r from-red-600 via-red-700 to-red-800 rounded-3xl overflow-hidden shadow-2xl relative">
+        <section class="my-16 md:my-24">
+            <div class="animated-hero-bg rounded-3xl overflow-hidden shadow-2xl relative">
                 <!-- Background Pattern -->
-                <div class="absolute inset-0 opacity-10">
-                    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, white 2px, transparent 2px), radial-gradient(circle at 75% 75%, white 2px, transparent 2px); background-size: 50px 50px;"></div>
-                </div>
+                <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
                 
                 <div class="relative z-10 px-8 py-16 lg:px-16 lg:py-20">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <!-- Left Side: Text Content -->
                         <div class="text-center lg:text-left">
-                            <h2 class="text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
-                                START SHOPPING<br>
-                                <span class="text-yellow-300">TODAY</span>
+                            <h2 class="text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300 mb-6 leading-tight" style="text-shadow: 0 0 20px rgba(196, 181, 253, 0.3);">
+                                Ready to Dive In?
                             </h2>
-                            <p class="text-xl text-red-100 mb-8 leading-relaxed">
-                                Your one-stop shop for the best digital products and gaming services in Sri Lanka.
+                            <p class="text-xl text-gray-200 mb-8 leading-relaxed">
+                                Explore our curated collection of digital goods and find your next favorite game or software.
                             </p>
                             
                             <!-- Call-to-Action Buttons -->
-                            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start" stroke-width="2">
-                                <a href="products.html" class="bg-white text-red-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg text-center">
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                                <a href="products.html" class="bg-blue-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-center">
                                     Browse Products
                                 </a>
-                                <a href="learn-more.html" class="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-red-600 transition-all duration-300 transform hover:scale-105 text-center">
+                                <a href="learn-more.html" class="border-2 border-white/50 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 hover:border-white transition-all duration-300 transform hover:scale-105 text-center">
                                     Learn More
                                 </a>
                             </div>
                             
                             <!-- Trust Indicators -->
-                            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-6 mt-8">
-                                <div class="flex items-center space-x-2 text-white">
-                                    <svg class="w-6 h-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-4 mt-10 text-gray-300">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944c-2.88 0-5.591 1.11-7.618 3.116A12.03 12.03 0 002 12c0 3.018 1.12 5.86 3.116 7.882A11.955 11.955 0 0112 21.056c2.88 0 5.591-1.11 7.618-3.116A12.03 12.03 0 0022 12c0-3.018-1.12-5.86-3.116-7.882z" />
                                     </svg>
                                     <span class="font-semibold">Secure Shopping</span>
                                 </div>
-                                <div class="flex items-center space-x-2 text-white">
-                                    <svg class="w-6 h-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                                     </svg>
                                     <span class="font-semibold">Best Prices</span>
                                 </div>
-                                <div class="flex items-center space-x-2 text-white">
-                                    <svg class="w-6 h-6 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                     </svg>
                                     <span class="font-semibold">Fast Delivery</span>
@@ -216,10 +241,10 @@
                         </div>
                         
                         <!-- Right Side: Visual Content -->
-                        <div class="relative">
+                        <div class="relative group">
                             <!-- Main Image Container -->
                             <div class="relative">
-                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                                <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1">
                                     <div class="flex items-center space-x-4 mb-4">
                                         <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
                                             <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -234,7 +259,7 @@
 
                                     <!-- Product Preview Cards -->
                                     <div class="grid grid-cols-2 gap-3">
-                                        <div class="bg-white/20 rounded-lg p-3 backdrop-blur-sm">
+                                        <div class="bg-white/20 rounded-lg p-3 backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-1">
                                             <div class="w-full h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg mb-2 flex items-center justify-center">
                                                 <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -243,7 +268,7 @@
                                             <div class="text-white text-xs font-semibold">Steam Accounts</div>
                                             <div class="text-red-200 text-xs">Starting at LKR 500</div>
                                         </div>
-                                        <div class="bg-white/20 rounded-lg p-3 backdrop-blur-sm">
+                                        <div class="bg-white/20 rounded-lg p-3 backdrop-blur-sm transition-transform duration-300 group-hover:-translate-y-1">
                                             <div class="w-full h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg mb-2 flex items-center justify-center">
                                                 <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
@@ -255,12 +280,12 @@
                                     </div>
 
                                 <!-- Floating Elements -->
-                                <div class="absolute -top-4 -right-4 w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                                <div class="absolute -top-4 -right-4 w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
                                     <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
-                                <div class="absolute -bottom-4 -left-4 w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                                <div class="absolute -bottom-4 -left-4 w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
                                     <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                                     </svg>
@@ -371,9 +396,120 @@
 
     // Load products on page load
     window.addEventListener('load', function() {
-        initializePage();
+        // Wait for Firebase to be ready before initializing the page
+        waitForFirebaseReady(() => {
+            initializePage();
+        });
         setupKeyboardShortcuts();
+        setupAutocomplete();
     });
+
+    // Handle search input
+    function handleSearch() {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput.value.trim() !== '') {
+            window.location.href = `products.html?search=${encodeURIComponent(searchInput.value.trim())}`;
+        }
+    }
+
+    // Function to wait for Firebase to be initialized
+    function waitForFirebaseReady(callback) {
+        const checkInterval = setInterval(() => {
+            if (window.FirebaseService && typeof window.FirebaseService.getProducts === 'function') {
+                clearInterval(checkInterval);
+                callback();
+            }
+        }, 100); // Check every 100ms
+    }
+
+    // Autocomplete functionality
+    function setupAutocomplete() {
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsContainer = document.getElementById('autocomplete-suggestions');
+        let selectedSuggestionIndex = -1;
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            if (query.length < 2) {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.classList.add('hidden');
+                return;
+            }
+
+            const matchedProducts = products.filter(product => 
+                product.name.toLowerCase().includes(query) || 
+                product.description.toLowerCase().includes(query)
+            ).slice(0, 5); // Limit to 5 suggestions
+
+            if (matchedProducts.length > 0) {
+                suggestionsContainer.innerHTML = matchedProducts.map((product, index) => `
+                    <a href="dynamic-product-detail.html?id=${product.id}" class="suggestion-item p-3 cursor-pointer flex items-center space-x-3" data-index="${index}">
+                        <img src="${product.image}" alt="${product.name}" class="w-10 h-10 object-cover rounded-md">
+                        <div>
+                            <p class="text-white font-semibold">${product.name}</p>
+                            <p class="text-gray-400 text-xs">LKR ${product.price.toLocaleString()}</p>
+                        </div>
+                    </a>
+                `).join('');
+                suggestionsContainer.classList.remove('hidden');
+            } else {
+                suggestionsContainer.innerHTML = '<div class="p-3 text-gray-400">No products found.</div>';
+                suggestionsContainer.classList.remove('hidden');
+            }
+            selectedSuggestionIndex = -1; // Reset selection
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+            const suggestions = suggestionsContainer.querySelectorAll('.suggestion-item');
+            if (suggestions.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedSuggestionIndex = (selectedSuggestionIndex + 1) % suggestions.length;
+                updateSelection(suggestions);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedSuggestionIndex = (selectedSuggestionIndex - 1 + suggestions.length) % suggestions.length;
+                updateSelection(suggestions);
+            } else if (e.key === 'Enter') {
+                if (selectedSuggestionIndex > -1) {
+                    e.preventDefault();
+                    suggestions[selectedSuggestionIndex].click(); // This will now navigate due to the <a> tag
+                } else {
+                    handleSearch();
+                }
+                suggestionsContainer.classList.add('hidden');
+            }
+        });
+
+        function updateSelection(suggestions) {
+            suggestions.forEach((item, index) => {
+                if (index === selectedSuggestionIndex) {
+                    item.classList.add('selected');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        // Close suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                suggestionsContainer.classList.add('hidden');
+            }
+        });
+    }
+
+    // Override handleSearch to also hide suggestions
+    function handleSearch() {
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsContainer = document.getElementById('autocomplete-suggestions');
+        if (searchInput.value.trim() !== '') {
+            window.location.href = `products.html?search=${encodeURIComponent(searchInput.value.trim())}`;
+        }
+        suggestionsContainer.classList.add('hidden');
+    }
 
     // Setup keyboard shortcuts for admin panel access
     function setupKeyboardShortcuts() {
@@ -870,27 +1006,30 @@
 
         featuredProducts.forEach(product => {
             const productCard = document.createElement('div');
-            productCard.className = 'product-card relative bg-slate-800 rounded-xl shadow-lg hover:shadow-blue-500/20 transition-all duration-300 border border-slate-700';
+            productCard.className = 'product-card group relative bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-700 transition-all duration-300 hover:shadow-blue-500/20 hover:-translate-y-1';
             
             // Determine detail page based on product ID
             let detailPage = 'dynamic-product-detail.html?id=' + product.id;
             const isSoldOut = !product.availability || product.availability <= 0;
 
             productCard.innerHTML = `
-                ${isSoldOut ? `<div class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-md transform rotate-12 shadow-lg z-10">SOLD OUT</div>` : ''}
-                <a href="${detailPage}">
-                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded-t-xl border-b border-slate-700 ${isSoldOut ? 'opacity-50' : ''}">
-                </a>
-                <div class="p-4">
-                    <h3 class="product-title text-lg font-semibold text-white truncate mb-1">${product.name}</h3>
-                    <p class="product-description text-sm text-gray-400 mb-2 line-clamp-2">${product.description}</p>
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
-                        <span class="text-sm text-gray-400">${product.soldCount || 0} sold</span>
-                    </div>
-                    <div class="mt-4">
-                        <a href="${detailPage}" class="w-full block bg-slate-600 text-white py-2 rounded-lg font-semibold hover:bg-slate-700 transition-colors duration-300 text-center">
-                            View Details
+                <div class="relative">
+                    <a href="${detailPage}">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105 ${isSoldOut ? 'opacity-50' : ''}">
+                    </a>
+                    ${isSoldOut ? `<div class="absolute top-3 right-3 bg-red-600/90 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">SOLD OUT</div>` : ''}
+                    <div class="absolute top-3 left-3 bg-black/50 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm">${product.category || 'General'}</div>
+                </div>
+                <div class="p-4 flex flex-col h-[calc(100%-12rem)]">
+                    <h3 class="product-title text-lg font-bold text-white truncate mb-2 group-hover:text-blue-400 transition-colors">${product.name}</h3>
+                    <p class="product-description text-sm text-gray-400 mb-4 line-clamp-2 flex-grow">${product.description}</p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <div>
+                            <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
+                            <p class="text-xs text-gray-500">${product.soldCount || 0} sold</p>
+                        </div>
+                        <a href="${detailPage}" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0">
+                            View
                         </a>
                     </div>
                 </div>
