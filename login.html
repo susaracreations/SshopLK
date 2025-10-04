@@ -358,56 +358,95 @@
     </script>
 
     <script>
-// Google Sign-In logic
-const googleSignInBtn = document.getElementById('googleSignInBtn');
-const googleErrorMessage = document.getElementById('googleErrorMessage');
-if (googleSignInBtn) {
-    googleSignInBtn.onclick = async function() {
-        googleErrorMessage.classList.add('hidden');
-        try {
-            if (window.firebase && firebase.auth) {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                const result = await firebase.auth().signInWithPopup(provider);
-                
-                // Store user info in Firestore if FirebaseService is available
-                if (result.user && window.FirebaseService) {
-                    try {
-                        // Check if user already exists in Firestore
-                        const existingUser = await FirebaseService.getUser(result.user.uid);
-                        if (!existingUser) {
-                            // Store new Google user in Firestore
-                            await FirebaseService.addUser({
-                                uid: result.user.uid,
-                                username: result.user.displayName || result.user.email.split('@')[0],
-                                email: result.user.email,
-                                displayName: result.user.displayName,
-                                photoURL: result.user.photoURL,
-                                createdAt: new Date().toISOString(),
-                                provider: 'google'
-                            });
-                        }
-                    } catch (firestoreError) {
-                        console.log('Could not store user data in Firestore:', firestoreError);
-                        // Continue with login even if Firestore fails
+        // Google Sign-In logic
+        const googleSignInBtn = document.getElementById('googleSignInBtn');
+        const googleErrorMessage = document.getElementById('googleErrorMessage');
+
+        // Helper function to detect mobile devices
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // Function to handle the sign-in result
+        async function handleSignInResult(result) {
+            if (!result || !result.user) return;
+
+            // Store user info in Firestore if FirebaseService is available
+            if (window.FirebaseService) {
+                try {
+                    // Check if user already exists in Firestore
+                    const existingUser = await FirebaseService.getUser(result.user.uid);
+                    if (!existingUser) {
+                        // Store new Google user in Firestore
+                        await FirebaseService.addUser({
+                            uid: result.user.uid,
+                            username: result.user.displayName || result.user.email.split('@')[0],
+                            email: result.user.email,
+                            displayName: result.user.displayName,
+                            photoURL: result.user.photoURL,
+                            createdAt: new Date().toISOString(),
+                            provider: 'google'
+                        });
+                    }
+                } catch (firestoreError) {
+                    console.warn('Could not store user data in Firestore:', firestoreError);
+                    // Continue with login even if Firestore fails
+                }
+            }
+            window.location.href = 'index.html';
+        }
+
+        // Handle the redirect result on page load
+        window.addEventListener('load', async () => {
+            try {
+                if (window.firebase && firebase.auth) {
+                    const result = await firebase.auth().getRedirectResult();
+                    if (result.user) {
+                        await handleSignInResult(result);
                     }
                 }
-                
-                window.location.href = 'index.html';
-            } else {
-                throw new Error('Firebase Auth not available');
+            } catch (error) {
+                console.error('Google sign-in redirect error:', error);
+                let errorText = 'Google sign-in failed. Please try again.';
+                if (error.code === 'auth/account-exists-with-different-credential') {
+                    errorText = 'An account already exists with the same email address but different sign-in credentials.';
+                }
+                googleErrorMessage.textContent = errorText;
+                googleErrorMessage.classList.remove('hidden');
             }
-        } catch (error) {
-            console.error('Google sign-in error:', error);
-            let errorText = 'Google sign-in failed. Please try again.';
-            if (error.code === 'auth/popup-closed-by-user') {
-                errorText = 'Sign-in popup closed. Please try again.';
-            }
-            googleErrorMessage.textContent = errorText;
-            googleErrorMessage.classList.remove('hidden');
+        });
+
+        if (googleSignInBtn) {
+            googleSignInBtn.onclick = async function() {
+                googleErrorMessage.classList.add('hidden');
+                try {
+                    if (window.firebase && firebase.auth) {
+                        const provider = new firebase.auth.GoogleAuthProvider();
+                        if (isMobileDevice()) {
+                            // Use redirect for mobile devices
+                            await firebase.auth().signInWithRedirect(provider);
+                        } else {
+                            // Use popup for desktop
+                            const result = await firebase.auth().signInWithPopup(provider);
+                            await handleSignInResult(result);
+                        }
+                    } else {
+                        throw new Error('Firebase Auth not available');
+                    }
+                } catch (error) {
+                    console.error('Google sign-in error:', error);
+                    let errorText = 'Google sign-in failed. Please try again.';
+                    if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
+                        errorText = 'Sign-in popup closed. Please try again.';
+                    } else if (error.code === 'auth/popup-blocked') {
+                        errorText = 'Pop-up blocked by browser. Please allow pop-ups for this site.';
+                    }
+                    googleErrorMessage.textContent = errorText;
+                    googleErrorMessage.classList.remove('hidden');
+                }
+            };
         }
-    };
-}
-</script>
+    </script>
 
 </body>
 </html> 
