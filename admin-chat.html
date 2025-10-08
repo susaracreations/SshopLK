@@ -13,8 +13,8 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: #0f172a; /* Dark blue background */
+            color: #e2e8f0; /* Light gray text */
         }
         
         /* Custom scrollbar */
@@ -22,14 +22,14 @@
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: #1e293b;
         }
         ::-webkit-scrollbar-thumb {
-            background: #ccc;
+            background: #475569;
             border-radius: 2px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
+            background: #6b7280;
         }
         
         /* Message animations */
@@ -64,26 +64,24 @@
 
         /* Glassmorphism effect */
         .glass {
-            background: white;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            background: rgba(30, 41, 59, 0.5); /* bg-slate-800/50 */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(71, 85, 105, 0.5); /* border-slate-700/50 */
         }
         
         /* Hover effects */
         .hover-lift {
             transition: all 0.2s ease;
         }
-        
         .hover-lift:hover {
             transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.1);
         }
 
         /* Message bubbles */
         .message-bubble {
             position: relative;
         }
-
         .message-admin {
             background-color: #dbeafe;
             margin-left: auto;
@@ -93,51 +91,10 @@
             background-color: #e5e7eb;
         }
 
-        /* Chat container scrolling */
-        #messagesContainer {
-            scrollbar-width: thin;
-            scrollbar-color: #475569 #334155;
-            overflow-y: auto;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        #messagesContainer::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        #messagesContainer::-webkit-scrollbar-track {
-            background: #334155;
-            border-radius: 2px;
-        }
-        
-        #messagesContainer::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 2px;
-        }
-        
-        #messagesContainer::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-        
-        /* Ensure messages list doesn't overflow */
-        #messagesList {
-            min-height: 100%;
-            padding-bottom: 10px;
-        }
-        
         /* Prevent chat box from being pushed down */
         .chat-layout {
-            height: calc(100vh - 180px);
-            max-height: calc(100vh - 160px);
+            height: calc(100vh - 200px);
             overflow: hidden;
-        }
-        
-        .chat-messages-area {
-            flex: 1;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
         
         .chat-input-area {
@@ -166,66 +123,48 @@
 <body class="min-h-screen">
 
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-2">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h1 class="text-lg font-bold text-gray-900">Chat Management</h1>
-                            <p class="text-xs text-gray-500">Admin Dashboard</p>
-                        </div>
-                    </div>
+    <header class="bg-slate-900/70 backdrop-blur-sm border-b border-slate-700 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-blue-600/30 rounded-lg flex items-center justify-center border border-blue-500/50">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
                 </div>
-                
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-xs text-gray-600">Welcome, <span id="adminUsername" class="font-semibold text-gray-900">Admin</span></span>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button onclick="showKeyboardShortcuts()" class="px-2 py-1 text-slate-300 hover:text-white transition-colors duration-200 flex items-center space-x-1 text-xs" title="Keyboard Shortcuts">
-                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            <span class="hidden sm:inline">Shortcuts</span>
-                        </button>
-                        <button onclick="logout()" class="px-3 py-1 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors text-xs">
-                            Logout
-                        </button>
-                        <a href="admin-dashboard.html" class="px-3 py-1 text-gray-500 hover:text-gray-700 transition-colors duration-200 flex items-center space-x-1 text-xs">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg>
-                            <span>Back to Dashboard</span>
-                        </a>
-                    </div>
-                </div>
+                <span class="text-xl font-bold text-white">Chat Management</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-slate-400">Welcome, <span id="adminUsername" class="font-semibold text-white">Admin</span></span>
+                <button onclick="logout()" class="bg-red-600/80 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-red-700/80 transition-colors text-xs">
+                    Logout
+                </button>
+                <a href="index.html" class="text-slate-400 hover:text-white text-xs flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Back to Website</span>
+                </a>
             </div>
         </div>
     </header>
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
+    <nav class="bg-slate-800/50 border-b border-slate-700">
         <div class="container mx-auto px-4">
             <div class="flex space-x-8 py-2">
-                <a href="admin-dashboard.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-dashboard.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Dashboard
                 </a>
-                <a href="admin.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Products
                 </a>
-                <a href="admin-chat.html" class="text-blue-600 border-b-2 border-blue-600 py-2 px-1 text-sm font-medium">
+                <a href="admin-chat.html" class="text-blue-400 border-b-2 border-blue-400 py-2 px-1 text-sm font-medium">
                     Chat
                 </a>
-                <a href="admin-logs.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-logs.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Logs
                 </a>
-                <a href="admin-settings.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-settings.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Settings
                 </a>
             </div>
@@ -233,21 +172,15 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-180px)]">
+    <main class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 chat-layout">
             
             <!-- Left Sidebar - Chat List -->
             <div class="lg:col-span-1">
                 <div class="glass rounded-xl p-4 h-full flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-bold text-gray-900">Active Chats</h2>
+                    <div class="flex justify-between items-center mb-4 flex-shrink-0">
+                        <h2 class="text-lg font-bold text-white">Conversations</h2>
                         <div class="flex space-x-1">
-                            <button onclick="refreshChats()" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-2 py-1 rounded-lg text-xs hover:from-blue-600 hover:to-blue-700 transition-all duration-200">
-                                <svg class="w-3 h-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                </svg>
-                                Refresh
-                            </button>
                             <button onclick="markAllAsRead()" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-2 py-1 rounded-lg text-xs hover:from-green-600 hover:to-green-700 transition-all duration-200">
                                 <svg class="w-3 h-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -259,13 +192,13 @@
                     
                     <!-- Chat Stats -->
                     <div class="grid grid-cols-2 gap-3 mb-4 flex-shrink-0">
-                        <div class="bg-gray-100 rounded-lg p-3 border border-gray-200">
-                            <div class="text-xl font-bold text-blue-600" id="totalChats">0</div>
-                            <div class="text-xs text-gray-500">Total Chats</div>
+                        <div class="bg-slate-700/50 rounded-lg p-3 border border-slate-600">
+                            <div class="text-xl font-bold text-blue-400" id="totalChats">0</div>
+                            <div class="text-xs text-slate-400">Total Chats</div>
                         </div>
-                        <div class="bg-gray-100 rounded-lg p-3 border border-gray-200">
-                            <div class="text-xl font-bold text-red-600" id="unreadChats">0</div>
-                            <div class="text-xs text-gray-500">Unread</div>
+                        <div class="bg-slate-700/50 rounded-lg p-3 border border-slate-600">
+                            <div class="text-xl font-bold text-red-500" id="unreadChats">0</div>
+                            <div class="text-xs text-slate-400">Unread</div>
                         </div>
                     </div>
                     
@@ -277,30 +210,24 @@
             </div>
 
             <!-- Right Side - Chat Messages -->
-            <div class="lg:col-span-3 h-full">
-                <div class="glass rounded-xl h-full flex flex-col chat-layout">
+            <div class="lg:col-span-3">
+                <div class="glass rounded-xl flex flex-col chat-layout">
                     
                     <!-- Chat Header -->
-                    <div class="px-4 py-3 rounded-t-xl border-b border-gray-200 flex-shrink-0">
+                    <div class="px-4 py-3 rounded-t-xl border-b border-slate-700/50 flex-shrink-0">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                                <div class="w-10 h-10 bg-blue-600/30 rounded-full flex items-center justify-center border border-blue-500/50">
                                     <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-base font-semibold text-gray-900" id="currentChatUser">Select a chat</h3>
-                                    <p class="text-xs text-gray-500" id="currentChatInfo">No chat selected</p>
+                                    <h3 class="text-base font-semibold text-white" id="currentChatUser">Select a chat</h3>
+                                    <p class="text-xs text-slate-400" id="currentChatInfo">No chat selected</p>
                                 </div>
                             </div>
-                            <div class="flex space-x-2">
-                                <button onclick="archiveChat()" class="bg-gray-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-gray-600 transition-all duration-200">
-                                    <svg class="w-3 h-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-10 4h4" />
-                                    </svg>
-                                    Archive
-                                </button>
+                            <div id="chatActionButtons" class="flex space-x-2">
                                 <button onclick="deleteChat()" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-lg text-xs hover:from-red-600 hover:to-red-700 transition-all duration-200">
                                     <svg class="w-3 h-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -312,38 +239,39 @@
                     </div>
 
                     <!-- Messages Container -->
-                    <div class="chat-messages-area">
-                        <div class="flex-1 overflow-y-auto p-4" id="messagesContainer">
-                            <div class="text-center text-gray-500 py-8" id="noChatMessage">
-                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <svg class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
-                            </div>
-                                <h3 class="text-base font-semibold text-gray-700 mb-1">No Chat Selected</h3>
-                                <p class="text-gray-500 text-sm">Select a chat from the list to view messages</p>
-                            </div>
-                            
-                            <!-- Messages will be loaded here -->
-                            <div id="messagesList" class="space-y-3" style="display: none;">
-                                <!-- Individual messages will be added here -->
-                            </div>
+                    <div class="flex-1 overflow-y-auto p-4" id="messagesContainer">
+                        <div class="text-center text-slate-500 py-8" id="noChatMessage">
+                            <div class="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg class="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                        </div>
+                            <h3 class="text-base font-semibold text-slate-300 mb-1">No Chat Selected</h3>
+                            <p class="text-slate-400 text-sm">Select a chat from the list to view messages</p>
+                        </div>
+                        
+                        <!-- Messages will be loaded here -->
+                        <div id="messagesList" class="space-y-3" style="display: none;">
+                            <!-- Individual messages will be added here -->
                         </div>
                     </div>
 
                     <!-- Message Input -->
-                    <div class="chat-input-area p-4" id="messageInputContainer" style="display: none;">
+                    <div class="chat-input-area p-4 border-t border-slate-700/50" id="messageInputContainer" style="display: none;">
                         <form id="messageForm" class="flex space-x-3">
                             <div class="flex-1">
                                 <textarea 
                                     id="messageInput" 
                                     placeholder="Type your message... Press Enter to send, Shift+Enter for new line" 
-                                    class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-500 text-sm"
+                                    class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-white placeholder-slate-400 text-sm"
                                     rows="2"
                                     maxlength="500"
                                 ></textarea>
-                                <div class="flex items-center justify-between mt-1 text-xs text-gray-500">
-                                    <span>Enter to send • Shift+Enter for new line</span>
+                                <div class="flex items-center justify-between mt-1 text-xs text-slate-400">
+                                    <button type="button" id="quickReplyBtn" class="flex items-center space-x-1 text-blue-400 hover:text-blue-300 transition-colors">
+                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                        <span>Quick Replies</span>
+                                    </button>
                                     <span id="charCount">0/500</span>
                                 </div>
                             </div>
@@ -359,6 +287,13 @@
                                 <span>Send</span>
                             </button>
                         </form>
+                        <!-- Quick Replies Panel -->
+                        <div id="quickReplyPanel" class="hidden absolute bottom-20 left-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-lg p-4 shadow-2xl z-10">
+                            <h4 class="text-sm font-semibold text-white mb-3">Select a Quick Reply</h4>
+                            <div id="quickReplyList" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                                <!-- Templates will be loaded here -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -374,13 +309,18 @@
     <script>
         let currentChatId = null;
         let chats = [];
+        let allChats = [];
         let currentChat = null;
-        let lastMessageCount = 0; // Track message count for notifications
+        let quickReplyTemplates = [];
+        let optimisticId = null; // Define at a higher scope
+        let lastMessageCount = 0; // Track message count for real-time updates and notifications
 
         // Check authentication
         window.addEventListener('load', function() {
             checkAuth();
+            setupChatListener(); // Set up the real-time listener
             loadChats();
+            initializeQuickReplies();
             setupEventListeners();
             setupMessageNotifications();
         });
@@ -428,15 +368,15 @@
                         }
                         
                         // Only update if this is the currently selected chat
-                        if (chatId === currentChatId && messages.length > lastMessageCount) {
-                        // New message received
-                        const newMessages = messages.slice(lastMessageCount);
-                        lastMessageCount = messages.length;
+                        if (chatId === currentChatId) {
+                            const newMessages = messages.slice(lastMessageCount);
+                            lastMessageCount = messages.length; // Update lastMessageCount
                             
                             // Display new messages immediately, but check for duplicates
                             newMessages.forEach(message => {
                                 if (message && message.id) {
-                                    addMessageIfNotExists(message, message.id);
+                                    // Only add if it's not the optimistic message we just sent
+                                    if (!message.optimistic) addMessageIfNotExists(message, message.id);
                                 }
                             });
                         
@@ -507,6 +447,43 @@
             }
             
             startInactivityMonitoring();
+        }
+
+        function initializeQuickReplies() {
+            // Define your quick reply templates here
+            quickReplyTemplates = [
+                { title: 'Greeting', text: 'Hello! Thank you for contacting S Shop LK support. How can I help you today?' },
+                { title: 'Payment Info', text: 'We accept bank transfers and mobile payments. I can provide the details once you confirm your order.' },
+                { title: 'Delivery Time', text: 'Digital products are delivered instantly or within a few hours. I will let you know the exact time for your specific order.' },
+                { title: 'Product Availability', text: 'Let me check the availability of that product for you. One moment please.' },
+                { title: 'Closing', text: 'Is there anything else I can help you with today?' },
+                { title: 'Thank You', text: 'Thank you for choosing S Shop LK! Have a great day.' }
+            ];
+
+            const quickReplyList = document.getElementById('quickReplyList');
+            quickReplyList.innerHTML = '';
+
+            quickReplyTemplates.forEach(template => {
+                const button = document.createElement('button');
+                button.className = 'text-left p-3 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg transition-colors text-sm';
+                button.innerHTML = `
+                    <p class="font-semibold text-white">${template.title}</p>
+                    <p class="text-slate-400 truncate">${template.text}</p>
+                `;
+                button.onclick = () => {
+                    const messageInput = document.getElementById('messageInput');
+                    messageInput.value = template.text;
+                    messageInput.focus();
+                    updateCharCount();
+                    document.getElementById('quickReplyPanel').classList.add('hidden');
+                };
+                quickReplyList.appendChild(button);
+            });
+
+            document.getElementById('quickReplyBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('quickReplyPanel').classList.toggle('hidden');
+            });
         }
 
         function startInactivityMonitoring() {
@@ -614,6 +591,9 @@
 
         async function loadChats() {
             try {
+                const chatList = document.getElementById('chatList');
+                chatList.innerHTML = `<div class="text-center text-gray-500 py-8">Loading chats...</div>`;
+
                 console.log('Loading chats...');
                 
                 // Try Firebase first
@@ -669,6 +649,29 @@
             }
         }
 
+        function setupChatListener() {
+            if (window.FirebaseService && window.db) {
+                db.collection('chats').onSnapshot(snapshot => {
+                    snapshot.docChanges().forEach(change => {
+                        const doc = change.doc;
+                        const chat = doc.data();
+                        if (chat && chat.userId) { // Basic validation
+                            // Remove old version if it exists, then add the new/updated one
+                            allChats = allChats.filter(c => c.id !== doc.id);
+                            allChats.push({ id: doc.id, ...chat });
+                        }
+                    });
+                    displayChats();
+                    updateStats();
+                }, error => {
+                    console.error("Error with chat listener:", error);
+                    showError("Real-time chat update failed. Please refresh.");
+                });
+            } else {
+                console.warn("Firebase not available for real-time chat listener.");
+            }
+        }
+
         function displayChats() {
             const chatList = document.getElementById('chatList');
             chatList.innerHTML = '';
@@ -676,7 +679,7 @@
             if (chats.length === 0) {
                 chatList.innerHTML = `
                     <div class="text-center text-slate-500 py-8">
-                        <div class="w-16 h-16 bg-slate-700/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div class="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
@@ -687,7 +690,12 @@
                 return;
             }
 
-            chats.forEach(chat => {
+            const chatsToDisplay = allChats.filter(chat => chat.status !== 'archived');
+
+            // Sort by last message time, descending
+            chatsToDisplay.sort((a, b) => (b.lastMessageAt?.toDate() || 0) - (a.lastMessageAt?.toDate() || 0));
+
+            chatsToDisplay.forEach(chat => {
                 // Skip invalid chat objects
                 if (!chat || !chat.id) {
                     console.warn('Skipping invalid chat object:', chat);
@@ -695,23 +703,15 @@
                 }
                 
                 const chatElement = document.createElement('div');
-                chatElement.className = `chat-item bg-white rounded-lg p-3 cursor-pointer transition-all duration-200 hover-lift ${chat.id === currentChatId ? 'ring-2 ring-blue-500 bg-blue-50' : 'border border-gray-200'}`;
+                chatElement.className = `chat-item bg-slate-800/50 rounded-lg p-3 cursor-pointer transition-all duration-200 hover-lift ${chat.id === currentChatId ? 'ring-2 ring-blue-500 bg-slate-700' : 'border border-slate-700'}`;
                 chatElement.dataset.chatId = chat.id; // Add data attribute for keyboard navigation
                 chatElement.tabIndex = 0; // Make focusable for keyboard navigation
                 
-                const lastMessage = chat.lastMessage || 'No messages yet';
+                const lastMessagePrefix = chat.lastMessageSender === 'admin' ? '<span class="text-slate-400">You: </span>' : '';
+                const lastMessage = chat.lastMessage ? `${lastMessagePrefix}${chat.lastMessage}` : 'No messages yet';
                 
                 // Safely get time
-                let time = 'Unknown';
-                if (chat.lastMessageAt) {
-                    try {
-                        const lastMessageTime = chat.lastMessageAt.toDate ? chat.lastMessageAt.toDate() : new Date(chat.lastMessageAt);
-                        time = lastMessageTime.toLocaleString();
-                    } catch (error) {
-                        console.error('Error parsing last message time:', error);
-                        time = 'Unknown';
-                    }
-                }
+                const time = formatRelativeTime(chat.lastMessageAt);
                 
                 const unreadCount = chat.unreadCount || 0;
                 
@@ -719,26 +719,27 @@
                 const userName = generateUserName(chat.userId, chat.userName);
                 
                 // Safely get user ID for display
-                const userId = chat.userId || 'Unknown';
-                const userIdDisplay = typeof userId === 'string' ? userId.substring(0, 8) + '...' : 'Unknown';
                 
                 chatElement.innerHTML = `
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <div class="flex items-center space-x-2 mb-2">
-                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                                    <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div class="w-8 h-8 bg-blue-600/30 border border-blue-500/50 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                 </div>
-                                <h4 class="font-semibold text-gray-900 text-sm">${userName}</h4>
-                                ${unreadCount > 0 ? `<span class="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full unread-indicator">${unreadCount}</span>` : ''}
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <h4 class="font-semibold text-white text-sm truncate">${userName}</h4>
+                                        <p class="text-xs text-slate-500 flex-shrink-0 ml-2">${time}</p>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-xs text-slate-400 truncate">${lastMessage}</p>
+                                        ${unreadCount > 0 ? `<span class="bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full flex-shrink-0 ml-2">${unreadCount}</span>` : ''}
+                                    </div>
+                                </div>
                             </div>
-                            <p class="text-xs text-gray-600 truncate mb-1">${lastMessage}</p>
-                            <p class="text-xs text-gray-500">${time}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-gray-500">ID: ${userIdDisplay}</p>
                         </div>
                     </div>
                 `;
@@ -746,6 +747,21 @@
                 chatElement.onclick = () => selectChat(chat);
                 chatList.appendChild(chatElement);
             });
+        }
+
+        function formatRelativeTime(timestamp) {
+            if (!timestamp) return '';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            const now = new Date();
+            const diffSeconds = Math.round((now - date) / 1000);
+            const diffDays = Math.floor(diffSeconds / 86400);
+
+            if (diffSeconds < 60) return 'Just now';
+            if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)}m ago`;
+            if (diffSeconds < 86400 && now.getDate() === date.getDate()) return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return date.toLocaleDateString([], { weekday: 'short' });
+            return date.toLocaleDateString();
         }
 
         // Generate a proper user name based on user ID
@@ -801,6 +817,21 @@
             document.getElementById('unreadChats').textContent = unreadCount;
         }
 
+        function clearChatSelection() {
+            currentChatId = null;
+            currentChat = null;
+            document.getElementById('currentChatUser').textContent = 'Select a chat';
+            document.getElementById('currentChatInfo').textContent = 'No chat selected';
+            document.getElementById('messageInputContainer').style.display = 'none';
+
+            const noChatMessage = document.getElementById('noChatMessage');
+            const messagesList = document.getElementById('messagesList');
+            if (noChatMessage) noChatMessage.classList.remove('hidden');
+            if (messagesList) messagesList.classList.add('hidden');
+
+            displayChats();
+        }
+
         async function selectChat(chat) {
             // Check if chat object is valid
             if (!chat || !chat.id) {
@@ -811,18 +842,15 @@
             currentChatId = chat.id;
             currentChat = chat;
             
-            // Generate proper user name with error handling
+            // Generate proper user name
             const userName = generateUserName(chat.userId, chat.userName);
             
             // Update UI with proper user name
             document.getElementById('currentChatUser').textContent = userName;
             
             // Safely get user ID for display
-            const userId = chat.userId || 'Unknown';
-            const userIdDisplay = typeof userId === 'string' ? userId.substring(0, 8) + '...' : 'Unknown';
-            
-            // Safely get last message time
-            let lastActiveText = 'Unknown';
+            const userEmail = chat.userEmail || 'No email provided';
+            let lastActiveText = 'Never active';
             if (chat.lastMessageAt) {
                 try {
                     const lastActive = chat.lastMessageAt.toDate ? chat.lastMessageAt.toDate() : new Date(chat.lastMessageAt);
@@ -833,7 +861,8 @@
                 }
             }
             
-            document.getElementById('currentChatInfo').textContent = `User ID: ${userIdDisplay} • Last active: ${lastActiveText}`;
+            document.getElementById('currentChatInfo').textContent = `${userEmail} • Last active: ${formatRelativeTime(chat.lastMessageAt, true)}`;
+
             document.getElementById('messageInputContainer').style.display = 'block';
             
             // Load messages
@@ -861,6 +890,7 @@
             messagesList.innerHTML = ''; // Clear previous messages
 
             try {
+                let lastMessageDate = null;
                 let messages;
                 
                 // Try Firebase first with timeout
@@ -887,7 +917,16 @@
                 // Display all messages efficiently
                 const fragment = document.createDocumentFragment();
                 messages.forEach(message => {
-                    const messageDiv = createMessageElement(message, message.id);
+                    const messageTimestamp = message.timestamp?.toDate ? message.timestamp.toDate() : new Date(message.timestamp);
+                    const messageDate = new Date(messageTimestamp.getFullYear(), messageTimestamp.getMonth(), messageTimestamp.getDate());
+                    
+                    // Check if we need to add a date separator
+                    if (!lastMessageDate || messageDate.toDateString() !== lastMessageDate.toDateString()) {
+                        fragment.appendChild(createDateSeparator(messageDate));
+                        lastMessageDate = messageDate;
+                    }
+
+                    const messageDiv = createMessageElement(message, message.id, messageTimestamp);
                     fragment.appendChild(messageDiv);
                 });
                 
@@ -904,34 +943,55 @@
             }
         }
 
-        function createMessageElement(messageData, messageId) {
+        function createMessageElement(messageData, messageId, messageTimestamp) {
             const isAdmin = messageData.sender === 'admin';
+            const avatarIcon = isAdmin 
+                ? `<svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6-4a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>` // Checkmark for admin
+                : `<svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>`;
             
             const messageDiv = document.createElement('div');
             messageDiv.className = `flex ${isAdmin ? 'justify-end' : 'justify-start'} mb-4 message-enter`;
             messageDiv.id = `message-${messageId}`;
             
-            const time = messageData.timestamp ? 
-                (messageData.timestamp.toDate ? 
-                    new Date(messageData.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) :
-                    new Date(messageData.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) // Fallback for optimistic
-                ) : 'Just now';
+            const time = messageTimestamp ? messageTimestamp.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : 'Just now';
             
             messageDiv.innerHTML = `
                 <div class="flex items-end space-x-2 max-w-xs lg:max-w-md ${isAdmin ? 'flex-row-reverse space-x-reverse' : ''}">
-                    <div class="w-8 h-8 ${isAdmin ? 'bg-green-500' : 'bg-blue-500'} rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
+                    <div class="w-8 h-8 ${isAdmin ? 'bg-green-600' : 'bg-blue-600'} rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                        ${avatarIcon}
                     </div>
-                    <div class="message-bubble rounded-xl p-3 shadow-md ${isAdmin ? 'message-admin' : 'message-user'}">
-                        <p class="text-sm text-gray-900">${messageData.text}</p>
-                        <p class="text-xs text-gray-600 opacity-75 mt-1">${isAdmin ? 'You' : 'User'} • ${time}</p>
+                    <div class="message-bubble rounded-xl p-3 shadow-md ${isAdmin ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-200'}">
+                        <p class="text-sm">${messageData.text}</p>
+                        <p class="text-xs ${isAdmin ? 'text-blue-200' : 'text-slate-400'} opacity-75 mt-1 text-right">${isAdmin ? 'You' : 'User'} • ${time}</p>
                     </div>
                 </div>
             `;
             
             return messageDiv;
+        }
+
+        function createDateSeparator(date) {
+            const separatorDiv = document.createElement('div');
+            separatorDiv.className = 'flex items-center justify-center my-4';
+            separatorDiv.innerHTML = `
+                <div class="flex-grow border-t border-slate-700"></div>
+                <span class="flex-shrink mx-4 text-xs text-slate-400 font-semibold">
+                    ${formatDateSeparator(date)}
+                </span>
+                <div class="flex-grow border-t border-slate-700"></div>
+            `;
+            return separatorDiv;
+        }
+
+        function formatDateSeparator(date) {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+            
+            if (date.toDateString() === today.toDateString()) return 'Today';
+            if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+            
+            return date.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         }
 
         function displayMessage(messageData, messageId) {
@@ -944,7 +1004,18 @@
                 return;
             }
             
-            const messageDiv = createMessageElement(messageData, messageId);
+            const messageTimestamp = messageData.timestamp?.toDate ? messageData.timestamp.toDate() : new Date(messageData.timestamp);
+            const messageDate = new Date(messageTimestamp.getFullYear(), messageTimestamp.getMonth(), messageTimestamp.getDate());
+            
+            // Check if a date separator is needed before adding the message
+            const lastMessageElement = messagesList.lastElementChild;
+            if (lastMessageElement && lastMessageElement.dataset.messageDate) {
+                const lastDate = new Date(lastMessageElement.dataset.messageDate);
+                if (messageDate.toDateString() !== lastDate.toDateString()) {
+                    messagesList.appendChild(createDateSeparator(messageDate));
+                }
+            }
+            const messageDiv = createMessageElement(messageData, messageId, messageTimestamp);
             messagesList.appendChild(messageDiv);
             
             // Auto-scroll to bottom for new messages with reduced delay
@@ -980,20 +1051,12 @@
                 updateCharCount();
             });
 
-            // Handle Enter key for sending messages
-            messageInput.addEventListener('keydown', function(e) {
-                // Send message on Enter (without Shift)
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-                
-                // Allow new line on Shift+Enter
-                if (e.key === 'Enter' && e.shiftKey) {
-                    // Let the default behavior happen (new line)
-                    return;
-                }
-                updateCharCount();
+            document.body.addEventListener('click', function() {
+                document.getElementById('quickReplyPanel').classList.add('hidden');
+            });
+
+            document.getElementById('quickReplyPanel').addEventListener('click', (e) => {
+                e.stopPropagation();
             });
 
             // Keyboard shortcuts
@@ -1034,7 +1097,7 @@
                 // Ctrl/Cmd + R: Refresh chats
                 if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
                     e.preventDefault();
-                    refreshChats();
+                    loadChats(); // Changed from refreshChats
                 }
 
                 // Ctrl/Cmd + A: Mark all as read
@@ -1102,7 +1165,7 @@
                 // Ctrl/Cmd + B: Back to admin panel
                 if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
                     e.preventDefault();
-                    window.location.href = 'admin.html';
+                    window.location.href = 'admin-dashboard.html'; // Changed to dashboard for consistency
                 }
             });
 
@@ -1196,24 +1259,35 @@
                 messageInput.style.height = 'auto';
                 updateCharCount();
                 
-                // Create optimistic message display (show immediately)
-                const optimisticId = 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                // Create optimistic message display (show immediately) - optimisticId is now defined at a higher scope
+                optimisticId = 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 const optimisticMessage = {
                     id: optimisticId,
                     text: message,
+                    sender: 'admin',
                     sender: 'admin',
                     userId: 'admin',
                     timestamp: new Date()
                 };
 
+                // Ensure the message list is visible before adding a message
+                const messagesList = document.getElementById('messagesList');
+                const noChatMessage = document.getElementById('noChatMessage');
+                if (messagesList && messagesList.classList.contains('hidden')) {
+                    messagesList.classList.remove('hidden');
+                    if (noChatMessage) noChatMessage.classList.add('hidden');
+                }
                 // Display message immediately for better UX
                 displayMessage(optimisticMessage, optimisticId);
                 
                 let messageId;
                 
                 // Try Firebase first with timeout
-                if (window.FirebaseService && window.FirebaseService.sendMessage) {
-                    const firebasePromise = FirebaseService.sendMessage(currentChatId, message);
+                if (window.FirebaseService && window.FirebaseService.sendMessage) { 
+                    // Update the chat's last message sender
+                    await FirebaseService.updateChat(currentChatId, { lastMessageSender: 'admin' });
+
+                    const firebasePromise = FirebaseService.addMessage(currentChatId, { text: message, sender: 'admin', userId: 'admin' });
                     const timeoutPromise = new Promise((_, reject) => 
                         setTimeout(() => reject(new Error('Firebase timeout')), 5000)
                     );
@@ -1221,6 +1295,11 @@
                     try {
                         messageId = await Promise.race([firebasePromise, timeoutPromise]);
                         
+                        // Update the chat's last message and timestamp
+                        await FirebaseService.updateChat(currentChatId, {
+                            lastMessage: message,
+                            lastMessageAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
                         // Log admin action
                         if (window.FirebaseService.logAdminAction) {
                             FirebaseService.logAdminAction('message_sent', {
@@ -1243,7 +1322,7 @@
                         
                     } catch (timeoutError) {
                         console.warn('Firebase timeout, using localStorage fallback');
-                        messageId = await LocalChatService.sendMessage(currentChatId, message);
+                        messageId = await LocalChatService.addMessage(currentChatId, message);
                         
                         // Update the optimistic message with localStorage ID
                         const tempMessage = document.getElementById(`message-${optimisticId}`);
@@ -1253,7 +1332,7 @@
                     }
                 } else {
                     // Fallback to localStorage
-                    messageId = await LocalChatService.sendMessage(currentChatId, message);
+                    messageId = await LocalChatService.addMessage(currentChatId, message);
                     
                     // Update the optimistic message with localStorage ID
                     const tempMessage = document.getElementById(`message-${optimisticId}`);
@@ -1274,7 +1353,7 @@
                 messageInput.value = message;
                 updateCharCount();
                 
-                // Remove optimistic message if it exists
+                // Remove optimistic message if it exists and optimisticId is set
                 const tempMessage = document.getElementById(`message-${optimisticId}`);
                 if (tempMessage) {
                     tempMessage.remove();
@@ -1327,44 +1406,6 @@
             }
         }
 
-        async function archiveChat() {
-            if (!currentChatId) return;
-            
-            if (confirm('Are you sure you want to archive this chat?')) {
-                try {
-                    await FirebaseService.updateChat(currentChatId, {
-                        status: 'archived'
-                    });
-                    
-                    // Remove from local list
-                    chats = chats.filter(chat => chat.id !== currentChatId);
-                    displayChats();
-                    updateStats();
-                    
-                    // Clear current chat
-                    currentChatId = null;
-                    currentChat = null;
-                    document.getElementById('currentChatUser').textContent = 'Select a chat';
-                    document.getElementById('currentChatInfo').textContent = 'No chat selected';
-                    document.getElementById('messageInputContainer').style.display = 'none';
-                    document.getElementById('messagesContainer').innerHTML = `
-                        <div class="text-center text-slate-500 py-12">
-                            <div class="w-20 h-20 bg-gradient-to-r from-slate-600 to-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg class="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-lg font-semibold text-slate-300 mb-2">No Chat Selected</h3>
-                            <p class="text-slate-500">Select a chat from the list to view messages</p>
-                        </div>
-                    `;
-                } catch (error) {
-                    console.error('Error archiving chat:', error);
-                    showError('Failed to archive chat');
-                }
-            }
-        }
-
         async function deleteChat() {
             if (!currentChatId) return;
             
@@ -1385,7 +1426,7 @@
                     
                     // Remove from local list
                     chats = chats.filter(chat => chat.id !== currentChatId);
-                    displayChats();
+                    allChats = allChats.filter(chat => chat.id !== currentChatId);
                     updateStats();
                     
                     // Clear current chat
@@ -1405,15 +1446,13 @@
                             <p class="text-slate-500">Select a chat from the list to view messages</p>
                         </div>
                     `;
+                    updateStats();
+                    displayChats();
                 } catch (error) {
                     console.error('Error deleting chat:', error);
                     showError('Failed to delete chat');
                 }
             }
-        }
-
-        function refreshChats() {
-            loadChats();
         }
 
         function scrollToBottom() {

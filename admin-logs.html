@@ -10,55 +10,67 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: #0f172a; /* Dark blue background */
+            color: #e2e8f0; /* Light gray text */
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.5); /* bg-slate-800/50 */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(71, 85, 105, 0.5); /* border-slate-700/50 */
         }
     </style>
 </head>
 <body class="min-h-screen">
 
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <header class="bg-slate-900/70 backdrop-blur-sm border-b border-slate-700 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-8 h-8 bg-blue-600/30 rounded-lg flex items-center justify-center border border-blue-500/50">
+                    <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                <span class="text-2xl font-extrabold text-gray-900">Admin Logs</span>
+                </div>
+                <span class="text-xl font-bold text-white">Admin Logs</span>
             </div>
             <div class="flex items-center space-x-4">
-                <span class="text-sm text-gray-600">Welcome, <span id="adminUsername">Admin</span></span>
-                <button onclick="refreshLogs()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <span class="text-sm text-slate-400">Welcome, <span id="adminUsername" class="font-semibold text-white">Admin</span></span>
+                <button onclick="refreshLogs()" class="bg-blue-600/80 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-blue-700/80 transition-colors text-xs">
                     Refresh
                 </button>
-                <button onclick="clearLogs()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                <button onclick="clearLogs()" class="bg-red-600/80 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-red-700/80 transition-colors text-xs">
                     Clear All Logs
                 </button>
-                <button onclick="logout()" class="bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+                <button onclick="logout()" class="bg-red-600/80 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-red-700/80 transition-colors text-xs">
                     Logout
                 </button>
-                <a href="admin-dashboard.html" class="text-blue-600 hover:text-blue-800">← Back to Dashboard</a>
+                <a href="admin-dashboard.html" class="text-slate-400 hover:text-white text-xs flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Back to Dashboard</span>
+                </a>
             </div>
         </div>
     </header>
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
+    <nav class="bg-slate-800/50 border-b border-slate-700">
         <div class="container mx-auto px-4">
             <div class="flex space-x-8 py-2">
-                <a href="admin-dashboard.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-dashboard.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Dashboard
                 </a>
-                <a href="admin.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Products
                 </a>
-                <a href="admin-chat.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-chat.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Chat
                 </a>
-                <a href="admin-logs.html" class="text-blue-600 border-b-2 border-blue-600 py-2 px-1 text-sm font-medium">
+                <a href="admin-logs.html" class="text-blue-400 border-b-2 border-blue-400 py-2 px-1 text-sm font-medium">
                     Logs
                 </a>
-                <a href="admin-settings.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-settings.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Settings
                 </a>
             </div>
@@ -66,12 +78,12 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <div class="bg-white rounded-xl border border-gray-200 p-6">
+    <main class="container mx-auto px-4 py-6">
+        <div class="glass rounded-xl p-6">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Admin Activity Logs</h2>
+                <h2 class="text-2xl font-bold text-white">Admin Activity Logs</h2>
                 <div class="flex space-x-2">
-                    <select id="actionFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="actionFilter" class="px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white">
                         <option value="">All Actions</option>
                         <option value="admin_login">Login</option>
                         <option value="admin_logout">Logout</option>
@@ -80,41 +92,41 @@
                         <option value="product_deleted">Product Deleted</option>
                         <option value="all_products_deleted">All Products Deleted</option>
                     </select>
-                    <button onclick="exportLogs()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                    <button onclick="exportLogs()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors text-sm">
                         Export CSV
                     </button>
                 </div>
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-blue-50 p-4 rounded-lg">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                     <div class="text-2xl font-bold text-blue-600" id="totalLogs">0</div>
-                    <div class="text-sm text-blue-600">Total Actions</div>
+                    <div class="text-sm text-slate-400">Total Actions</div>
                 </div>
-                <div class="bg-green-50 p-4 rounded-lg">
+                <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                     <div class="text-2xl font-bold text-green-600" id="todayLogs">0</div>
-                    <div class="text-sm text-green-600">Today's Actions</div>
+                    <div class="text-sm text-slate-400">Today's Actions</div>
                 </div>
-                <div class="bg-yellow-50 p-4 rounded-lg">
+                <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                     <div class="text-2xl font-bold text-yellow-600" id="productActions">0</div>
-                    <div class="text-sm text-yellow-600">Product Actions</div>
+                    <div class="text-sm text-slate-400">Product Actions</div>
                 </div>
-                <div class="bg-red-50 p-4 rounded-lg">
+                <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
                     <div class="text-2xl font-bold text-red-600" id="deletionActions">0</div>
-                    <div class="text-sm text-red-600">Deletion Actions</div>
+                    <div class="text-sm text-slate-400">Deletion Actions</div>
                 </div>
             </div>
 
             <!-- Logs Table -->
             <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <table class="w-full text-sm text-left text-slate-400">
+                    <thead class="text-xs text-slate-300 uppercase bg-slate-700/50">
                         <tr>
-                            <th class="px-6 py-3">Action</th>
-                            <th class="px-6 py-3">Details</th>
-                            <th class="px-6 py-3">Session ID</th>
-                            <th class="px-6 py-3">Timestamp</th>
+                            <th scope="col" class="px-6 py-3">Action</th>
+                            <th scope="col" class="px-6 py-3">Details</th>
+                            <th scope="col" class="px-6 py-3">Session ID</th>
+                            <th scope="col" class="px-6 py-3">Timestamp</th>
                         </tr>
                     </thead>
                     <tbody id="logsTableBody">
@@ -125,8 +137,8 @@
 
             <!-- Loading State -->
             <div id="loadingState" class="text-center py-8">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <p class="mt-2 text-gray-600">Loading admin logs...</p>
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+                <p class="mt-2 text-slate-400">Loading admin logs...</p>
             </div>
 
             <!-- Empty State -->
@@ -134,13 +146,14 @@
                 <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <p class="text-gray-500">No admin logs found</p>
+                <p class="text-slate-500">No admin logs found</p>
             </div>
         </div>
     </main>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
@@ -207,7 +220,7 @@
             
             filteredLogs.forEach(log => {
                 const row = document.createElement('tr');
-                row.className = 'bg-white border-b hover:bg-gray-50';
+                row.className = 'border-b border-slate-700 hover:bg-slate-700/50';
                 
                 const timestamp = log.timestamp ? new Date(log.timestamp.toDate()).toLocaleString() : 'Unknown';
                 const details = formatLogDetails(log);
@@ -218,11 +231,11 @@
                             ${formatActionName(log.action)}
                         </span>
                     </td>
-                    <td class="px-6 py-4">
-                        <div class="text-sm text-gray-900">${details}</div>
+                    <td class="px-6 py-4 text-slate-200">
+                        ${details}
                     </td>
-                    <td class="px-6 py-4 text-xs text-gray-500">${log.sessionId || 'N/A'}</td>
-                    <td class="px-6 py-4 text-xs text-gray-500">${timestamp}</td>
+                    <td class="px-6 py-4 text-xs text-slate-500 font-mono">${log.sessionId || 'N/A'}</td>
+                    <td class="px-6 py-4 text-xs text-slate-400">${timestamp}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -243,14 +256,14 @@
 
         function getActionColor(action) {
             const colors = {
-                'admin_login': 'bg-green-100 text-green-800',
-                'admin_logout': 'bg-gray-100 text-gray-800',
-                'product_created': 'bg-blue-100 text-blue-800',
-                'product_updated': 'bg-yellow-100 text-yellow-800',
-                'product_deleted': 'bg-red-100 text-red-800',
-                'all_products_deleted': 'bg-red-100 text-red-800'
+                'admin_login': 'bg-green-500/20 text-green-300',
+                'admin_logout': 'bg-slate-500/20 text-slate-300',
+                'product_created': 'bg-blue-500/20 text-blue-300',
+                'product_updated': 'bg-yellow-500/20 text-yellow-300',
+                'product_deleted': 'bg-red-500/20 text-red-300',
+                'all_products_deleted': 'bg-red-500/20 text-red-300'
             };
-            return colors[action] || 'bg-gray-100 text-gray-800';
+            return colors[action] || 'bg-slate-500/20 text-slate-300';
         }
 
         function formatLogDetails(log) {

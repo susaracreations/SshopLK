@@ -45,11 +45,12 @@
         /* Mobile header scroll behavior */
         @media (max-width: 768px) {
             header {
-                transition: transform 0.3s ease-in-out;
+                transition: background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
             }
             
-            header.header-hidden {
-                transform: translateY(-100%);
+            header.header-scrolled {
+                background-color: rgba(15, 23, 42, 0.8); /* bg-slate-900 with 80% opacity */
+                backdrop-filter: blur(8px);
             }
         }
     </style>
@@ -57,12 +58,7 @@
 <body class="flex flex-col min-h-screen">
 
     <!-- Replace header -->
-<div id="header-container"></div>
-
-<!-- Keep your main content here -->
-
-<!-- Add component scripts -->
-<script src="header-component.js"></script>
+    <div id="header-container"></div>
 
     <!-- Breadcrumbs -->
     <div class="bg-slate-800 border-b border-slate-700">
@@ -160,13 +156,8 @@
 
 
 <!-- Replace footer -->
-<div id="footer-container"></div>
-
-<!-- Add component scripts -->
-<script src="footer-component.js"></script>
-
-    <!-- Buy Now Modal -->
-    <div id="buyNowModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
+<div id="footer-container"></div>    <!-- Buy Now Modal -->
+<div id="buyNowModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
         <div class="bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-md text-left border-2 border-blue-600 relative">
             <!-- Close Button -->
             <button class="absolute top-4 right-4 text-gray-400 hover:text-white" onclick="closeModal()">
@@ -209,6 +200,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
+    <!-- Shared Components -->
+    <script src="header-component.js"></script>
+    <script src="footer-component.js"></script>
+
     <!-- JavaScript -->
     <script>
         let products = [];
@@ -218,122 +213,7 @@
         // Load products on page load
         window.addEventListener('load', function() {
             loadProducts();
-            setupAuthState();
-            setupMobileHeaderScroll();
         });
-
-        // Mobile header scroll behavior
-        function setupMobileHeaderScroll() {
-            let lastScrollTop = 0;
-            const header = document.querySelector('header');
-            const mobileBreakpoint = 768;
-            
-            window.addEventListener('scroll', function() {
-                // Only apply on mobile devices
-                if (window.innerWidth <= mobileBreakpoint) {
-                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    
-                    // Show header when scrolling up or at the top
-                    if (scrollTop <= 0) {
-                        header.classList.remove('header-hidden');
-                    } else if (scrollTop < lastScrollTop) {
-                        // Scrolling up - show header
-                        header.classList.remove('header-hidden');
-                    } else if (scrollTop > lastScrollTop && scrollTop > 100) {
-                        // Scrolling down and not at the top - hide header
-                        header.classList.add('header-hidden');
-                    }
-                    
-                    lastScrollTop = scrollTop;
-                } else {
-                    // On desktop, always show header
-                    header.classList.remove('header-hidden');
-                }
-            });
-        }
-
-        // Authentication State Management
-        function setupAuthState() {
-            if (window.AuthService) {
-                AuthService.onAuthStateChanged(function(user) {
-                    updateAuthUI(user);
-                });
-            }
-        }
-
-        function updateAuthUI(user) {
-            const guestUser = document.getElementById('guestUser');
-            const loggedInUser = document.getElementById('loggedInUser');
-            const avatarInitials = document.getElementById('avatarInitials');
-            const dropdownUsername = document.getElementById('dropdownUsername');
-            const dropdownEmail = document.getElementById('dropdownEmail');
-            
-            if (user) {
-                // User is signed in
-                guestUser.classList.add('hidden');
-                loggedInUser.classList.remove('hidden');
-                
-                // Try to get username from Firestore
-                if (window.FirebaseService) {
-                    FirebaseService.getUser(user.uid)
-                        .then(userData => {
-                            if (userData && userData.username) {
-                                const username = userData.username;
-                                const initials = getInitials(username);
-                                avatarInitials.textContent = initials;
-                                dropdownUsername.textContent = username;
-                                dropdownEmail.textContent = userData.email || user.email || 'user@example.com';
-                            } else {
-                                const email = user.email || 'User';
-                                const initials = getInitials(email);
-                                avatarInitials.textContent = initials;
-                                dropdownUsername.textContent = email;
-                                dropdownEmail.textContent = email;
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching user data:', error);
-                            const email = user.email || 'User';
-                            const initials = getInitials(email);
-                            avatarInitials.textContent = initials;
-                            dropdownUsername.textContent = email;
-                            dropdownEmail.textContent = email;
-                        });
-                } else {
-                    const email = user.email || 'User';
-                    const initials = getInitials(email);
-                    avatarInitials.textContent = initials;
-                    dropdownUsername.textContent = email;
-                    dropdownEmail.textContent = email;
-                }
-                
-                console.log('User is signed in:', user.email);
-            } else {
-                // User is signed out
-                guestUser.classList.remove('hidden');
-                loggedInUser.classList.add('hidden');
-                console.log('User is signed out');
-            }
-        }
-
-        // Get initials from name
-        function getInitials(name) {
-            if (!name) return 'U';
-            return name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2);
-        }
-
-        async function signOut() {
-            try {
-                if (window.AuthService) {
-                    await AuthService.signOut();
-                    console.log('User signed out successfully');
-                    // The UI will update automatically through the auth state listener
-                }
-            } catch (error) {
-                console.error('Error signing out:', error);
-                alert('Error signing out. Please try again.');
-            }
-        }
 
         function loadProducts() {
             // Try to load from Firebase first

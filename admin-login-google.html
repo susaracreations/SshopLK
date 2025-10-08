@@ -162,32 +162,21 @@
             }
             
             // Wait for Firebase to be fully initialized before setting up Google sign-in
-            waitForFirebase().then(() => {
-                // Also handle redirect result on page load
-                if (window.auth) {
-                    window.auth.getRedirectResult()
-                        .then(result => {
-                            if (result && result.user) {
-                                handleGoogleSignIn(result.user);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Google sign-in redirect error:', error);
-                            showError('Google sign-in failed after redirect. Please try again.');
-                        });
-                }
-            });
+            waitForFirebase();
         });
 
         // Wait for Firebase to be fully initialized
         function waitForFirebase() {
-            if (window.auth && window.AuthService) {
-                console.log('Firebase is ready, initializing Google sign-in');
-                initializeGoogleSignIn();
-            } else {
-                console.log('Waiting for Firebase to initialize...');
-                setTimeout(waitForFirebase, 100);
-            }
+            return new Promise((resolve) => {
+                const checkInterval = setInterval(() => {
+                    if (window.auth && window.AuthService) {
+                        clearInterval(checkInterval);
+                        console.log('Firebase is ready, initializing Google sign-in');
+                        initializeGoogleSignIn();
+                        resolve();
+                    }
+                }, 100);
+            });
         }
 
         // Helper function to detect mobile devices
@@ -198,8 +187,20 @@
         // Initialize Google Sign-In
         function initializeGoogleSignIn() {
             if (window.auth && typeof window.auth.signInWithPopup === 'function') {
+                // Handle redirect result on page load
+                window.auth.getRedirectResult()
+                    .then(result => {
+                        if (result && result.user) {
+                            handleGoogleSignIn(result.user);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Google sign-in redirect error:', error);
+                        showError('Google sign-in failed after redirect. Please try again.');
+                    });
+
                 // Set up Google provider
-                const provider = new firebase.auth.GoogleAuthProvider();
+                const provider = new window.firebase.auth.GoogleAuthProvider();
                 provider.addScope('email');
                 provider.addScope('profile');
                 

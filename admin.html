@@ -13,15 +13,20 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: #0f172a; /* Dark blue background */
+            color: #e2e8f0; /* Light gray text */
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.5); /* bg-slate-800/50 */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(71, 85, 105, 0.5); /* border-slate-700/50 */
         }
         
         /* Custom slider styling */
         .slider {
             -webkit-appearance: none;
             appearance: none;
-            background: #e5e7eb;
+            background: #334155; /* slate-700 */
             outline: none;
             border-radius: 8px;
             transition: background 0.2s;
@@ -69,41 +74,48 @@
 <body class="min-h-screen">
 
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <header class="bg-slate-900/70 backdrop-blur-sm border-b border-slate-700 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-2 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                </svg>
-                <span class="text-2xl font-extrabold text-gray-900">Products Management</span>
+                <div class="w-8 h-8 bg-blue-600/30 rounded-lg flex items-center justify-center border border-blue-500/50">
+                    <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold text-white">Products Management</span>
             </div>
             <div class="flex items-center space-x-4">
-                <span class="text-sm text-gray-600">Welcome, <span id="adminUsername">Admin</span></span>
-                <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                <span class="text-sm text-slate-400">Welcome, <span id="adminUsername" class="font-semibold text-white">Admin</span></span>
+                <button onclick="logout()" class="bg-red-600/80 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-red-700/80 transition-colors text-xs">
                     Logout
                 </button>
-                <a href="index.html" class="text-blue-600 hover:text-blue-800">← Back to Website</a>
+                <a href="index.html" class="text-slate-400 hover:text-white text-xs flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Back to Website</span>
+                </a>
             </div>
         </div>
     </header>
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
+    <nav class="bg-slate-800/50 border-b border-slate-700">
         <div class="container mx-auto px-4">
             <div class="flex space-x-8 py-2">
-                <a href="admin-dashboard.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-dashboard.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Dashboard
                 </a>
-                <a href="admin.html" class="text-blue-600 border-b-2 border-blue-600 py-2 px-1 text-sm font-medium">
+                <a href="admin.html" class="text-blue-400 border-b-2 border-blue-400 py-2 px-1 text-sm font-medium">
                     Products
                 </a>
-                <a href="admin-chat.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-chat.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Chat
                 </a>
-                <a href="admin-logs.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-logs.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Logs
                 </a>
-                <a href="admin-settings.html" class="text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                <a href="admin-settings.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
                     Settings
                 </a>
             </div>
@@ -111,56 +123,56 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <!-- Left Sidebar - Add/Edit Product Form -->
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-xl border border-gray-200 p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Add New Product</h2>
+                <div class="glass rounded-xl p-6 sticky top-24">
+                    <h2 class="text-2xl font-bold text-white mb-6">Add New Product</h2>
                     
                     <form id="productForm" class="space-y-4">
                         <input type="hidden" id="productId" value="">
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
-                            <input type="text" id="productName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <label for="productName" class="block text-sm font-medium text-slate-300 mb-2">Product Name</label>
+                            <input type="text" id="productName" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                            <textarea id="productDescription" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                            <label for="productDescription" class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                            <textarea id="productDescription" rows="3" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Detailed Description</label>
-                            <textarea id="productDetailedDescription" rows="5" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Provide a more detailed description of the product..."></textarea>
+                            <label for="productDetailedDescription" class="block text-sm font-medium text-slate-300 mb-2">Detailed Description</label>
+                            <textarea id="productDetailedDescription" rows="5" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Provide a more detailed description..."></textarea>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Price (LKR)</label>
-                                <input type="number" id="productPrice" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="productPrice" class="block text-sm font-medium text-slate-300 mb-2">Price (LKR)</label>
+                                <input type="number" id="productPrice" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Availability</label>
-                                <input type="number" id="productAvailability" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="productAvailability" class="block text-sm font-medium text-slate-300 mb-2">Availability</label>
+                                <input type="number" id="productAvailability" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Sold Count</label>
-                                <input type="number" id="productSoldCount" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
+                                <label for="productSoldCount" class="block text-sm font-medium text-slate-300 mb-2">Sold Count</label>
+                                <input type="number" id="productSoldCount" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
                             </div>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
-                            <input type="url" id="productImage" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <label for="productImage" class="block text-sm font-medium text-slate-300 mb-2">Image URL</label>
+                            <input type="url" id="productImage" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                                <select id="productCategory" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <label for="productCategory" class="block text-sm font-medium text-slate-300 mb-2">Category</label>
+                                <select id="productCategory" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                                     <option value="">Select Category</option>
                                     <option value="games">Games</option>
                                     <option value="software-apps">Software & Apps</option>
@@ -169,78 +181,72 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
-                                <input type="text" id="productSubcategory" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., steam, epic-games, office, adobe">
+                                <label for="productSubcategory" class="block text-sm font-medium text-slate-300 mb-2">Subcategory</label>
+                                <input type="text" id="productSubcategory" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., steam, office">
                             </div>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Features (comma separated)</label>
-                            <input type="text" id="productFeatures" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., GTA V Included, Exclusive Skins">
+                            <label for="productFeatures" class="block text-sm font-medium text-slate-300 mb-2">Features (comma separated)</label>
+                            <input type="text" id="productFeatures" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., GTA V Included, Exclusive Skins">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Options</label>
-                            <textarea id="productOptions" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Format: OptionName: Value1, Value2; Platform: Steam, Epic"></textarea>
-                            <p class="text-xs text-gray-500 mt-1">Use format: `Key: Value1, Value2;`</p>
+                            <label for="productOptions" class="block text-sm font-medium text-slate-300 mb-2">Product Options</label>
+                            <textarea id="productOptions" rows="3" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Format: OptionName: Value1, Value2; Platform: Steam, Epic"></textarea>
+                            <p class="text-xs text-slate-400 mt-1">Use format: `Key: Value1, Value2;`</p>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Redeem Points</label>
-                                <input type="number" id="productRedeemPoints" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
+                                <label for="productRedeemPoints" class="block text-sm font-medium text-slate-300 mb-2">Redeem Points</label>
+                                <input type="number" id="productRedeemPoints" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" value="0">
                             </div>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Trust Badge</label>
-                            <input type="text" id="productTrustBadge" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., TRUSTED SELLER WITH OVER 1000 SALES" value="TRUSTED SELLER WITH OVER 1000 SALES">
+                            <label for="productTrustBadge" class="block text-sm font-medium text-slate-300 mb-2">Trust Badge</label>
+                            <input type="text" id="productTrustBadge" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., TRUSTED SELLER" value="TRUSTED SELLER WITH OVER 1000 SALES">
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Speed</label>
-                                <select id="productDeliverySpeed" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleCustomDeliverySpeed()">
+                                <label for="productDeliverySpeed" class="block text-sm font-medium text-slate-300 mb-2">Delivery Speed</label>
+                                <select id="productDeliverySpeed" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleCustomDeliverySpeed()">
                                     <option value="Instant">Instant</option>
                                     <option value="5-10 minutes">5-10 minutes</option>
                                     <option value="15-30 minutes">15-30 minutes</option>
                                     <option value="1-2 hours">1-2 hours</option>
                                     <option value="Same day">Same day</option>
-                                    <option value="Next day">Next day</option>
-                                    <option value="2-3 days">2-3 days</option>
                                     <option value="Custom">Custom</option>
                                 </select>
-                                <input type="text" id="customDeliverySpeed" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2 hidden" placeholder="Enter custom delivery speed">
+                                <input type="text" id="customDeliverySpeed" class="w-full mt-2 px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hidden" placeholder="Enter custom speed">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Method</label>
-                                <select id="productDeliveryMethod" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleCustomDeliveryMethod()">
+                                <label for="productDeliveryMethod" class="block text-sm font-medium text-slate-300 mb-2">Delivery Method</label>
+                                <select id="productDeliveryMethod" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleCustomDeliveryMethod()">
                                     <option value="Auto delivery">Auto delivery</option>
                                     <option value="Email delivery">Email delivery</option>
                                     <option value="WhatsApp delivery">WhatsApp delivery</option>
-                                    <option value="Discord delivery">Discord delivery</option>
-                                    <option value="Manual delivery">Manual delivery</option>
                                     <option value="Digital download">Digital download</option>
                                     <option value="Account credentials">Account credentials</option>
                                     <option value="Custom">Custom</option>
                                 </select>
-                                <input type="text" id="customDeliveryMethod" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2 hidden" placeholder="Enter custom delivery method">
+                                <input type="text" id="customDeliveryMethod" class="w-full mt-2 px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hidden" placeholder="Enter custom method">
                             </div>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Activation Region</label>
-                            <select id="productActivationRegion" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleCustomActivationRegion()">
+                            <label for="productActivationRegion" class="block text-sm font-medium text-slate-300 mb-2">Activation Region</label>
+                            <select id="productActivationRegion" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="toggleCustomActivationRegion()">
                                 <option value="Can activate in Sri Lanka">Can activate in Sri Lanka</option>
                                 <option value="Global activation">Global activation</option>
-                                <option value="Worldwide activation">Worldwide activation</option>
                                 <option value="Region free">Region free</option>
                                 <option value="No activation required">No activation required</option>
-                                <option value="Instant activation">Instant activation</option>
                                 <option value="Works worldwide">Works worldwide</option>
                                 <option value="Custom">Custom</option>
                             </select>
-                            <input type="text" id="customActivationRegion" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2 hidden" placeholder="Enter custom activation region">
+                            <input type="text" id="customActivationRegion" class="w-full mt-2 px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hidden" placeholder="Enter custom region">
                         </div>
                         
                         <div class="flex space-x-3">
@@ -257,10 +263,10 @@
 
             <!-- Right Side - Product List -->
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <div class="glass rounded-xl p-6">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900">Manage Products</h2>
-                        <div class="flex space-x-2">
+                        <h2 class="text-2xl font-bold text-white">Manage Products</h2>
+                        <div class="flex space-x-2 text-sm">
                             <button onclick="exportProducts()" class="bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors">
                                 Export JSON
                             </button>
@@ -280,8 +286,8 @@
                     </div>
                     
                     <!-- Debug Info -->
-                    <div id="debugInfo" class="mb-4 p-3 bg-gray-100 rounded-lg text-sm hidden">
-                        <strong>Debug Info:</strong>
+                    <div id="debugInfo" class="mb-4 p-3 bg-slate-900/50 rounded-lg text-sm hidden border border-slate-700">
+                        <strong class="text-yellow-400">Debug Info:</strong>
                         <div id="debugContent"></div>
                     </div>
                     
@@ -291,17 +297,23 @@
                 </div>
                 
                 <!-- Website Settings Section -->
-                <div class="bg-white rounded-xl border border-gray-200 p-6 mt-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Website Settings</h2>
-                    
+                <div class="glass rounded-xl p-6 mt-8">
+                    <h2 class="text-2xl font-bold text-white mb-6">Website Settings</h2>
+
+                    <!-- Site Name Management -->
+                    <div class="space-y-4 mb-8">
+                        <h3 class="text-lg font-semibold text-slate-200">General Settings</h3>
+                        <label for="siteName" class="block text-sm font-medium text-slate-300">Site Name</label>
+                        <input type="text" id="siteName" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your website name">
+                    </div>
                     <!-- Hero Image Management -->
                     <div class="space-y-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Hero Section Images</h3>
+                        <h3 class="text-lg font-semibold text-slate-200">Hero Section Images</h3>
                         
-                        <!-- Image Dimensions Guide -->
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-blue-800 mb-2">📏 Recommended Image Dimensions:</h4>
-                            <div class="text-sm text-blue-700 space-y-1">
+                        <!-- Image Dimensions Guide (Removed for brevity in diff, styling is complex) -->
+                        <div class="bg-blue-900/20 border border-blue-500/50 rounded-lg p-4">
+                            <h4 class="font-semibold text-blue-300 mb-2">📏 Recommended Image Dimensions:</h4>
+                            <div class="text-sm text-blue-300/80 space-y-1">
                                 <p><strong>Optimal Size:</strong> 1200 × 800 pixels (3:2 ratio)</p>
                                 <p><strong>Minimum Size:</strong> 800 × 600 pixels</p>
                                 <p><strong>Maximum Size:</strong> 1920 × 1280 pixels</p>
@@ -311,10 +323,10 @@
                         </div>
                         
                         <!-- Hero Image Visibility Toggle -->
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
                             <div>
-                                <label class="font-medium text-gray-700">Show Hero Images</label>
-                                <p class="text-sm text-gray-500">Display the hero image carousel on the website</p>
+                                <label class="font-medium text-slate-300">Show Hero Images</label>
+                                <p class="text-sm text-slate-400">Display the hero image carousel on the website</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="showHeroImagesToggle" class="sr-only peer" checked>
@@ -324,10 +336,10 @@
                         
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Add New Hero Image</label>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Add New Hero Image</label>
                                 <div class="space-y-2">
-                                    <input type="url" id="newHeroImageUrl" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://example.com/hero-image.jpg">
-                                    <input type="text" id="newHeroImageAlt" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Image description (optional)">
+                                    <input type="url" id="newHeroImageUrl" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://example.com/hero-image.jpg">
+                                    <input type="text" id="newHeroImageAlt" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Image description (optional)">
                                     <div class="flex space-x-2">
                                         <button onclick="addHeroImage()" class="bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                                             Add Image
@@ -340,7 +352,7 @@
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Hero Images</label>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Current Hero Images</label>
                                 <div id="heroImagesList" class="space-y-2 max-h-60 overflow-y-auto">
                                     <!-- Hero images will be listed here -->
                                 </div>
@@ -356,22 +368,22 @@
                             </div>
                             
                             <div id="heroImagePreview" class="hidden">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Preview:</label>
-                                <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Preview:</label>
+                                <div class="border border-slate-600 rounded-lg p-4 bg-slate-700/50">
                                     <img id="previewImage" src="" alt="Hero Image Preview" class="max-w-full h-auto rounded-lg shadow-md">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Hero Background Image Management -->
                     <div class="space-y-4 mt-6">
-                        <h3 class="text-lg font-semibold text-gray-800">Hero Background Image</h3>
+                        <h3 class="text-lg font-semibold text-slate-200">Hero Background Image</h3>
                         
-                        <!-- Background Image Dimensions Guide -->
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                            <h4 class="font-semibold text-green-800 mb-2">📏 Background Image Dimensions:</h4>
-                            <div class="text-sm text-green-700 space-y-1">
+                        <!-- Background Image Dimensions Guide (Removed for brevity in diff) -->
+                        <div class="bg-green-900/20 border border-green-500/50 rounded-lg p-4">
+                            <h4 class="font-semibold text-green-300 mb-2">📏 Background Image Dimensions:</h4>
+                            <div class="text-sm text-green-300/80 space-y-1">
                                 <p><strong>Optimal Size:</strong> 1920 × 1080 pixels (16:9 ratio)</p>
                                 <p><strong>Minimum Size:</strong> 1200 × 675 pixels</p>
                                 <p><strong>File Format:</strong> JPG, PNG, or WebP</p>
@@ -382,13 +394,13 @@
                         
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Background Image URL</label>
-                                <input type="url" id="heroBackgroundImageUrl" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://example.com/background-image.jpg">
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Background Image URL</label>
+                                <input type="url" id="heroBackgroundImageUrl" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://example.com/background-image.jpg">
                             </div>
                             
                             <!-- Background Opacity Control -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Background Opacity: <span id="opacityValue">20%</span></label>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Background Opacity: <span id="opacityValue">20%</span></label>
                                 <div class="flex items-center space-x-4">
                                     <input type="range" id="heroBackgroundOpacity" min="0" max="100" value="20" class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider" oninput="updateOpacityValue(this.value)">
                                     <button onclick="resetBackgroundOpacity()" class="bg-gray-500 text-white px-3 py-1 rounded text-sm hover:bg-gray-600 transition-colors">
@@ -396,7 +408,7 @@
                                     </button>
                                 </div>
                                 <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>0% (Hidden)</span>
+                                    <span class="text-slate-400">0% (Hidden)</span>
                                     <span>50% (Medium)</span>
                                     <span>100% (Full)</span>
                                 </div>
@@ -415,8 +427,8 @@
                             </div>
                             
                             <div id="backgroundImagePreview" class="hidden">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Background Preview:</label>
-                                <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Background Preview:</label>
+                                <div class="border border-slate-600 rounded-lg p-4 bg-slate-700/50">
                                     <div class="relative w-full h-32 bg-gradient-to-r from-purple-900 to-red-900 rounded-lg overflow-hidden">
                                         <img id="backgroundPreviewImage" src="" alt="Background Preview" class="absolute inset-0 w-full h-full object-cover opacity-20">
                                         <div class="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-red-900/80"></div>
@@ -428,6 +440,58 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Announcement Bar Management -->
+                    <div class="space-y-4 mt-6">
+                        <h3 class="text-lg font-semibold text-slate-200">Announcement Bar Settings</h3>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Announcement Text</label>
+                            <input type="text" id="announcementText" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter announcement text" />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">"Shop Now" Link URL</label>
+                            <input type="text" id="announcementLink" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., products.html or a full URL" />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">"Shop Now" Button Text</label>
+                            <input type="text" id="announcementButtonText" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., Shop Now, View Deals" />
+                        </div>
+                        
+                        <!-- Announcement Bar Visibility Toggle -->
+                        <div class="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
+                            <div>
+                                <label class="font-medium text-slate-300">Show Announcement Bar</label>
+                                <p class="text-sm text-slate-400">Toggle the visibility of the announcement bar on the website</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="showAnnouncementBarToggle" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Gradient Start</label>
+                                <input type="color" id="announcementGradientStart" class="w-full h-10 px-1 py-1 border border-gray-300 rounded-lg cursor-pointer" value="#3b82f6">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Gradient End</label>
+                                <input type="color" id="announcementGradientEnd" class="w-full h-10 px-1 py-1 border border-gray-300 rounded-lg cursor-pointer" value="#8b5cf6">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Text Color</label>
+                                <input type="color" id="announcementTextColor" class="w-full h-10 px-1 py-1 border border-gray-300 rounded-lg cursor-pointer" value="#ffffff">
+                            </div>
+                        </div>
+                        
+                        <button onclick="saveAnnouncementSettings()" class="bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors w-full">
+                            Save Announcement
+                        </button>
+
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -435,9 +499,9 @@
 
     <!-- Import Modal -->
     <div id="importModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
-        <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md">
-            <h3 class="text-xl font-bold mb-4">Import Products</h3>
-            <textarea id="importTextarea" rows="10" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Paste your JSON data here..."></textarea>
+        <div class="glass rounded-lg shadow-2xl p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold text-white mb-4">Import Products</h3>
+            <textarea id="importTextarea" rows="10" class="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Paste your JSON data here..."></textarea>
             <div class="flex space-x-3 mt-4">
                 <button onclick="confirmImport()" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                     Import
@@ -556,7 +620,7 @@
         }
 
         // Auto-logout on tab close or inactivity
-        window.addEventListener('beforeunload', function() {
+        window.addEventListener('pagehide', function() {
             // Set admin as offline when leaving
             if (window.FirebaseService) {
                 try {
@@ -663,8 +727,8 @@
 
             if (products.length === 0) {
                 productList.innerHTML = `
-                    <div class="text-center py-8">
-                        <p class="text-gray-500 mb-4">No products found. Add your first product using the form on the left.</p>
+                    <div class="text-center py-8 text-slate-400">
+                        <p class="mb-4">No products found. Add your first product using the form on the left.</p>
                         <button onclick="addTestProducts()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                             Add Test Products
                         </button>
@@ -674,27 +738,27 @@
 
             products.forEach(product => {
                 const productCard = document.createElement('div');
-                productCard.className = 'bg-white border border-gray-200 rounded-lg p-4 flex items-center space-x-4 hover:shadow-md transition-shadow duration-200';
+                productCard.className = 'bg-slate-800/50 border border-slate-700 rounded-lg p-4 flex items-center space-x-4 hover:bg-slate-700/50 transition-colors duration-200';
                 productCard.innerHTML = `
                     <img src="${product.image}" alt="${product.name}" class="w-16 h-16 object-cover rounded-md flex-shrink-0">
                     <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
                         <div class="md:col-span-2">
-                            <h3 class="font-semibold text-gray-800">${product.name}</h3>
-                            <p class="text-xs text-gray-500">${product.category}</p>
+                            <h3 class="font-semibold text-white">${product.name}</h3>
+                            <p class="text-xs text-slate-400">${product.category}</p>
                         </div>
                         <div class="text-sm">
                             <span class="font-semibold text-green-600">LKR ${product.price.toLocaleString()}</span>
                         </div>
                         <div class="text-sm">
-                            <span class="text-gray-600">${product.availability} in stock</span>
+                            <span class="text-slate-400">${product.availability} in stock</span>
                             <span class="text-blue-600 font-semibold block">${product.soldCount || 0} sold</span>
                         </div>
                     </div>
                     <div class="flex space-x-2">
-                        <button onclick="editProduct('${product.id}')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold hover:bg-blue-200 transition-colors">
+                        <button onclick="editProduct('${product.id}')" class="bg-blue-600/20 text-blue-300 px-3 py-1 rounded-full text-xs font-semibold hover:bg-blue-600/40 transition-colors">
                             Edit
                         </button>
-                        <button onclick="deleteProduct('${product.id}')" class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold hover:bg-red-200 transition-colors">
+                        <button onclick="deleteProduct('${product.id}')" class="bg-red-600/20 text-red-300 px-3 py-1 rounded-full text-xs font-semibold hover:bg-red-600/40 transition-colors">
                             Delete
                         </button>
                         </div>
@@ -1081,11 +1145,11 @@
             }
 
             const heroImageItem = document.createElement('div');
-            heroImageItem.className = 'flex items-center justify-between bg-gray-100 p-2 rounded-lg';
+            heroImageItem.className = 'flex items-center justify-between bg-slate-700/50 p-2 rounded-lg';
             heroImageItem.innerHTML = `
                 <div class="flex items-center space-x-2">
                     <img src="${newHeroImageUrl}" alt="${newHeroImageAlt || 'Hero Image'}" class="w-10 h-10 object-cover rounded-md">
-                    <span class="text-sm text-gray-700">${newHeroImageAlt || 'Hero Image'}</span>
+                    <span class="text-sm text-slate-300">${newHeroImageAlt || 'Hero Image'}</span>
                 </div>
                 <button onclick="removeHeroImage(this)" class="text-red-600 hover:text-red-800 text-lg">
                     ×
@@ -1122,8 +1186,8 @@
                 const aspectRatio = (width / height).toFixed(2);
                 
                 // Create dimension info
-                const dimensionInfo = document.createElement('div');
-                dimensionInfo.className = 'mt-2 p-2 bg-gray-100 rounded text-xs';
+                const dimensionInfo = document.createElement('div'); 
+                dimensionInfo.className = 'mt-2 p-2 bg-slate-800/50 rounded text-xs text-slate-300';
                 dimensionInfo.innerHTML = `
                     <p><strong>Image Dimensions:</strong> ${width} × ${height} pixels</p>
                     <p><strong>Aspect Ratio:</strong> ${aspectRatio}</p>
@@ -1133,7 +1197,7 @@
                 `;
                 
                 // Remove existing dimension info and add new one
-                const existingInfo = previewDiv.querySelector('.bg-gray-100');
+                const existingInfo = previewDiv.querySelector('.bg-slate-800\\/50');
                 if (existingInfo) {
                     existingInfo.remove();
                 }
@@ -1237,11 +1301,11 @@
 
                 defaultImages.forEach(image => {
                     const heroImageItem = document.createElement('div');
-                    heroImageItem.className = 'flex items-center justify-between bg-gray-100 p-2 rounded-lg';
+                    heroImageItem.className = 'flex items-center justify-between bg-slate-700/50 p-2 rounded-lg';
                     heroImageItem.innerHTML = `
                         <div class="flex items-center space-x-2">
                             <img src="${image.url}" alt="${image.alt}" class="w-10 h-10 object-cover rounded-md">
-                            <span class="text-sm text-gray-700">${image.alt}</span>
+                            <span class="text-sm text-slate-300">${image.alt}</span>
                         </div>
                         <button onclick="removeHeroImage(this)" class="text-red-600 hover:text-red-800 text-lg">
                             ×
@@ -1252,11 +1316,11 @@
             } else {
                 heroImages.forEach(image => {
                     const heroImageItem = document.createElement('div');
-                    heroImageItem.className = 'flex items-center justify-between bg-gray-100 p-2 rounded-lg';
+                    heroImageItem.className = 'flex items-center justify-between bg-slate-700/50 p-2 rounded-lg';
                     heroImageItem.innerHTML = `
                         <div class="flex items-center space-x-2">
                             <img src="${image.url}" alt="${image.alt}" class="w-10 h-10 object-cover rounded-md">
-                            <span class="text-sm text-gray-700">${image.alt}</span>
+                            <span class="text-sm text-slate-300">${image.alt}</span>
                         </div>
                         <button onclick="removeHeroImage(this)" class="text-red-600 hover:text-red-800 text-lg">
                             ×
@@ -1329,8 +1393,8 @@
                 const aspectRatio = (width / height).toFixed(2);
                 
                 // Create dimension info
-                const dimensionInfo = document.createElement('div');
-                dimensionInfo.className = 'mt-2 p-2 bg-gray-100 rounded text-xs';
+                const dimensionInfo = document.createElement('div'); 
+                dimensionInfo.className = 'mt-2 p-2 bg-slate-800/50 rounded text-xs text-slate-300';
                 dimensionInfo.innerHTML = `
                     <p><strong>Background Dimensions:</strong> ${width} × ${height} pixels</p>
                     <p><strong>Aspect Ratio:</strong> ${aspectRatio}</p>
@@ -1340,7 +1404,7 @@
                 `;
                 
                 // Remove existing dimension info and add new one
-                const existingInfo = previewDiv.querySelector('.bg-gray-100');
+                const existingInfo = previewDiv.querySelector('.bg-slate-800\\/50');
                 if (existingInfo) {
                     existingInfo.remove();
                 }
@@ -1422,6 +1486,104 @@
                 alert('Hero image visibility setting saved successfully!');
             }
         }
+
+        // Announcement Text Management Functions
+        function saveAnnouncementSettings() {
+            const announcementSettings = {
+                siteName: document.getElementById('siteName').value.trim(),
+                announcementId: 'ann-' + Date.now(), // Unique ID to force reappear
+                announcementText: document.getElementById('announcementText').value.trim(),
+                announcementLink: document.getElementById('announcementLink').value.trim(),
+                announcementGradientStart: document.getElementById('announcementGradientStart').value,
+                announcementGradientEnd: document.getElementById('announcementGradientEnd').value,
+                announcementButtonText: document.getElementById('announcementButtonText').value.trim(),
+                announcementTextColor: document.getElementById('announcementTextColor').value,
+                showAnnouncementBar: document.getElementById('showAnnouncementBarToggle').checked
+            };
+
+            // Save to localStorage as a fallback
+            localStorage.setItem('sShopAnnouncementId', announcementSettings.announcementId);
+            localStorage.setItem('sShopAnnouncementText', announcementSettings.announcementText);
+            localStorage.setItem('sShopSiteName', announcementSettings.siteName);
+            localStorage.setItem('sShopAnnouncementLink', announcementSettings.announcementLink);
+            localStorage.setItem('sShopAnnouncementGradientStart', announcementSettings.announcementGradientStart);
+            localStorage.setItem('sShopAnnouncementGradientEnd', announcementSettings.announcementGradientEnd);
+            localStorage.setItem('sShopAnnouncementTextColor', announcementSettings.announcementTextColor);
+            localStorage.setItem('sShopShowAnnouncementBar', announcementSettings.showAnnouncementBar);
+            
+            // Save to Firebase if available
+            if (window.FirebaseService) {
+                FirebaseService.updateWebsiteSettings(announcementSettings)
+                    .then(() => {
+                        alert('Announcement settings saved successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error saving to Firebase:', error);
+                        alert('Settings saved to localStorage, but Firebase save failed.');
+                    });
+            } else {
+                alert('Announcement settings saved to localStorage.');
+            }
+        }
+
+        function loadAnnouncementText() {
+            // Try to load from Firebase first
+            if (window.FirebaseService) {
+                FirebaseService.getWebsiteSettings()
+                    .then(settings => {
+                        if (settings) {
+                            // We don't load announcementId here, as we want a new one on each save.
+                            document.getElementById('siteName').value = settings.siteName || 'S Shop LK';
+                            document.getElementById('announcementText').value = settings.announcementText || '20% OFF SITE-WIDE!';
+                            document.getElementById('announcementLink').value = settings.announcementLink || 'products.html';
+                            document.getElementById('announcementGradientStart').value = settings.announcementGradientStart || '#3b82f6';
+                            document.getElementById('announcementGradientEnd').value = settings.announcementGradientEnd || '#8b5cf6';
+                            document.getElementById('announcementButtonText').value = settings.announcementButtonText || 'SHOP NOW';
+                            document.getElementById('announcementTextColor').value = settings.announcementTextColor || '#ffffff';
+                            // Load visibility setting
+                            if (settings.showAnnouncementBar !== undefined) {
+                                document.getElementById('showAnnouncementBarToggle').checked = settings.showAnnouncementBar;
+                            } else {
+                                document.getElementById('showAnnouncementBarToggle').checked = true; // Default to true
+                            }
+                            console.log('Loaded announcement settings from Firebase.');
+                        } else {
+                            loadAnnouncementFromLocalStorage();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching settings from Firebase:', error);
+                        loadAnnouncementFromLocalStorage();
+                    });
+            } else {
+                loadAnnouncementFromLocalStorage();
+            }
+        }
+
+        function loadAnnouncementFromLocalStorage() {
+            console.log('Loading announcement settings from localStorage.');
+            // We don't load announcementId here.
+            const siteName = localStorage.getItem('sShopSiteName') || 'S Shop LK';
+            const text = localStorage.getItem('sShopAnnouncementText') || '20% OFF SITE-WIDE!';
+            const link = localStorage.getItem('sShopAnnouncementLink') || 'products.html';
+            const buttonText = localStorage.getItem('sShopAnnouncementButtonText') || 'SHOP NOW';
+            const gradientStart = localStorage.getItem('sShopAnnouncementGradientStart') || '#3b82f6';
+            const gradientEnd = localStorage.getItem('sShopAnnouncementGradientEnd') || '#8b5cf6';
+            const textColor = localStorage.getItem('sShopAnnouncementTextColor') || '#ffffff';
+            const showBar = localStorage.getItem('sShopShowAnnouncementBar');
+
+            document.getElementById('siteName').value = siteName;
+            document.getElementById('announcementText').value = text;
+            document.getElementById('announcementButtonText').value = buttonText;
+            document.getElementById('announcementLink').value = link;
+            document.getElementById('announcementGradientStart').value = gradientStart;
+            document.getElementById('announcementGradientEnd').value = gradientEnd;
+            document.getElementById('announcementTextColor').value = textColor;
+            document.getElementById('showAnnouncementBarToggle').checked = showBar === 'true' || showBar === null; // Default to true
+        }
+
+        // Load announcement text on page load
+        window.addEventListener('load', loadAnnouncementText);
 
         function loadHeroImageVisibilitySettings() {
             const showHeroImages = localStorage.getItem('sShopShowHeroImages');

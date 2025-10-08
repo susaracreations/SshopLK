@@ -12,13 +12,13 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0f172a;
-            color: #e2e8f0;
-            height: 100vh;
-            overflow: hidden;
+            color: #e2e8f0; 
+            overscroll-behavior-y: contain; /* Prevents pull-to-refresh on mobile */
         }
         
         .chat-container {
-            height: 100vh;
+            height: 100vh; /* Fallback for browsers that don't support dvh */
+            height: 100dvh; /* Dynamic viewport height, adjusts for mobile browser UI */
             display: flex;
             flex-direction: column;
         }
@@ -82,25 +82,25 @@
 <body>
     <div class="chat-container">
         <!-- Header -->
-        <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between">
+        <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between flex-shrink-0">
                 <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center border-2 border-blue-400/50">
+                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                     </div>
                     <div>
-                    <h1 class="text-base font-semibold text-white">S Shop LK Support</h1>
-                        <div class="flex items-center space-x-2">
-                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse admin-status-dot"></div>
-                        <span class="text-xs text-green-400 admin-status-text">Online</span>
+                    <h1 class="text-lg font-bold text-white">S Shop LK Support</h1>
+                        <p class="text-xs text-slate-400 hidden" id="ticketInfo">Connecting...</p> 
+                        <div id="adminStatusContainer" class="flex items-center space-x-2">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full admin-status-dot"></div>
+                            <span class="text-xs text-gray-400 admin-status-text">Offline</span>
                     </div>
                 </div>
             </div>
             
             <div class="flex items-center space-x-3">
                 <div class="flex items-center space-x-2">
-                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                     <span id="userInfo" class="text-xs text-white">Welcome, Guest</span>
                 </div>
                 <a href="index.html" class="glass px-3 py-1.5 rounded-full text-white hover:bg-white/20 transition-all duration-300 flex items-center space-x-1 text-sm">
@@ -113,27 +113,41 @@
         </div>
 
         <!-- Messages Container -->
-        <div class="messages-container p-3 space-y-3" id="messagesContainer">
+        <div class="messages-container p-4 space-y-4" id="messagesContainer">
             <!-- Welcome Message -->
-            <div class="flex justify-center">
+            <div id="initialMessage" class="flex justify-center">
                 <div class="glass px-3 py-2 rounded-full text-center">
                     <p class="text-xs text-gray-300">Welcome to S Shop LK Support! How can we help you today?</p>
                 </div>
             </div>
         </div>
 
+        <!-- Typing Indicator -->
+        <div id="typingIndicator" class="hidden px-4 pb-2 flex-shrink-0">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-white text-xs">SA</div>
+                <div class="bg-slate-700 rounded-lg px-3 py-2 typing-indicator">
+                    <span id="typingAgentName" class="text-xs text-slate-300 mr-1"></span> is typing...
+                </div>
+            </div>
+        </div>
+
         <!-- Input Area -->
-        <div class="border-t border-slate-700 p-3">
+        <div class="border-t border-slate-700 p-3 flex-shrink-0">
             <form id="messageForm" class="flex space-x-3">
                 <div class="flex-1 relative">
+                    <button type="button" id="attachmentBtn" class="absolute top-1/2 -translate-y-1/2 left-3 text-slate-400 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                    </button>
+                    <input type="file" id="attachmentInput" class="hidden">
                     <textarea 
                         id="messageInput" 
                         placeholder="Type your message here..." 
-                        class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm"
+                        class="w-full pl-10 pr-16 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm transition-all"
                         rows="1"
                         maxlength="500"
                     ></textarea>
-                    <div class="absolute bottom-1 right-1 text-xs text-gray-400" id="charCount">0/500</div>
+                    <div id="charCountContainer" class="absolute bottom-2 right-2 text-xs text-gray-400 bg-slate-800/50 px-2 py-0.5 rounded-full hidden"><span id="charCount">0</span>/500</div>
                 </div>
                 <button 
                     type="submit" 
@@ -150,9 +164,9 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
 
     <!-- Audio for notifications -->
@@ -163,19 +177,20 @@
     <script>
         let currentUserId = null;
         let currentChatId = null;
+        let currentUserName = "Customer";
+        const agentName = "S Shop LK Admin";
         let messageListener = null;
-        let adminStatusListener = null;
-        let lastMessageCount = 0; // Track message count for notifications
+        let chatListener = null;
+        let lastMessageDate = null;
         let isNotificationsEnabled = true; // Track notification preference
-
+        
         // Initialize chat when page loads
         window.addEventListener('load', function() {
             initializeChat();
-            setupEventListeners();
             setupMessageNotifications();
             checkAdminStatus();
         });
-
+        
         // Notification functions
         function playNotificationSound() {
             try {
@@ -190,7 +205,7 @@
                 console.log('Notification sound error:', error);
             }
         }
-
+        
         function showNotification(title, body) {
             if ('Notification' in window && Notification.permission === 'granted' && isNotificationsEnabled) {
                 new Notification(title, {
@@ -200,13 +215,13 @@
                 });
             }
         }
-
+        
         function requestNotificationPermission() {
             if ('Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission();
             }
         }
-
+        
         function setupMessageNotifications() {
             // Request notification permission on page load
             requestNotificationPermission();
@@ -217,14 +232,14 @@
                 isNotificationsEnabled = savedPreference === 'true';
             }
         }
-
+        
         // Check admin online status
         function checkAdminStatus() {
-            if (window.FirebaseService) {
+            if (window.FirebaseService && typeof window.FirebaseService.onAdminStatusChange === 'function') {
                 try {
                     // Listen for admin status changes
-                    adminStatusListener = FirebaseService.onAdminStatusChange((isOnline) => {
-                        updateAdminStatus(isOnline);
+                    FirebaseService.onAdminStatusChange((isOnline) => {
+                        updateAdminStatusUI(isOnline);
                     });
                 } catch (error) {
                     console.warn('Admin status tracking blocked by ad blocker or network issue:', error);
@@ -234,26 +249,34 @@
                 }
             }
         }
-
+        
         // Update admin status display
-        function updateAdminStatus(isOnline) {
+        function updateAdminStatusUI(isOnline) {
             const statusDot = document.querySelector('.admin-status-dot');
             const statusText = document.querySelector('.admin-status-text');
             
             if (statusDot && statusText) {
+                const messageInput = document.getElementById('messageInput');
+                const sendButton = document.getElementById('sendButton');
                 if (isOnline) {
                     statusDot.className = 'w-2 h-2 bg-green-400 rounded-full animate-pulse admin-status-dot';
                     statusText.textContent = 'Online';
-                    statusText.className = 'text-sm text-green-400 admin-status-text';
+                    statusText.className = 'text-xs text-green-400 admin-status-text';
+                    messageInput.disabled = false;
+                    messageInput.placeholder = 'Type your message...';
+                    sendButton.disabled = false;
                 } else {
                     statusDot.className = 'w-2 h-2 bg-gray-400 rounded-full admin-status-dot';
                     statusText.textContent = 'Offline';
-                    statusText.className = 'text-sm text-gray-400 admin-status-text';
+                    statusText.className = 'text-xs text-gray-400 admin-status-text';
+                    messageInput.disabled = true;
+                    messageInput.placeholder = 'Admin is currently offline. Messages will be seen later.';
+                    sendButton.disabled = true;
                 }
             }
         }
 
-        // Show warning about ad blocker
+        // Show warning about ad-blocker
         function showAdBlockerWarning() {
             const warningDiv = document.createElement('div');
             warningDiv.className = 'fixed top-4 left-4 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 max-w-sm';
@@ -264,7 +287,7 @@
                     </svg>
                     <div>
                         <p class="font-semibold">Ad Blocker Detected</p>
-                        <p class="text-xs">Admin status may not update correctly. Consider disabling ad blocker for this site.</p>
+                        <p class="text-xs">Admin status may not update correctly. Consider disabling ad-blocker for this site.</p>
                     </div>
                 </div>
             `;
@@ -276,7 +299,7 @@
                 warningDiv.remove();
             }, 8000);
         }
-
+        
         function initializeChat() {
             // Check if user is logged in via Firebase Auth
             if (window.AuthService) {
@@ -294,7 +317,7 @@
                 window.location.href = 'login.html';
             }
         }
-
+        
         function initializeChatWithFirebaseUser(user) {
             try {
                 // Use Firebase Auth user ID
@@ -302,25 +325,26 @@
                 
                 // Get username from user data or use email
                 let userName = user.displayName || user.email.split('@')[0];
+                currentUserName = userName;
                 
                 // Try to get username from Firestore
                 if (window.FirebaseService) {
                     FirebaseService.getUser(user.uid)
                         .then(userData => {
                             if (userData && userData.username) {
-                                userName = userData.username;
+                                currentUserName = userData.username;
                             }
-                            document.getElementById('userInfo').textContent = `Welcome, ${userName}`;
-                            getOrCreateChat(userName);
+                            document.getElementById('userInfo').textContent = `Welcome, ${currentUserName}`;
+                            getOrCreateChat(currentUserName);
                         })
                         .catch(error => {
                             console.log('Could not fetch user data, using default name');
-                            document.getElementById('userInfo').textContent = `Welcome, ${userName}`;
-                            getOrCreateChat(userName);
+                            document.getElementById('userInfo').textContent = `Welcome, ${currentUserName}`;
+                            getOrCreateChat(currentUserName);
                         });
                 } else {
-                    document.getElementById('userInfo').textContent = `Welcome, ${userName}`;
-                    getOrCreateChat(userName);
+                    document.getElementById('userInfo').textContent = `Welcome, ${currentUserName}`;
+                    getOrCreateChat(currentUserName);
                 }
             } catch (error) {
                 console.error('Error initializing chat with Firebase user:', error);
@@ -328,7 +352,7 @@
                 window.location.href = 'login.html';
             }
         }
-
+        
         async function getOrCreateChat(userName) {
             try {
                 // Check if user has an existing chat
@@ -336,23 +360,31 @@
                 const userChat = existingChats.find(chat => chat.userId === currentUserId);
 
                 if (userChat) {
+                    console.log("Found existing chat:", userChat.id);
                     currentChatId = userChat.id;
+                    document.getElementById('ticketInfo').textContent = `Ticket ID: ${userChat.ticketId || 'N/A'}`;
                     loadMessages();
                 } else {
                     // Create new chat with real user name
                     const chatData = {
                         userId: currentUserId,
-                        userName: userName,
-                        status: 'active'
+                        userName: userName, // Use the passed-in, correct user name
+                        status: 'active',
+                        ticketId: `T${Date.now()}`.slice(-8)
                     };
+                    console.log("Creating new chat for user:", userName);
                     currentChatId = await FirebaseService.createChat(chatData);
+                    document.getElementById('ticketInfo').textContent = `Ticket ID: ${chatData.ticketId}`;
                 }
-
+                
                 // Set up real-time listener for messages
                 setupMessageListener();
+
+                // Set up event listeners now that chat is ready
+                setupEventListeners();
             } catch (error) {
                 console.error('Error initializing chat:', error);
-                showError('Failed to initialize chat. Please refresh the page.');
+                showError('Failed to initialize chat. Please refresh.');
             }
         }
 
@@ -360,76 +392,143 @@
             if (!currentChatId) return;
 
             const messagesContainer = document.getElementById('messagesContainer');
-            
-            // Clear welcome message
-            const welcomeMessage = messagesContainer.querySelector('.flex.justify-center');
-            if (welcomeMessage) {
-                welcomeMessage.remove();
-            }
+            messagesContainer.innerHTML = ''; // Clear previous messages
 
             try {
                 const messages = await FirebaseService.getMessages(currentChatId);
+                const fragment = document.createDocumentFragment(); // Use a fragment for performance
                 messages.forEach(message => {
-                    displayMessage(message, message.id);
+                    const messageDiv = createMessageElement(message);
+                    if (messageDiv) {
+                        fragment.appendChild(messageDiv);
+                    }
                 });
-                scrollToBottom();
+                messagesContainer.appendChild(fragment);
+                scrollToBottom(true); // Instant scroll on initial load
             } catch (error) {
                 console.error('Error loading messages:', error);
                 showError('Failed to load messages');
             }
         }
 
-        function displayMessage(messageData, messageId) {
-            const messagesContainer = document.getElementById('messagesContainer');
-            const isAdmin = messageData.sender === 'admin';
+        function formatRelativeTime(date) {
+            const now = new Date();
+            const diffSeconds = Math.round((now - date) / 1000);
+            const diffMinutes = Math.round(diffSeconds / 60);
+            const diffHours = Math.round(diffMinutes / 60);
+            const diffDays = Math.round(diffHours / 24);
+
+            if (diffSeconds < 60) return 'just now';
+            if (diffMinutes < 60) return `${diffMinutes}m ago`;
+            if (diffHours < 24 && now.getDate() === date.getDate()) return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+            if (diffDays === 1) return 'Yesterday';
+            
+            return date.toLocaleDateString();
+        }
+        
+        function createDateSeparator(date) {
+            const separatorDiv = document.createElement('div');
+            separatorDiv.className = 'flex items-center justify-center my-3';
+            const today = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            let dateString = date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+            if (date.toDateString() === today.toDateString()) dateString = 'Today';
+            if (date.toDateString() === yesterday.toDateString()) dateString = 'Yesterday';
+
+            separatorDiv.innerHTML = `<div class="flex-grow border-t border-slate-700"></div><span class="flex-shrink mx-4 text-xs text-slate-400">${dateString}</span><div class="flex-grow border-t border-slate-700"></div>`;
+            return separatorDiv;
+        }
+        
+        function createMessageElement(messageData) {
+            const isAgent = messageData.sender === 'admin';
             
             const messageDiv = document.createElement('div');
-            messageDiv.className = `flex ${isAdmin ? 'justify-start' : 'justify-end'} message-bubble`;
+            messageDiv.className = `flex ${isAgent ? 'justify-start' : 'justify-end'} message-bubble`;
             
-            const time = messageData.timestamp ? new Date(messageData.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now';
-            
-            messageDiv.innerHTML = `
-                <div class="max-w-xs lg:max-w-md">
-                    <div class="bg-${isAdmin ? 'slate-700' : 'blue-600'} text-white rounded-lg px-3 py-2 shadow-lg">
-                        <p class="text-sm">${messageData.text}</p>
-                        <div class="flex items-center justify-between mt-1">
-                            <span class="text-xs opacity-75">${isAdmin ? 'Admin' : 'You'}</span>
+            if (!messageData.timestamp) return null; // Don't render messages without a timestamp
+            const messageTimestamp = messageData.timestamp ? new Date(messageData.timestamp.toDate()) : new Date();
+            const time = messageTimestamp.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+            const senderName = isAgent ? agentName : currentUserName;
+            const initials = senderName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+            // Add date separator if needed
+            const messageDate = new Date(messageTimestamp.getFullYear(), messageTimestamp.getMonth(), messageTimestamp.getDate());
+            if (!lastMessageDate || messageDate.toDateString() !== lastMessageDate.toDateString()) {
+                document.getElementById('messagesContainer').appendChild(createDateSeparator(messageDate));
+                lastMessageDate = messageDate;
+            }
+
+            messageDiv.innerHTML = /*html*/`
+                <div class="flex items-end space-x-2 max-w-xs lg:max-w-md ${isAgent ? '' : 'flex-row-reverse space-x-reverse'}">
+                    <div class="w-8 h-8 ${isAgent ? 'bg-slate-600' : 'bg-purple-600'} rounded-full flex items-center justify-center flex-shrink-0 font-bold text-white text-xs">${initials}</div>
+                    <div class="bg-${isAgent ? 'slate-700' : 'blue-600'} text-white rounded-lg px-3 py-2 shadow-lg">
+                        <p class="text-sm leading-relaxed">${messageData.text}</p>
+                        <div class="text-right mt-1.5">
                             <span class="text-xs opacity-75">${time}</span>
                         </div>
                     </div>
                 </div>
             `;
-            
-            messagesContainer.appendChild(messageDiv);
-            scrollToBottom();
+            return messageDiv;
         }
 
+        function displayMessage(messageData, messageId) {
+            if (document.getElementById(`msg-${messageId}`)) return; // Prevent duplicates
+
+            const messageElement = createMessageElement(messageData);
+            if (messageElement) {
+                messageElement.id = `msg-${messageId}`;
+                document.getElementById('messagesContainer').appendChild(messageElement);
+                scrollToBottom();
+            }
+        }
+        
         function setupEventListeners() {
             const messageForm = document.getElementById('messageForm');
             const messageInput = document.getElementById('messageInput');
-            const charCount = document.getElementById('charCount');
-
+            const attachmentBtn = document.getElementById('attachmentBtn');
+            const attachmentInput = document.getElementById('attachmentInput');
+            
             messageForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 sendMessage();
             });
 
-            // Auto-resize textarea
             messageInput.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = Math.min(this.scrollHeight, 120) + 'px';
                 
+                const charCountContainer = document.getElementById('charCountContainer');
+                const charCountSpan = document.getElementById('charCount');
+                
                 // Update character count
                 const count = this.value.length;
-                charCount.textContent = `${count}/500`;
-                charCount.className = count > 450 ? 'absolute bottom-1 right-1 text-xs text-red-400' : 'absolute bottom-1 right-1 text-xs text-gray-400';
-            });
+                charCountSpan.textContent = count;
+                charCountContainer.classList.toggle('hidden', count === 0);
+                charCountSpan.classList.toggle('text-red-400', count > 450);
 
-            // Handle Enter key
+                // Save draft
+                localStorage.setItem(`chatDraft_${currentChatId}`, this.value);
+            });
+            
+            attachmentBtn.addEventListener('click', () => attachmentInput.click());
+            attachmentInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) showError(`File uploads are not yet supported.`);
+            });
+            
+            // Load draft after currentChatId is available
+            if (currentChatId) {
+                const draft = localStorage.getItem(`chatDraft_${currentChatId}`);
+                if (draft) messageInput.value = draft;
+            }
+            
             messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    sendMessage();
+                    messageForm.requestSubmit();
                 }
             });
         }
@@ -445,90 +544,112 @@
             sendButton.innerHTML = `
                 <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                <span class="hidden sm:inline">Sending...</span>
-            `;
+                    </svg>
+                    <span class="hidden sm:inline">Sending...</span>
+                `;
+            
+            // Optimistic UI update
+            const optimisticId = `optimistic-${Date.now()}`;
+            const optimisticMessageData = {
+                text: message,
+                sender: 'user',
+                timestamp: { toDate: () => new Date() } // Mock Firestore timestamp
+            };
+            displayMessage(optimisticMessageData, optimisticId);
+
+            // Clear input immediately for a responsive feel
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            messageInput.dispatchEvent(new Event('input'));
+            localStorage.removeItem(`chatDraft_${currentChatId}`);
 
             try {
-                // Add message to Firebase using service
                 await FirebaseService.addMessage(currentChatId, {
                     text: message,
                     sender: 'user',
                     userId: currentUserId
                 });
-
+                
                 // Update chat last message time
                 await FirebaseService.updateChat(currentChatId, {
                     lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastMessage: message
+                    lastMessage: message,
+                    lastMessageSender: 'user',
+                    unreadCount: firebase.firestore.FieldValue.increment(1)
                 });
-
-                // Clear input
-                messageInput.value = '';
-                messageInput.style.height = 'auto';
-                document.getElementById('charCount').textContent = '0/500';
 
             } catch (error) {
                 console.error('Error sending message:', error);
                 showError('Failed to send message');
+                // If sending fails, remove the optimistic message
+                const optimisticElement = document.getElementById(`msg-${optimisticId}`);
+                if (optimisticElement) {
+                    optimisticElement.remove();
+                }
+                // Restore the message in the input
+                messageInput.value = message;
+                messageInput.dispatchEvent(new Event('input'));
             } finally {
                 sendButton.disabled = false;
                 sendButton.innerHTML = `
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                    </svg>
-                    <span class="hidden sm:inline">Send</span>
-                `;
+                </svg>
+                <span class="hidden sm:inline">Send</span>
+            `;
             }
         }
-
+        
         function setupMessageListener() {
             if (!currentChatId) return;
 
-            // Set up real-time listener for new messages
-            messageListener = FirebaseService.onChatMessagesChange((chatId, messages) => {
-                // Only process messages for the current chat
-                if (chatId !== currentChatId) return;
-                
-                const messagesContainer = document.getElementById('messagesContainer');
-                
-                // Check for new messages and play notification
-                if (messages && messages.length > lastMessageCount) {
-                    const newMessages = messages.slice(lastMessageCount);
-                    lastMessageCount = messages.length;
-                    
-                    // Play sound for new admin messages
-                    newMessages.forEach(message => {
-                        if (message.sender === 'admin') { // Only notify for admin messages
-                            playNotificationSound();
-                            
-                            // Show browser notification if not focused
-                            if (!document.hasFocus()) {
-                                showNotification('Admin Response', `${message.text.substring(0, 50)}${message.text.length > 50 ? '...' : ''}`);
+            // Detach any existing listener first
+            if (messageListener) messageListener();
+
+            messageListener = db.collection('chats').doc(currentChatId).collection('messages')
+                .orderBy('timestamp', 'asc')
+                .onSnapshot((snapshot) => {
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const initialMessage = document.getElementById('initialMessage');
+                            if (initialMessage) {
+                                initialMessage.style.display = 'none';
+                            }
+                            const messageData = change.doc.data();
+                            displayMessage(messageData, change.doc.id);
+                            if (messageData.sender === 'admin') {
+                                playNotificationSound();
+                                if (!document.hasFocus()) {
+                                    showNotification('Admin Response', messageData.text.substring(0, 50) + '...');
+                                }
                             }
                         }
                     });
-                }
-                
-                // Clear existing messages except welcome message
-                const welcomeMessage = messagesContainer.querySelector('.flex.justify-center');
-                messagesContainer.innerHTML = '';
-                if (welcomeMessage) {
-                    messagesContainer.appendChild(welcomeMessage);
-                }
-                
-                // Display all messages
-                messages.forEach(message => {
-                    displayMessage(message, message.id);
+                }, (error) => {
+                    console.error("Message listener error:", error);
+                    showError("Connection lost. Please refresh.");
                 });
+
+            // Detach existing chat listener
+            if (chatListener) chatListener();
+
+            chatListener = db.collection('chats').doc(currentChatId).onSnapshot((doc) => {
+                const chatData = doc.data();
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.classList.toggle('hidden', !chatData?.isTyping);
+                    if (chatData?.isTyping) {
+                        document.getElementById('typingAgentName').textContent = agentName.split(',')[0];
+                    }
+                }
             });
         }
 
-        function scrollToBottom() {
+        function scrollToBottom(instant = false) {
             const messagesContainer = document.getElementById('messagesContainer');
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
-
+        
         function showError(message) {
             const notification = document.createElement('div');
             notification.className = 'fixed top-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
@@ -540,9 +661,8 @@
                 notification.remove();
             }, 5000);
         }
-
+        
         function logout() {
-            // If user was logged in via Firebase Auth, sign them out
             if (window.AuthService) {
                 AuthService.signOut()
                     .then(() => {
@@ -557,36 +677,11 @@
                 window.location.href = 'login.html';
             }
         }
-
-        function toggleUserNotifications() {
-            isNotificationsEnabled = !isNotificationsEnabled;
-            localStorage.setItem('userNotificationsEnabled', isNotificationsEnabled);
-            const toggleButton = document.getElementById('userNotificationToggle');
-            if (isNotificationsEnabled) {
-                toggleButton.innerHTML = `
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    </svg>
-                    <span class="hidden sm:inline">Sound</span>
-                `;
-            } else {
-                toggleButton.innerHTML = `
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    </svg>
-                    <span class="hidden sm:inline">Mute</span>
-                `;
-            }
-        }
-
+        
         // Clean up listener on page unload
         window.addEventListener('beforeunload', function() {
-            if (messageListener) {
-                messageListener();
-            }
-            if (adminStatusListener) {
-                adminStatusListener();
-            }
+            if (messageListener) messageListener();
+            if (chatListener) chatListener();
         });
     </script>
 </body>

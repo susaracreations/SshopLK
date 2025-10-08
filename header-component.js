@@ -5,6 +5,16 @@ class HeaderComponent {
     constructor() {
         this.headerHTML = `
             <header class="bg-slate-900 shadow-xl sticky top-0 z-50 border-b border-slate-700">
+                <!-- Announcement Bar -->
+                <div id="announcementBar" class="text-sm font-semibold text-center py-2 px-4 relative">
+                    <span>20% OFF SITE-WIDE!</span>
+                    <a href="products.html" class="underline hover:text-blue-200 ml-2"></a>
+                    <button id="closeAnnouncementBar" aria-label="Dismiss announcement" class="absolute top-1/2 right-4 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
                 <div class="container mx-auto px-4 py-4 flex justify-between items-center">
                     <!-- Left side: Logo and Site Name -->
                     <a href="index.html" class="flex items-center space-x-2">
@@ -220,6 +230,8 @@ class HeaderComponent {
         this.setupMobileHeaderScroll();
         this.setupDropdowns();
         this.loadSiteSettings();
+        this.loadAnnouncementBarSettings();
+        this.setupAnnouncementBarCloseButton();
 
         // Set user offline on page close
         window.addEventListener('beforeunload', () => {
@@ -246,12 +258,90 @@ class HeaderComponent {
                     if (settings && settings.siteName) {
                         document.querySelector('header .text-2xl.font-extrabold.text-white').textContent = settings.siteName;
                     }
+                    if (settings && settings.announcementId) {
+                        localStorage.setItem('sShopAnnouncementId', settings.announcementId);
+                    }
+                    if (settings) {
+                        // Also update localStorage for consistency
+                        localStorage.setItem('sShopAnnouncementText', settings.announcementText || '20% OFF SITE-WIDE!');
+                        localStorage.setItem('sShopAnnouncementButtonText', settings.announcementButtonText || 'SHOP NOW');
+                        localStorage.setItem('sShopAnnouncementLink', settings.announcementLink || 'products.html');
+                        localStorage.setItem('sShopAnnouncementGradientStart', settings.announcementGradientStart || '#3b82f6');
+                        localStorage.setItem('sShopAnnouncementGradientEnd', settings.announcementGradientEnd || '#8b5cf6');
+                        localStorage.setItem('sShopAnnouncementTextColor', settings.announcementTextColor || '#ffffff');
+                        if (settings.showAnnouncementBar !== undefined) {
+                            localStorage.setItem('sShopShowAnnouncementBar', settings.showAnnouncementBar);
+                        }
+                        if (settings.siteName) {
+                            localStorage.setItem('sShopSiteName', settings.siteName);
+                        }
+                        this.loadAnnouncementBarSettings(); // Re-apply settings
+                    }
                 });
             } else {
                 setTimeout(checkFirebase, 100);
             }
         };
         checkFirebase();
+    }
+
+    // Load and apply announcement bar settings
+    loadAnnouncementBarSettings() {
+        const announcementBar = document.getElementById('announcementBar');
+        if (!announcementBar) return;
+
+        // Check if this specific announcement has been dismissed
+        const announcementId = localStorage.getItem('sShopAnnouncementId');
+        const dismissedId = localStorage.getItem('sShopDismissedAnnouncementId');
+        if (announcementId && announcementId === dismissedId) {
+            announcementBar.style.display = 'none';
+            return;
+        }
+
+        // Handle visibility first
+        const showBar = localStorage.getItem('sShopShowAnnouncementBar');
+        if (showBar === 'false') {
+            announcementBar.style.display = 'none';
+            return; // Don't apply other settings if it's hidden
+        }
+        announcementBar.style.display = 'block';
+
+        // Get settings from localStorage (which should be synced by loadSiteSettings or admin panel)
+        const text = localStorage.getItem('sShopAnnouncementText') || '20% OFF SITE-WIDE!';
+        const link = localStorage.getItem('sShopAnnouncementLink') || 'products.html';
+        const buttonText = localStorage.getItem('sShopAnnouncementButtonText') || 'SHOP NOW';
+        const gradientStart = localStorage.getItem('sShopAnnouncementGradientStart') || '#3b82f6';
+        const gradientEnd = localStorage.getItem('sShopAnnouncementGradientEnd') || '#8b5cf6';
+        const textColor = localStorage.getItem('sShopAnnouncementTextColor') || '#ffffff';
+
+        // Apply the settings
+        announcementBar.querySelector('span').textContent = text;
+        announcementBar.querySelector('a').textContent = buttonText;
+        announcementBar.querySelector('a').href = link;
+
+        // --- Safely update classes ---
+        announcementBar.className = 'text-sm font-semibold text-center py-2 px-4 relative'; // Reset classes
+        announcementBar.style.background = `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`;
+        announcementBar.style.color = textColor;
+
+        announcementBar.querySelector('a').className = `underline hover:text-blue-200 ml-2`; // Ensure link style is consistent and visible
+    }
+
+    // Setup close button for the announcement bar
+    setupAnnouncementBarCloseButton() {
+        const closeButton = document.getElementById('closeAnnouncementBar');
+        const announcementBar = document.getElementById('announcementBar');
+
+        if (closeButton && announcementBar) {
+            closeButton.addEventListener('click', () => {
+                announcementBar.style.display = 'none';
+                // Store the ID of the dismissed announcement
+                const announcementId = localStorage.getItem('sShopAnnouncementId');
+                if (announcementId) {
+                    localStorage.setItem('sShopDismissedAnnouncementId', announcementId);
+                }
+            });
+        }
     }
 
     // Mobile header scroll behavior
@@ -261,22 +351,19 @@ class HeaderComponent {
         const mobileBreakpoint = 768;
         
         if (!header) return;
-        
+
         window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
             if (window.innerWidth <= mobileBreakpoint) {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                
-                if (scrollTop <= 0) {
-                    header.classList.remove('header-hidden');
-                } else if (scrollTop < lastScrollTop) {
-                    header.classList.remove('header-hidden');
-                } else if (scrollTop > lastScrollTop && scrollTop > 100) {
-                    header.classList.add('header-hidden');
+                if (scrollTop > 50) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
                 }
-                
-                lastScrollTop = scrollTop;
             } else {
-                header.classList.remove('header-hidden');
+                // On desktop, remove the class if the window is resized
+                header.classList.remove('header-scrolled');
             }
         });
     }
@@ -301,63 +388,67 @@ class HeaderComponent {
         
         if (user) {
             // User is signed in
-            guestUser.classList.add('hidden');
-            loggedInUser.classList.remove('hidden');
-            
-            // For Google users, use displayName if available
-            if (user.displayName) {
-                const displayName = user.displayName;
-                const initials = this.getInitials(displayName);
-                if (avatarInitials) avatarInitials.textContent = initials;
-                if (dropdownUsername) dropdownUsername.textContent = displayName;
-                if (dropdownEmail) dropdownEmail.textContent = user.email || 'user@example.com';
+            if (window.FirebaseService) {
+                FirebaseService.getUser(user.uid).then(userData => {
+                    const displayName = user.displayName || (userData && userData.displayName) || (userData && userData.username) || user.email.split('@')[0];
+                    const photoURL = user.photoURL || (userData && userData.photoURL);
+                    const email = user.email || (userData && userData.email) || 'No email';
+                    const initials = this.getInitials(displayName);
 
-                // Set user as online
-                if (window.FirebaseService) {
+                    guestUser.classList.add('hidden');
+                    loggedInUser.classList.remove('hidden');
+
+                    if (dropdownUsername) dropdownUsername.textContent = displayName;
+                    if (dropdownEmail) dropdownEmail.textContent = email;
+
+                    const userAvatarContainer = document.getElementById('userAvatar');
+                    if (photoURL) {
+                        userAvatarContainer.innerHTML = `<img src="${photoURL}" alt="Profile Picture" class="w-full h-full object-cover rounded-full">`;
+                    } else {
+                        userAvatarContainer.innerHTML = `<span id="avatarInitials">${initials}</span>`;
+                    }
+
                     FirebaseService.setUserOnline(user.uid, displayName);
-                }
-            } else if (window.FirebaseService) {
-                // For regular users, try to get username from Firestore
-                FirebaseService.getUser(user.uid)
-                    .then(userData => {
-                        if (userData && userData.username) {
-                            const username = userData.username;
-                            const initials = this.getInitials(username);
-                            if (avatarInitials) avatarInitials.textContent = initials;
-                            if (dropdownUsername) dropdownUsername.textContent = username;
-                            if (dropdownEmail) dropdownEmail.textContent = userData.email || user.email || 'user@example.com';
+                }).catch(error => {
+                    console.error("Error fetching user data for header:", error);
+                    // Fallback to basic user info
+                    const displayName = user.displayName || user.email.split('@')[0];
+                    const photoURL = user.photoURL;
+                    const email = user.email || 'No email';
+                    const initials = this.getInitials(displayName);
 
-                            // Set user as online
-                            if (window.FirebaseService) {
-                                FirebaseService.setUserOnline(user.uid, username);
-                            }
-                        } else {
-                            const email = user.email || 'User';
-                            const initials = this.getInitials(email);
-                            if (avatarInitials) avatarInitials.textContent = initials;
-                            if (dropdownUsername) dropdownUsername.textContent = email;
-                            if (dropdownEmail) dropdownEmail.textContent = email;
+                    guestUser.classList.add('hidden');
+                    loggedInUser.classList.remove('hidden');
 
-                            // Set user as online
-                            if (window.FirebaseService) {
-                                FirebaseService.setUserOnline(user.uid, email);
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching user data:', error);
-                        const email = user.email || 'User';
-                        const initials = this.getInitials(email);
-                        if (avatarInitials) avatarInitials.textContent = initials;
-                        if (dropdownUsername) dropdownUsername.textContent = email;
-                        if (dropdownEmail) dropdownEmail.textContent = email;
-                    });
+                    if (dropdownUsername) dropdownUsername.textContent = displayName;
+                    if (dropdownEmail) dropdownEmail.textContent = email;
+
+                    const userAvatarContainer = document.getElementById('userAvatar');
+                    if (photoURL) {
+                        userAvatarContainer.innerHTML = `<img src="${photoURL}" alt="Profile Picture" class="w-full h-full object-cover rounded-full">`;
+                    } else {
+                        userAvatarContainer.innerHTML = `<span id="avatarInitials">${initials}</span>`;
+                    }
+                });
             } else {
-                const email = user.email || 'User';
-                const initials = this.getInitials(email);
-                if (avatarInitials) avatarInitials.textContent = initials;
-                if (dropdownUsername) dropdownUsername.textContent = email;
+                // Fallback if FirebaseService is not ready
+                const displayName = user.displayName || user.email.split('@')[0];
+                const photoURL = user.photoURL;
+                const email = user.email || 'No email';
+                const initials = this.getInitials(displayName);
+
+                guestUser.classList.add('hidden');
+                loggedInUser.classList.remove('hidden');
+
+                if (dropdownUsername) dropdownUsername.textContent = displayName;
                 if (dropdownEmail) dropdownEmail.textContent = email;
+
+                const userAvatarContainer = document.getElementById('userAvatar');
+                if (photoURL) {
+                    userAvatarContainer.innerHTML = `<img src="${photoURL}" alt="Profile Picture" class="w-full h-full object-cover rounded-full">`;
+                } else {
+                    userAvatarContainer.innerHTML = `<span id="avatarInitials">${initials}</span>`;
+                }
             }
         } else {
             // User is signed out
@@ -374,6 +465,10 @@ class HeaderComponent {
     async signOut() {
         try {
             if (window.AuthService) {
+                const user = AuthService.getCurrentUser();
+                if (user && window.FirebaseService) {
+                    await FirebaseService.setUserOffline(user.uid);
+                }
                 await AuthService.signOut();
             }
         } catch (error) {
