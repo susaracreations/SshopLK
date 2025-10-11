@@ -1,4 +1,4 @@
-Website Description: S Shop LK
+S Shop LK
 S Shop LK is a specialized e-commerce platform designed as a digital marketplace, primarily targeting customers in Sri Lanka. The website focuses on selling a variety of digital goods and gaming-related services.
 
 Core Business & Products: The site functions as a "one-stop shop" for digital products, organized into four main categories:
