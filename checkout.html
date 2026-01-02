@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - S Shop LK</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #3b82f6;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header Container -->
+    <div id="header-container"></div>
+
+    <!-- Breadcrumbs -->
+    <div class="bg-slate-800 border-b border-slate-700">
+        <div class="container mx-auto px-4 py-3">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2 text-sm text-gray-400">
+                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+                    <li class="flex items-center">
+                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        <span class="text-white">Checkout</span>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-3xl font-bold text-white mb-8">Secure Checkout</h1>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="text-center py-16">
+                <div class="loading-spinner mx-auto"></div>
+                <p class="mt-4 text-lg text-gray-300">Loading Order Details...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="hidden text-center py-16 bg-red-900/20 border border-red-500/50 rounded-lg">
+                <h2 class="text-2xl font-bold text-red-400 mb-4">Order Error</h2>
+                <p id="error-message" class="text-gray-300 mb-6">Sorry, we couldn't load your order details.</p>
+                <a href="index.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Return Home
+                </a>
+            </div>
+
+            <!-- Checkout Content -->
+            <div id="checkout-content" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left Column: Customer Details -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Contact Info Form -->
+                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+                        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
+                            <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">1</span>
+                            Contact Information
+                        </h2>
+                        
+                        <form id="checkout-form" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="fullName" class="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
+                                    <input type="text" id="fullName" required class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="John Doe">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-400 mb-1">Email Address</label>
+                                    <input type="email" id="email" required class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="john@example.com">
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-gray-400 mb-1">Phone Number (WhatsApp)</label>
+                                    <input type="tel" id="phone" required pattern="^(?:\+94|0)?\s?7\d\s?\d{3}\s?\d{4}$" title="Please enter a valid Sri Lankan phone number (e.g., 077 123 4567 or +94 77 123 4567)" oninput="this.value = this.value.replace(/[^0-9+\s]/g, '')" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="+94 7X XXX XXXX">
+                                </div>
+                                <div>
+                                    <label for="discord" class="block text-sm font-medium text-gray-400 mb-1">Discord Username (Optional)</label>
+                                    <input type="text" id="discord" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="username#0000">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="notes" class="block text-sm font-medium text-gray-400 mb-1">Order Notes (Optional)</label>
+                                <textarea id="notes" rows="3" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="Any special requests?"></textarea>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+                        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
+                            <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">2</span>
+                            Payment Method
+                        </h2>
+                        
+                        <div class="space-y-3">
+                            <label class="flex items-center p-4 border border-blue-500/50 bg-blue-500/10 rounded-lg cursor-pointer transition-all hover:bg-blue-500/20">
+                                <input type="radio" name="payment" value="whatsapp" checked class="w-5 h-5 text-blue-600 bg-slate-700 border-slate-500 focus:ring-blue-500 focus:ring-2">
+                                <div class="ml-4">
+                                    <span class="block text-white font-medium">Coordinate via WhatsApp</span>
+                                    <span class="block text-sm text-gray-400">We will send you payment details (Bank Transfer, EzCash, etc.) directly on WhatsApp.</span>
+                                </div>
+                            </label>
+                            
+                            <label class="flex items-center p-4 border border-slate-700 rounded-lg opacity-60 cursor-not-allowed bg-slate-800/50">
+                                <input type="radio" name="payment" value="card" disabled class="w-5 h-5 text-blue-600 bg-slate-700 border-slate-500">
+                                <div class="ml-4">
+                                    <span class="block text-gray-300 font-medium">Credit/Debit Card (Coming Soon)</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Order Summary -->
+                <div class="lg:col-span-1">
+                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg sticky top-8">
+                        <h2 class="text-xl font-semibold text-white mb-6">Order Summary</h2>
+                        
+                        <!-- Product Item -->
+                        <div id="order-item-container" class="flex gap-4 mb-6 pb-6 border-b border-slate-700">
+                            <img id="summary-image" src="" alt="Product" class="w-20 h-20 object-cover rounded-lg border border-slate-600 bg-slate-700">
+                            <div class="flex-1">
+                                <h3 id="summary-name" class="text-white font-medium line-clamp-2">Loading...</h3>
+                                <p id="summary-category" class="text-xs text-blue-400 mt-1 uppercase font-bold"></p>
+                                
+                                <!-- Quantity Control -->
+                                <div class="flex items-center mt-3">
+                                    <span class="text-gray-400 text-sm mr-2">Qty:</span>
+                                    <div class="flex items-center border border-slate-600 rounded-lg bg-slate-700">
+                                        <button type="button" onclick="updateQuantity(-1)" class="px-3 py-1 text-gray-300 hover:text-white hover:bg-slate-600 rounded-l-lg transition-colors">-</button>
+                                        <input type="number" id="quantity-input" value="1" min="1" class="w-12 text-center bg-transparent text-white text-sm focus:outline-none" onchange="updateTotal()" readonly>
+                                        <button type="button" onclick="updateQuantity(1)" class="px-3 py-1 text-gray-300 hover:text-white hover:bg-slate-600 rounded-r-lg transition-colors">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Totals -->
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between text-gray-400">
+                                <span>Item Price</span>
+                                <span id="summary-price">LKR 0</span>
+                            </div>
+                            <div class="flex justify-between text-gray-400">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal">LKR 0</span>
+                            </div>
+                            <div class="border-t border-slate-700 pt-4 flex justify-between items-center">
+                                <span class="text-white font-bold text-lg">Total</span>
+                                <span id="summary-total" class="text-blue-400 font-bold text-2xl">LKR 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <button onclick="processOrder()" class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-bold text-lg shadow-lg shadow-green-900/20 transition-all duration-300 flex items-center justify-center space-x-2 transform hover:scale-[1.02]">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp" class="w-6 h-6">
+                            <span>Complete Order</span>
+                        </button>
+                        
+                        <div class="mt-4 flex items-center justify-center space-x-2 text-xs text-gray-500">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                            <span>Secure Checkout via WhatsApp</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <!-- Shared Components -->
+    <script src="header-component.js"></script>
+    <script src="footer-component.js"></script>
+
+    <script>
+        let currentProduct = null;
+        let productPrice = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCheckoutDetails();
+        });
+
+        async function loadCheckoutDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('id');
+            const qtyParam = params.get('qty');
+            
+            if (!productId) {
+                showError("No product specified.");
+                return;
+            }
+
+            try {
+                // Wait for Firebase to initialize
+                await waitForFirebase();
+
+                const products = await window.FirebaseService.getProducts();
+                const product = products.find(p => p.id === productId);
+
+                if (product) {
+                    currentProduct = product;
+                    productPrice = product.price;
+                    
+                    // Set initial quantity
+                    const initialQty = qtyParam ? parseInt(qtyParam) : 1;
+                    document.getElementById('quantity-input').value = initialQty;
+                    
+                    displayProductSummary(product);
+                    updateTotal();
+                    
+                    document.getElementById('loading-state').classList.add('hidden');
+                    document.getElementById('checkout-content').classList.remove('hidden');
+                } else {
+                    showError("Product not found.");
+                }
+            } catch (err) {
+                console.error("Error loading checkout:", err);
+                showError("Failed to load product details. Please try again.");
+            }
+        }
+
+        function displayProductSummary(product) {
+            document.getElementById('summary-image').src = product.image || 'https://placehold.co/100x100/1e293b/e2e8f0?text=No+Image';
+            document.getElementById('summary-name').textContent = product.name;
+            document.getElementById('summary-category').textContent = product.category || 'Product';
+            document.getElementById('summary-price').textContent = `LKR ${product.price.toLocaleString()}`;
+            
+            // Set max quantity if available
+            if (product.availability) {
+                document.getElementById('quantity-input').max = product.availability;
+            }
+        }
+
+        function updateQuantity(change) {
+            const input = document.getElementById('quantity-input');
+            let newVal = parseInt(input.value) + change;
+            
+            if (newVal < 1) newVal = 1;
+            if (currentProduct.availability && newVal > currentProduct.availability) {
+                newVal = currentProduct.availability;
+            }
+            
+            input.value = newVal;
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const qty = parseInt(document.getElementById('quantity-input').value);
+            const subtotal = productPrice * qty;
+            
+            document.getElementById('summary-subtotal').textContent = `LKR ${subtotal.toLocaleString()}`;
+            document.getElementById('summary-total').textContent = `LKR ${subtotal.toLocaleString()}`;
+        }
+
+        function processOrder() {
+            // Validate Form
+            const form = document.getElementById('checkout-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const name = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const discord = document.getElementById('discord').value;
+            const notes = document.getElementById('notes').value;
+            const qty = document.getElementById('quantity-input').value;
+            const total = document.getElementById('summary-total').textContent;
+
+            // Construct WhatsApp Message
+            const message = `*New Order Request - S Shop LK*
+
+*--- ORDER DETAILS ---*
+*Product:* ${currentProduct.name}
+*Product ID:* ${currentProduct.id}
+*Quantity:* ${qty}
+*Total Price:* ${total}
+
+*--- CUSTOMER DETAILS ---*
+*Name:* ${name}
+*Email:* ${email}
+*Phone:* ${phone}
+${discord ? `*Discord:* ${discord}` : ''}
+${notes ? `*Notes:* ${notes}` : ''}
+
+*Payment Method:* WhatsApp Coordination
+
+Please confirm my order and provide payment details.`;
+
+            // Get WhatsApp number from settings or default
+            if (window.FirebaseService) {
+                window.FirebaseService.getWebsiteSettings().then(settings => {
+                    const whatsappNumber = settings.phoneNumber || '+94767854069';
+                    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\s/g, '')}?text=${encodeURIComponent(message)}`;
+                    window.open(whatsappUrl, '_blank');
+                });
+            } else {
+                // Fallback
+                const whatsappUrl = `https://wa.me/94767854069?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            }
+        }
+
+        function showError(msg) {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('error-state').classList.remove('hidden');
+            document.getElementById('error-message').textContent = msg;
+        }
+
+        function waitForFirebase() {
+            return new Promise(resolve => {
+                const check = () => {
+                    if (window.FirebaseService) resolve();
+                    else setTimeout(check, 100);
+                };
+                check();
+            });
+        }
+    </script>
+</body>
+</html>
