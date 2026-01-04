@@ -1173,3 +1173,39 @@
     <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="ff46caff-2828-4393-aace-86191b624a7c";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+</head>
+<body>
+
+    <h2>Redirecting you in 3 seconds...</h2>
+    <p>If the page does not open automatically, <a id="manualLink" href="#" target="_blank">click here</a>.</p>
+
+    <script>
+        // Set the timeout duration (in milliseconds)
+        const redirectTimeout = 3000; // 3 seconds
+
+        // Specify the URL to redirect to
+        const redirectUrl = "https://www.effectiveratecpm.com/ey6q240x9?key=b8f53705f701942f83ea8603333b54cf";
+
+        // Set the manual link href just in case
+        document.getElementById('manualLink').href = redirectUrl;
+
+        // Use setTimeout to open in a new tab
+        setTimeout(() => {
+            // '_blank' tells the browser to open a new tab
+            const newWindow = window.open(redirectUrl, '_blank');
+            
+            // Security/UX check: if newWindow is null, the popup was blocked
+            if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') { 
+                console.log("Popup blocked by browser.");
+            }
+        }, redirectTimeout);
+    </script>
+
+</body>
+</html>
