@@ -3,195 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - S Shop LK</title>
+    <title>Checkout — S Shop LK</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
     <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
     <script src="favicon.js"></script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="font-loader.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        :root {
+            --slate-950: #0f172a;
+        }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
+            background-color: var(--slate-950);
             color: #e2e8f0;
+            font-feature-settings: "cv02", "cv03", "cv04", "cv11";
         }
         .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(59, 130, 246, 0.1);
             border-radius: 50%;
-            border-top: 4px solid #3b82f6;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+            border-top: 3px solid #3b82f6;
+            width: 32px;
+            height: 32px;
+            animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .form-input {
+            background: rgba(30, 41, 59, 0.5);
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #334155;
+            border-radius: 10px;
+        }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen antialiased">
 
     <!-- Header Container -->
     <div id="header-container"></div>
 
-    <!-- Breadcrumbs -->
-    <div class="bg-slate-800 border-b border-slate-700">
-        <div class="container mx-auto px-4 py-3">
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2 text-sm text-gray-400">
-                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                        <span class="text-white">Checkout</span>
-                    </li>
-                </ol>
+    <!-- Breadcrumbs - More Minimal -->
+    <div class="border-b border-slate-800/60 bg-slate-900/30 backdrop-blur-sm">
+        <div class="container mx-auto px-6 py-4">
+            <nav class="flex items-center space-x-3 text-xs tracking-wider uppercase font-medium text-slate-500">
+                <a href="index.html" class="hover:text-blue-400 transition-colors">Store</a>
+                <span class="text-slate-700">/</span>
+                <span class="text-slate-300">Checkout</span>
             </nav>
         </div>
     </div>
 
     <!-- Main Content -->
-    <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+    <main class="flex-grow container mx-auto px-4 py-10 md:py-16">
         <div class="max-w-6xl mx-auto">
-            <h1 class="text-3xl font-bold text-white mb-8">Secure Checkout</h1>
+            
+            <header class="mb-12">
+                <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl mb-3">
+                    Finish your order<span class="text-blue-500">.</span>
+                </h1>
+                <p class="text-slate-400 text-lg">Complete the details below to secure your items via WhatsApp.</p>
+            </header>
 
             <!-- Loading State -->
-            <div id="loading-state" class="text-center py-16">
-                <div class="loading-spinner mx-auto"></div>
-                <p class="mt-4 text-lg text-gray-300">Loading Order Details...</p>
+            <div id="loading-state" class="flex flex-col items-center justify-center py-24">
+                <div class="loading-spinner mb-4"></div>
+                <p class="text-slate-500 font-medium animate-pulse">Establishing secure connection...</p>
             </div>
 
             <!-- Error State -->
-            <div id="error-state" class="hidden text-center py-16 bg-red-900/20 border border-red-500/50 rounded-lg">
-                <h2 class="text-2xl font-bold text-red-400 mb-4">Order Error</h2>
-                <p id="error-message" class="text-gray-300 mb-6">Sorry, we couldn't load your order details.</p>
-                <a href="index.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                    Return Home
+            <div id="error-state" class="hidden max-w-lg mx-auto text-center py-12 px-6 bg-red-500/5 border border-red-500/20 rounded-2xl">
+                <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </div>
+                <h2 class="text-xl font-bold text-white mb-2">Something went wrong</h2>
+                <p id="error-message" class="text-slate-400 mb-8">We couldn't retrieve the product details.</p>
+                <a href="index.html" class="inline-flex items-center justify-center px-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition-all">
+                    Back to Shop
                 </a>
             </div>
 
             <!-- Checkout Content -->
-            <div id="checkout-content" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div id="checkout-content" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                 
-                <!-- Left Column: Customer Details -->
-                <div class="lg:col-span-2 space-y-6">
+                <!-- Left Column: Details -->
+                <div class="lg:col-span-7 space-y-10">
                     
-                    <!-- Contact Info Form -->
-                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
-                        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
-                            <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">1</span>
-                            Contact Information
-                        </h2>
+                    <!-- Section 1: Customer -->
+                    <section>
+                        <div class="flex items-center space-x-4 mb-8">
+                            <span class="flex-none w-10 h-10 rounded-full bg-blue-600/10 border border-blue-500/30 text-blue-500 flex items-center justify-center font-bold">1</span>
+                            <h2 class="text-2xl font-bold text-white">Your Information</h2>
+                        </div>
                         
-                        <form id="checkout-form" class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <form id="checkout-form" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="fullName" class="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
-                                    <input type="text" id="fullName" required class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="John Doe">
+                                    <label for="fullName" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Full Name</label>
+                                    <input type="text" id="fullName" required class="form-input w-full border border-slate-700/50 rounded-xl px-5 py-4 text-white focus:outline-none placeholder-slate-600" placeholder="e.g. Kamal Perera">
                                 </div>
                                 <div>
-                                    <label for="email" class="block text-sm font-medium text-gray-400 mb-1">Email Address</label>
-                                    <input type="email" id="email" required class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="john@example.com">
+                                    <label for="email" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+                                    <input type="email" id="email" required class="form-input w-full border border-slate-700/50 rounded-xl px-5 py-4 text-white focus:outline-none placeholder-slate-600" placeholder="name@email.com">
                                 </div>
                             </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="phone" class="block text-sm font-medium text-gray-400 mb-1">Phone Number (WhatsApp)</label>
-                                    <input type="tel" id="phone" required pattern="^(?:\+94|0)?\s?7\d\s?\d{3}\s?\d{4}$" title="Please enter a valid Sri Lankan phone number (e.g., 077 123 4567 or +94 77 123 4567)" oninput="this.value = this.value.replace(/[^0-9+\s]/g, '')" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="+94 7X XXX XXXX">
+                                    <label for="phone" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">WhatsApp Number</label>
+                                    <input type="tel" id="phone" required pattern="^(?:\+94|0)?\s?7\d\s?\d{3}\s?\d{4}$" oninput="this.value = this.value.replace(/[^0-9+\s]/g, '')" class="form-input w-full border border-slate-700/50 rounded-xl px-5 py-4 text-white focus:outline-none placeholder-slate-600" placeholder="07X XXX XXXX">
                                 </div>
                                 <div>
-                                    <label for="discord" class="block text-sm font-medium text-gray-400 mb-1">Discord Username (Optional)</label>
-                                    <input type="text" id="discord" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="username#0000">
+                                    <label for="discord" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Discord (Optional)</label>
+                                    <input type="text" id="discord" class="form-input w-full border border-slate-700/50 rounded-xl px-5 py-4 text-white focus:outline-none placeholder-slate-600" placeholder="username#0000">
                                 </div>
                             </div>
 
                             <div>
-                                <label for="notes" class="block text-sm font-medium text-gray-400 mb-1">Order Notes (Optional)</label>
-                                <textarea id="notes" rows="3" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500" placeholder="Any special requests?"></textarea>
+                                <label for="notes" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Special Instructions</label>
+                                <textarea id="notes" rows="3" class="form-input w-full border border-slate-700/50 rounded-xl px-5 py-4 text-white focus:outline-none placeholder-slate-600 resize-none" placeholder="Is there anything we should know about your order?"></textarea>
                             </div>
                         </form>
-                    </div>
+                    </section>
 
-                    <!-- Payment Method -->
-                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
-                        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
-                            <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">2</span>
-                            Payment Method
-                        </h2>
+                    <!-- Section 2: Payment -->
+                    <section>
+                        <div class="flex items-center space-x-4 mb-8">
+                            <span class="flex-none w-10 h-10 rounded-full bg-blue-600/10 border border-blue-500/30 text-blue-500 flex items-center justify-center font-bold">2</span>
+                            <h2 class="text-2xl font-bold text-white">Payment Selection</h2>
+                        </div>
                         
-                        <div class="space-y-3">
-                            <label class="flex items-center p-4 border border-blue-500/50 bg-blue-500/10 rounded-lg cursor-pointer transition-all hover:bg-blue-500/20">
-                                <input type="radio" name="payment" value="whatsapp" checked class="w-5 h-5 text-blue-600 bg-slate-700 border-slate-500 focus:ring-blue-500 focus:ring-2">
-                                <div class="ml-4">
-                                    <span class="block text-white font-medium">Coordinate via WhatsApp</span>
-                                    <span class="block text-sm text-gray-400">We will send you payment details (Bank Transfer, EzCash, etc.) directly on WhatsApp.</span>
+                        <div class="grid grid-cols-1 gap-4">
+                            <label class="group relative flex items-center p-6 border-2 border-blue-600/40 bg-blue-600/5 rounded-2xl cursor-pointer transition-all hover:bg-blue-600/10">
+                                <input type="radio" name="payment" value="whatsapp" checked class="w-5 h-5 accent-blue-500">
+                                <div class="ml-5">
+                                    <span class="block text-white font-bold text-lg">Direct WhatsApp Confirmation</span>
+                                    <span class="block text-sm text-slate-400 mt-1 leading-relaxed">Pay via Bank Transfer, KOKO, or eZ Cash after chatting with our agent.</span>
+                                </div>
+                                <div class="absolute top-4 right-4 text-blue-500 opacity-40">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
                                 </div>
                             </label>
                             
-                            <label class="flex items-center p-4 border border-slate-700 rounded-lg opacity-60 cursor-not-allowed bg-slate-800/50">
-                                <input type="radio" name="payment" value="card" disabled class="w-5 h-5 text-blue-600 bg-slate-700 border-slate-500">
-                                <div class="ml-4">
-                                    <span class="block text-gray-300 font-medium">Credit/Debit Card (Coming Soon)</span>
+                            <div class="flex items-center p-6 border border-slate-800 rounded-2xl opacity-40 grayscale pointer-events-none bg-slate-900/40">
+                                <div class="w-5 h-5 border-2 border-slate-700 rounded-full"></div>
+                                <div class="ml-5">
+                                    <span class="block text-slate-300 font-bold text-lg">Online Card Payment</span>
+                                    <span class="text-xs bg-slate-800 text-slate-500 px-2 py-1 rounded mt-2 inline-block font-bold">SOON</span>
                                 </div>
-                            </label>
+                            </div>
                         </div>
-                    </div>
-
+                    </section>
                 </div>
 
-                <!-- Right Column: Order Summary -->
-                <div class="lg:col-span-1">
-                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg sticky top-8">
-                        <h2 class="text-xl font-semibold text-white mb-6">Order Summary</h2>
+                <!-- Right Column: Summary Sticky -->
+                <div class="lg:col-span-5">
+                    <aside class="bg-slate-900/50 backdrop-blur-md p-8 rounded-3xl border border-slate-800/60 sticky top-12 shadow-2xl">
+                        <h2 class="text-xl font-black text-white mb-8 tracking-tight">Order Summary</h2>
                         
-                        <!-- Product Item -->
-                        <div id="order-item-container" class="flex gap-4 mb-6 pb-6 border-b border-slate-700">
-                            <img id="summary-image" src="" alt="Product" class="w-20 h-20 object-cover rounded-lg border border-slate-600 bg-slate-700">
-                            <div class="flex-1">
-                                <h3 id="summary-name" class="text-white font-medium line-clamp-2">Loading...</h3>
-                                <p id="summary-category" class="text-xs text-blue-400 mt-1 uppercase font-bold"></p>
+                        <!-- Product Preview Card -->
+                        <div id="order-item-container" class="flex items-start gap-5 mb-8 group">
+                            <div class="relative flex-none">
+                                <img id="summary-image" src="" alt="Product" class="w-24 h-24 object-cover rounded-2xl border border-slate-700 group-hover:border-blue-500/50 transition-colors">
+                                <span id="summary-badge" class="absolute -top-2 -right-2 bg-blue-600 text-[10px] font-black text-white px-2 py-1 rounded-lg shadow-lg">NEW</span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 id="summary-name" class="text-white font-bold leading-snug truncate">Loading...</h3>
+                                <p id="summary-category" class="text-[10px] text-blue-400 mt-1 uppercase tracking-tighter font-black"></p>
                                 
-                                <!-- Quantity Control -->
-                                <div class="flex items-center mt-3">
-                                    <span class="text-gray-400 text-sm mr-2">Qty:</span>
-                                    <div class="flex items-center border border-slate-600 rounded-lg bg-slate-700">
-                                        <button type="button" onclick="updateQuantity(-1)" class="px-3 py-1 text-gray-300 hover:text-white hover:bg-slate-600 rounded-l-lg transition-colors">-</button>
-                                        <input type="number" id="quantity-input" value="1" min="1" class="w-12 text-center bg-transparent text-white text-sm focus:outline-none" onchange="updateTotal()" readonly>
-                                        <button type="button" onclick="updateQuantity(1)" class="px-3 py-1 text-gray-300 hover:text-white hover:bg-slate-600 rounded-r-lg transition-colors">+</button>
+                                <!-- Quantity Control - Redesigned -->
+                                <div class="flex items-center mt-4">
+                                    <div class="flex items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
+                                        <button type="button" onclick="updateQuantity(-1)" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all">−</button>
+                                        <input type="number" id="quantity-input" value="1" min="1" class="w-10 text-center bg-transparent text-white font-bold text-sm focus:outline-none" readonly>
+                                        <button type="button" onclick="updateQuantity(1)" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all">+</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Totals -->
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between text-gray-400">
-                                <span>Item Price</span>
-                                <span id="summary-price">LKR 0</span>
+                        <!-- Price Matrix -->
+                        <div class="space-y-4 mb-8">
+                            <div class="flex justify-between items-center text-slate-400">
+                                <span class="text-sm font-medium">Unit Price</span>
+                                <span id="summary-price" class="font-mono text-white">LKR 0</span>
                             </div>
-                            <div class="flex justify-between text-gray-400">
-                                <span>Subtotal</span>
-                                <span id="summary-subtotal">LKR 0</span>
+                            <div class="flex justify-between items-center text-slate-400">
+                                <span class="text-sm font-medium">Platform Fee</span>
+                                <span class="text-green-500 font-bold text-xs uppercase tracking-widest">Free</span>
                             </div>
-                            <div class="border-t border-slate-700 pt-4 flex justify-between items-center">
-                                <span class="text-white font-bold text-lg">Total</span>
-                                <span id="summary-total" class="text-blue-400 font-bold text-2xl">LKR 0</span>
+                            <div class="h-px bg-slate-800/80 my-2"></div>
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <span class="block text-xs font-black text-slate-500 uppercase tracking-widest">Total Amount</span>
+                                    <span class="text-[10px] text-slate-600">Incl. all services</span>
+                                </div>
+                                <span id="summary-total" class="text-3xl font-black text-white tracking-tighter">LKR 0</span>
                             </div>
                         </div>
 
                         <!-- Action Button -->
-                        <button onclick="processOrder()" class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-bold text-lg shadow-lg shadow-green-900/20 transition-all duration-300 flex items-center justify-center space-x-2 transform hover:scale-[1.02]">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp" class="w-6 h-6">
-                            <span>Complete Order</span>
+                        <button onclick="processOrder()" class="group relative w-full overflow-hidden bg-green-500 text-slate-950 py-5 rounded-2xl font-black text-lg transition-all hover:bg-green-400 hover:scale-[1.01] active:scale-[0.98] shadow-xl shadow-green-500/10">
+                            <div class="relative z-10 flex items-center justify-center space-x-3">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                                <span>Place Order via WhatsApp</span>
+                            </div>
                         </button>
                         
-                        <div class="mt-4 flex items-center justify-center space-x-2 text-xs text-gray-500">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                            <span>Secure Checkout via WhatsApp</span>
+                        <div class="mt-6 flex flex-col items-center space-y-2 border-t border-slate-800 pt-6">
+                            <div class="flex items-center space-x-2 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+                                <svg class="w-3 h-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                <span>End-to-end Encrypted</span>
+                            </div>
+                            <p class="text-[10px] text-slate-600 text-center leading-relaxed px-4">
+                                By clicking place order, you will be redirected to WhatsApp to finalize payment with our verified business account.
+                            </p>
                         </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
         </div>
@@ -200,7 +239,7 @@
     <!-- Footer Container -->
     <div id="footer-container"></div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (Compatibility) -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
@@ -224,12 +263,11 @@
             const qtyParam = params.get('qty');
             
             if (!productId) {
-                showError("No product specified.");
+                showError("The product identifier is missing.");
                 return;
             }
 
             try {
-                // Wait for Firebase to initialize
                 await waitForFirebase();
 
                 const products = await window.FirebaseService.getProducts();
@@ -239,8 +277,7 @@
                     currentProduct = product;
                     productPrice = product.price;
                     
-                    // Set initial quantity
-                    const initialQty = qtyParam ? parseInt(qtyParam) : 1;
+                    const initialQty = qtyParam ? Math.max(1, parseInt(qtyParam)) : 1;
                     document.getElementById('quantity-input').value = initialQty;
                     
                     displayProductSummary(product);
@@ -249,21 +286,32 @@
                     document.getElementById('loading-state').classList.add('hidden');
                     document.getElementById('checkout-content').classList.remove('hidden');
                 } else {
-                    showError("Product not found.");
+                    showError("This product no longer exists in our catalog.");
                 }
             } catch (err) {
-                console.error("Error loading checkout:", err);
-                showError("Failed to load product details. Please try again.");
+                console.error("Critical: Error loading checkout:", err);
+                showError("Secure connection failed. Please refresh your browser.");
             }
         }
 
         function displayProductSummary(product) {
-            document.getElementById('summary-image').src = product.image || 'https://placehold.co/100x100/1e293b/e2e8f0?text=No+Image';
+            const img = document.getElementById('summary-image');
+            img.src = product.image || 'https://placehold.co/100x100/1e293b/e2e8f0?text=S+SHOP';
+            img.onerror = () => { img.src = 'https://placehold.co/100x100/1e293b/e2e8f0?text=Item'; };
+            
             document.getElementById('summary-name').textContent = product.name;
-            document.getElementById('summary-category').textContent = product.category || 'Product';
+            document.getElementById('summary-category').textContent = product.category || 'Premium Item';
             document.getElementById('summary-price').textContent = `LKR ${product.price.toLocaleString()}`;
             
-            // Set max quantity if available
+            const badge = document.getElementById('summary-badge');
+            if (product.availability <= 5 && product.availability > 0) {
+                badge.textContent = `ONLY ${product.availability} LEFT`;
+                badge.className = "absolute -top-2 -right-2 bg-orange-600 text-[10px] font-black text-white px-2 py-1 rounded-lg shadow-lg";
+            } else if (product.availability === 0) {
+                badge.textContent = `OUT OF STOCK`;
+                badge.className = "absolute -top-2 -right-2 bg-red-600 text-[10px] font-black text-white px-2 py-1 rounded-lg shadow-lg";
+            }
+
             if (product.availability) {
                 document.getElementById('quantity-input').max = product.availability;
             }
@@ -285,13 +333,10 @@
         function updateTotal() {
             const qty = parseInt(document.getElementById('quantity-input').value);
             const subtotal = productPrice * qty;
-            
-            document.getElementById('summary-subtotal').textContent = `LKR ${subtotal.toLocaleString()}`;
             document.getElementById('summary-total').textContent = `LKR ${subtotal.toLocaleString()}`;
         }
 
         function processOrder() {
-            // Validate Form
             const form = document.getElementById('checkout-form');
             if (!form.checkValidity()) {
                 form.reportValidity();
@@ -306,27 +351,26 @@
             const qty = document.getElementById('quantity-input').value;
             const total = document.getElementById('summary-total').textContent;
 
-            // Construct WhatsApp Message
-            const message = `*New Order Request - S Shop LK*
+            const message = `*NEW ORDER INCOMING — S SHOP LK*
 
-*--- ORDER DETAILS ---*
-*Product:* ${currentProduct.name}
-*Product ID:* ${currentProduct.id}
-*Quantity:* ${qty}
-*Total Price:* ${total}
+📦 *PRODUCT DETAILS*
+• Item: ${currentProduct.name}
+• ID: ${currentProduct.id}
+• Qty: ${qty}
+• Total: ${total}
 
-*--- CUSTOMER DETAILS ---*
-*Name:* ${name}
-*Email:* ${email}
-*Phone:* ${phone}
-${discord ? `*Discord:* ${discord}` : ''}
-${notes ? `*Notes:* ${notes}` : ''}
+👤 *CUSTOMER INFO*
+• Name: ${name}
+• Email: ${email}
+• Phone: ${phone}
+${discord ? `• Discord: ${discord}` : ''}
+${notes ? `• Notes: ${notes}` : ''}
 
-*Payment Method:* WhatsApp Coordination
+💳 *PAYMENT METHOD*
+WhatsApp Coordination requested.
 
-Please confirm my order and provide payment details.`;
+_Sent from S Shop LK Checkout_`;
 
-            // Get WhatsApp number from settings or default
             if (window.FirebaseService) {
                 window.FirebaseService.getWebsiteSettings().then(settings => {
                     const whatsappNumber = settings.phoneNumber || '+94767854069';
@@ -334,7 +378,6 @@ Please confirm my order and provide payment details.`;
                     window.open(whatsappUrl, '_blank');
                 });
             } else {
-                // Fallback
                 const whatsappUrl = `https://wa.me/94767854069?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
             }

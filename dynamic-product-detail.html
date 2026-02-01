@@ -10,155 +10,262 @@
     <script src="favicon.js"></script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="font-loader.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
         body {
-            font-family: 'Inter', sans-serif;
             background-color: #0f172a;
-            color: #e2e8f0;
+            color: #f8fafc;
+            -webkit-font-smoothing: antialiased;
         }
-        .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
+
+        /* Updated Breadcrumb Styling to match image_31ffd9.png */
+        .breadcrumb-bar {
+            background-color: #161e2d;
+            border-bottom: 1px solid #1e293b;
+            width: 100%;
+            padding: 1rem 0;
+            margin-bottom: 2.5rem;
+        }
+
+        .breadcrumb-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .breadcrumb-link {
+            color: #94a3b8;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-link:hover {
+            color: #f8fafc;
+        }
+
+        .breadcrumb-separator {
+            color: #475569;
+            font-size: 0.75rem;
+        }
+
+        .breadcrumb-current {
+            color: #f8fafc;
+            font-weight: 600;
+        }
+
+        /* Product Gallery Fix */
+        .gallery-container {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .gallery-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        /* Description Truncation */
+        #product-description {
+            line-height: 1.8;
+            color: #94a3b8;
+            transition: max-height 0.4s ease;
+        }
+
+        .description-clamped {
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Professional Specs Table */
+        .specs-table tr {
+            border-bottom: 1px solid #1e293b;
+        }
+        .specs-table td {
+            padding: 0.75rem 0;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #1e293b;
+            border-top: 3px solid #3b82f6;
             border-radius: 50%;
-            border-top: 4px solid #3b82f6;
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .btn-primary {
+            background-color: #f8fafc;
+            color: #020617;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-primary:hover {
+            background-color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Reference Style Card Adjustments */
+        .game-card-img-container {
+            aspect-ratio: 3/4;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1e293b;
+            border: 1px solid #334155;
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="min-h-screen flex flex-col">
 
-    <!-- Header Container -->
     <div id="header-container"></div>
 
-    <!-- Breadcrumbs -->
-    <div class="bg-slate-800 border-b border-slate-700">
-        <div class="container mx-auto px-4 py-3">
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol id="breadcrumbs" class="flex items-center space-x-2 text-sm text-gray-400">
-                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        <a id="breadcrumb-category" href="#" class="hover:text-white transition-colors">Category</a>
-                    </li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        <span id="breadcrumb-product-name" class="text-white">Product</span>
-                    </li>
-                </ol>
-            </nav>
-        </div>
+    <!-- New Breadcrumb Bar (Matches Reference Image) -->
+    <div class="breadcrumb-bar">
+        <nav class="breadcrumb-container">
+            <a href="index.html" class="breadcrumb-link">Home</a>
+            <span class="breadcrumb-separator">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </span>
+            <a id="breadcrumb-category" href="#" class="breadcrumb-link">Category</a>
+            <span class="breadcrumb-separator">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </span>
+            <span class="breadcrumb-current" id="breadcrumb-product-name">Product</span>
+        </nav>
     </div>
 
     <!-- Main Content -->
-    <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
-        <div id="product-detail-container" class="max-w-4xl mx-auto">
-            <!-- Loading State -->
-            <div id="loading-state" class="text-center py-16">
-                <div class="loading-spinner mx-auto"></div>
-                <p class="mt-4 text-lg text-gray-300">Loading Product Details...</p>
-            </div>
+    <main class="container mx-auto px-4 md:px-8 pb-10 flex-grow max-w-7xl flex flex-col items-center">
+        
+        <!-- Loading / Error States -->
+        <div id="loading-state" class="flex flex-col items-center justify-center py-32">
+            <div class="spinner mb-6"></div>
+            <p class="text-slate-400 text-sm tracking-widest uppercase">Fetching Details</p>
+        </div>
 
-            <!-- Error State -->
-            <div id="error-state" class="hidden text-center py-16 bg-red-900/20 border border-red-500/50 rounded-lg">
-                <h2 class="text-2xl font-bold text-red-400 mb-4">Product Not Found</h2>
-                <p class="text-gray-300 mb-6">Sorry, we couldn't find the product you're looking for.</p>
-                <a href="index.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                    Back to Home
-                </a>
-            </div>
+        <div id="error-state" class="hidden text-center py-32 bg-slate-900/50 rounded-3xl border border-slate-800 w-full max-w-2xl">
+            <h1 class="text-3xl font-bold text-white mb-4">Product Not Found</h1>
+            <a href="index.html" class="px-8 py-3 bg-white text-black font-bold rounded-full text-sm uppercase tracking-widest hover:bg-slate-200 transition-colors">Go to Home</a>
+        </div>
 
-            <!-- Content -->
-            <div id="product-content" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-                <!-- Product Image -->
-                <div>
-                    <img id="product-image" src="" alt="Product Image" class="w-full h-auto object-cover rounded-xl shadow-lg border border-slate-700">
+        <!-- Product Interface -->
+        <div id="product-content" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-16 items-start w-full max-w-7xl">
+            
+            <!-- Gallery & Info (Left) -->
+            <div class="lg:col-span-7">
+                <div class="gallery-container">
+                    <img id="product-image" src="" alt="Product Detail" onerror="this.src='https://placehold.co/800x450/0f172a/334155?text=Image+Unavailable'">
                 </div>
 
-                <!-- Product Info -->
-                <div class="flex flex-col">
-                    <!-- Trust Badge -->
-                    <div id="trust-badge-container" class="hidden mb-4">
-                        <div class="bg-green-500/10 border border-green-500/30 text-green-300 text-xs font-bold uppercase px-3 py-1.5 rounded-full inline-flex items-center space-x-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944a11.954 11.954 0 007.834 3.055l-1.966-1.966A9.955 9.955 0 0110 3.944a9.955 9.955 0 01-5.868 1.966l-1.966 1.966z" clip-rule="evenodd"></path><path d="M12.5 11a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"></path><path fill-rule="evenodd" d="M.666 10.585A12.034 12.034 0 0110 5.944a12.034 12.034 0 019.334 4.641l-1.966 1.966A9.955 9.955 0 0010 7.944a9.955 9.955 0 00-7.368 3.572l-1.966-1.931z" clip-rule="evenodd"></path></svg>
-                            <span id="trust-badge-text"></span>
+                <div class="mt-16 space-y-12">
+                    <section>
+                        <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-blue-500 mb-6">Product Overview</h3>
+                        <div class="relative">
+                            <p id="product-description" class="description-clamped whitespace-pre-line text-slate-300"></p>
+                            <button id="toggle-description" class="hidden mt-6 text-white text-sm font-bold flex items-center gap-2 group">
+                                <span id="toggle-text">Show More</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
                         </div>
-                    </div>
+                    </section>
+                </div>
+            </div>
 
-                    <h1 id="product-name" class="text-3xl md:text-4xl font-bold text-white mb-4"></h1>
-                    <p id="product-description" class="text-gray-300 leading-relaxed mb-6"></p>
-
-                    <!-- Key Details -->
-                    <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-6">
-                        <h3 class="text-lg font-semibold text-white mb-4">Product Specifications</h3>
-                        <div class="grid grid-cols-2 gap-4 text-sm">
-                            <div id="availability-container" class="hidden"><strong class="text-gray-400 block">Availability:</strong> <span id="product-availability" class="text-white"></span></div>
-                            <div id="category-container" class="hidden"><strong class="text-gray-400 block">Category:</strong> <span id="product-category" class="text-white"></span></div>
-                            <div id="delivery-speed-container" class="hidden"><strong class="text-gray-400 block">Delivery Speed:</strong> <span id="product-delivery-speed" class="text-white"></span></div>
-                            <div id="delivery-method-container" class="hidden"><strong class="text-gray-400 block">Delivery Method:</strong> <span id="product-delivery-method" class="text-white"></span></div>
-                            <div id="activation-region-container" class="hidden"><strong class="text-gray-400 block">Activation Region:</strong> <span id="product-activation-region" class="text-white"></span></div>
+            <!-- Purchase Column (Right) -->
+            <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                <div class="lg:sticky lg:top-12 w-full max-w-md">
+                    <div class="bg-slate-900/40 border border-slate-800 rounded-3xl p-8 md:p-10 backdrop-blur-xl">
+                        <div id="trust-badge-container" class="hidden mb-6 flex justify-start">
+                            <span id="trust-badge-text" class="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-extrabold uppercase tracking-widest rounded-md"></span>
                         </div>
-                    </div>
+                        <h1 id="product-name" class="text-3xl md:text-4xl font-extrabold text-white mb-4 leading-tight"></h1>
+                        <div class="flex items-center gap-4 mb-8 text-slate-500 text-[10px] uppercase font-bold tracking-widest">
+                            Verified Merchant Item
+                        </div>
 
-                    <div class="mt-auto">
-                        <div class="flex items-center justify-between bg-slate-800 p-4 rounded-lg border border-slate-700 mb-6">
-                            <span class="text-3xl font-extrabold text-blue-400" id="product-price"></span>
-                            <div class="text-right">
-                                <span id="product-sold" class="text-sm text-gray-400 block"></span>
+                        <!-- Technical Details -->
+                        <div class="mb-8 pt-4 border-t border-slate-800">
+                            <h3 class="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-500 mb-4">Technical Details</h3>
+                            <table class="w-full specs-table text-[12px] text-slate-300">
+                                <tr id="availability-row" class="hidden">
+                                    <td class="text-slate-500 font-medium">Availability</td>
+                                    <td id="product-availability" class="text-slate-200 font-semibold text-right"></td>
+                                </tr>
+                                <tr id="category-row" class="hidden">
+                                    <td class="text-slate-500 font-medium">Collection</td>
+                                    <td id="product-category" class="text-slate-200 font-semibold text-right"></td>
+                                </tr>
+                                <tr id="delivery-speed-row" class="hidden">
+                                    <td class="text-slate-500 font-medium">Est. Fulfillment</td>
+                                    <td id="product-delivery-speed" class="text-slate-200 font-semibold text-right"></td>
+                                </tr>
+                                <tr id="delivery-method-row" class="hidden">
+                                    <td class="text-slate-500 font-medium">Service Method</td>
+                                    <td id="product-delivery-method" class="text-slate-200 font-semibold text-right"></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="bg-slate-800/30 rounded-2xl p-6 mb-8 border border-slate-800/50">
+                            <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Amount</p>
+                            <div class="flex items-baseline gap-2">
+                                <span id="product-price" class="text-4xl font-extrabold text-white tracking-tight"></span>
+                                <span class="text-slate-500 text-xs font-medium">LKR</span>
                             </div>
                         </div>
-                        <button id="buy-now-button" class="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors duration-300">
-                            Buy Now
-                        </button>
+                        <button id="buy-now-button" class="btn-primary w-full py-5 rounded-2xl font-black text-sm uppercase tracking-[0.2em]">Process Purchase</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Related Products Section -->
-        <section id="related-products-section" class="hidden max-w-4xl mx-auto mt-12 md:mt-16">
-            <h2 class="text-2xl font-bold text-white mb-6">Related Products</h2>
-            <div id="related-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Related product cards will be injected here -->
+        <!-- Reference-Style Complementary Items Section -->
+        <section id="related-products-section" class="hidden mt-32 pt-16 border-t border-slate-800 w-full max-w-7xl">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-lg font-bold text-white tracking-tight">Complementary Items</h2>
+                <a href="index.html" class="text-xs font-bold text-slate-500 hover:text-white uppercase tracking-widest transition-colors flex items-center gap-2">
+                    All Items 
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
             </div>
+            <div id="related-products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"></div>
         </section>
 
     </main>
 
-    <!-- Footer Container -->
     <div id="footer-container"></div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
-
-    <!-- Shared Components -->
     <script src="header-component.js"></script>
     <script src="footer-component.js"></script>
 
     <script>
         let currentProduct = null;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProductDetails();
-        });
+        document.addEventListener('DOMContentLoaded', loadProductDetails);
 
         async function loadProductDetails() {
             const loadingState = document.getElementById('loading-state');
             const errorState = document.getElementById('error-state');
             const productContent = document.getElementById('product-content');
-
             const params = new URLSearchParams(window.location.search);
             const productId = params.get('id');
 
@@ -169,172 +276,103 @@
             }
 
             try {
-                // Wait for Firebase to be ready
                 await new Promise(resolve => {
-                    const checkFirebase = () => {
-                        if (window.FirebaseService) {
-                            resolve();
-                        } else {
-                            setTimeout(checkFirebase, 100);
-                        }
-                    };
-                    checkFirebase();
+                    const check = () => window.FirebaseService ? resolve() : setTimeout(check, 100);
+                    check();
                 });
 
                 const products = await window.FirebaseService.getProducts();
                 const product = products.find(p => p.id === productId);
 
                 if (product) {
+                    currentProduct = product;
                     displayProduct(product);
-                    currentProduct = product; // Store the current product
                     loadRelatedProducts(product, products);
                     loadingState.classList.add('hidden');
                     productContent.classList.remove('hidden');
+                    setTimeout(() => initDescriptionToggle(), 100);
                 } else {
                     loadingState.classList.add('hidden');
                     errorState.classList.remove('hidden');
                 }
             } catch (err) {
-                console.error("Error loading product details:", err);
                 loadingState.classList.add('hidden');
                 errorState.classList.remove('hidden');
             }
         }
 
-        function displayProduct(product) {
-            document.title = `${product.name} - S Shop LK`;
-            
-            // Breadcrumbs
-            const categorySlug = product.category ? product.category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-') : 'products';
-            const categoryLink = document.getElementById('breadcrumb-category');
-            categoryLink.textContent = product.category || 'Products';
-            categoryLink.href = `category-${categorySlug}.html`;
-            document.getElementById('breadcrumb-product-name').textContent = product.name;
+        function initDescriptionToggle() {
+            const desc = document.getElementById('product-description');
+            const btn = document.getElementById('toggle-description');
+            const txt = document.getElementById('toggle-text');
+            if (desc.scrollHeight > desc.clientHeight) btn.classList.remove('hidden');
+            btn.onclick = () => {
+                const isClamped = desc.classList.contains('description-clamped');
+                desc.classList.toggle('description-clamped');
+                txt.textContent = isClamped ? 'Show Less' : 'Show More';
+                btn.querySelector('svg').style.transform = isClamped ? 'rotate(180deg)' : 'rotate(0deg)';
+            };
+        }
 
-            // Main details
-            document.getElementById('product-image').src = product.image || 'https://placehold.co/600x400/1e293b/e2e8f0?text=No+Image';
-            document.getElementById('product-image').alt = product.name;
+        function displayProduct(product) {
+            document.title = `${product.name} | S Shop LK`;
+            const categoryLink = document.getElementById('breadcrumb-category');
+            categoryLink.textContent = product.category || 'Shop All';
+            categoryLink.href = `category-${(product.category || 'all').toLowerCase().replace(/ /g, '-')}.html`;
+            document.getElementById('breadcrumb-product-name').textContent = product.name;
+            document.getElementById('product-image').src = product.image;
             document.getElementById('product-name').textContent = product.name;
             document.getElementById('product-description').textContent = product.description;
-            document.getElementById('product-price').textContent = `LKR ${product.price.toLocaleString()}`;
+            document.getElementById('product-price').textContent = product.price.toLocaleString();
 
-            // Trust Badge
             if (product.trustBadge) {
                 document.getElementById('trust-badge-text').textContent = product.trustBadge;
                 document.getElementById('trust-badge-container').classList.remove('hidden');
             }
 
-            // Key Details
-            if (product.availability) {
-                document.getElementById('product-availability').textContent = `${product.availability} in stock`;
-                document.getElementById('availability-container').classList.remove('hidden');
-            }
-            if (product.category) {
-                document.getElementById('product-category').textContent = product.category;
-                document.getElementById('category-container').classList.remove('hidden');
-            }
-            if (product.deliverySpeed) {
-                document.getElementById('product-delivery-speed').textContent = product.deliverySpeed;
-                document.getElementById('delivery-speed-container').classList.remove('hidden');
-            }
-            if (product.deliveryMethod) {
-                document.getElementById('product-delivery-method').textContent = product.deliveryMethod;
-                document.getElementById('delivery-method-container').classList.remove('hidden');
-            }
-            if (product.activationRegion) {
-                document.getElementById('product-activation-region').textContent = product.activationRegion;
-                document.getElementById('activation-region-container').classList.remove('hidden');
-            }
-
-            // Buy button
-            const buyNowButton = document.getElementById('buy-now-button');
-            const isSoldOut = !product.availability || product.availability <= 0;
-            if (isSoldOut) {
-                buyNowButton.textContent = 'Sold Out';
-                buyNowButton.disabled = true;
-                buyNowButton.classList.add('bg-gray-500', 'cursor-not-allowed');
-                buyNowButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-            } else {
-                buyNowButton.onclick = () => goToCheckout();
-            }
-        }
-
-        function updateQuantityInputMax() {
-            const quantityInput = document.getElementById('quantity');
-            if (quantityInput && currentProduct && currentProduct.availability > 0) {
-                quantityInput.max = currentProduct.availability;
-            }
-        }
-
-        function loadRelatedProducts(currentProduct, allProducts) {
-            const relatedProductsSection = document.getElementById('related-products-section');
-
-            if (!currentProduct.category) {
-                relatedProductsSection.classList.add('hidden');
-                return;
-            }
-
-            const relatedProducts = allProducts.filter(p => 
-                p.category === currentProduct.category && p.id !== currentProduct.id
-            ).slice(0, 4); // Get up to 4 related products
-
-            if (relatedProducts.length > 0) {
-                displayRelatedProducts(relatedProducts);
-                relatedProductsSection.classList.remove('hidden');
-            } else {
-                relatedProductsSection.classList.add('hidden');
-            }
-        }
-
-        function displayRelatedProducts(relatedProducts) {
-            const container = document.getElementById('related-products-container');
-            container.innerHTML = ''; // Clear previous content
-
-            relatedProducts.forEach(product => {
-                const detailPage = `dynamic-product-detail.html?id=${product.id}`;
-                const productCard = document.createElement('div');
-                productCard.className = 'bg-slate-800 rounded-xl shadow-lg hover:shadow-blue-500/20 transition-all duration-300 border border-slate-700';
-                
-                productCard.innerHTML = `
-                    <a href="${detailPage}">
-                        <img src="${product.image || 'https://placehold.co/400x300/1e293b/e2e8f0?text=No+Image'}" alt="${product.name}" class="w-full h-40 object-cover rounded-t-xl border-b border-slate-700">
-                    </a>
-                    <div class="p-4">
-                        <h3 class="text-md font-semibold text-white truncate mb-1"><a href="${detailPage}" class="hover:text-blue-400">${product.name}</a></h3>
-                        <span class="text-lg font-bold text-blue-400">LKR ${product.price.toLocaleString()}</span>
-                    </div>
-                `;
-                container.appendChild(productCard);
+            const fields = {'availability': product.availability, 'category': product.category, 'delivery-speed': product.deliverySpeed, 'delivery-method': product.deliveryMethod};
+            Object.entries(fields).forEach(([id, val]) => {
+                if(val) {
+                    document.getElementById(`product-${id}`).textContent = id === 'availability' ? `${val} Units` : val;
+                    document.getElementById(`${id}-row`).classList.remove('hidden');
+                }
             });
-        }
 
-        function goToCheckout() {
-            if (currentProduct) {
-                window.location.href = `checkout.html?id=${currentProduct.id}&qty=1`;
+            const buyBtn = document.getElementById('buy-now-button');
+            if (product.availability <= 0) {
+                buyBtn.textContent = 'Out of Stock';
+                buyBtn.disabled = true;
+                buyBtn.classList.replace('btn-primary', 'bg-slate-800');
+            } else {
+                buyBtn.onclick = () => window.location.href = `checkout.html?id=${product.id}&qty=1`;
             }
         }
 
-        function updateQuantity(change) {
-            const quantityInput = document.getElementById('quantity');
-            let currentQuantity = parseInt(quantityInput.value);
-            currentQuantity += change;
-            if (currentQuantity < 1) {
-                currentQuantity = 1;
+        function loadRelatedProducts(current, all) {
+            const container = document.getElementById('related-products-container');
+            const related = all.filter(p => p.category === current.category && p.id !== current.id).slice(0, 6);
+            
+            if (related.length > 0) {
+                document.getElementById('related-products-section').classList.remove('hidden');
+                related.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'group cursor-pointer';
+                    card.onclick = () => window.location.href = `dynamic-product-detail.html?id=${p.id}`;
+                    card.innerHTML = `
+                        <div class="game-card-img-container mb-4 overflow-hidden shadow-2xl relative">
+                            <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mb-1 opacity-80">${p.deliveryMethod || 'Instant Delivery'}</p>
+                        <h4 class="text-[13px] font-bold text-slate-200 leading-snug group-hover:text-white transition-colors line-clamp-2 mb-2">${p.name}</h4>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-extrabold text-blue-400 tracking-tight">LKR ${p.price.toLocaleString()}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
             }
-            // Do not allow quantity to exceed stock
-            if (currentProduct && currentProduct.availability && currentQuantity > currentProduct.availability) {
-                currentQuantity = currentProduct.availability;
-            }
-            quantityInput.value = currentQuantity;
-            updateTotalPrice();
-        }
-
-        function updateTotalPrice() {
-            const quantity = parseInt(document.getElementById('quantity').value);
-            const totalPrice = (currentProduct.price * quantity).toLocaleString();
-            document.getElementById('totalPrice').textContent = `LKR ${totalPrice}`;
         }
     </script>
-
 </body>
 </html>

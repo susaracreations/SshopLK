@@ -7,10 +7,9 @@
     <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             background-color: #0f172a;
             color: #e2e8f0; 
             overscroll-behavior-y: contain; /* Prevents pull-to-refresh on mobile */
@@ -103,7 +102,7 @@
                 <div class="flex items-center space-x-2">
                     <span id="userInfo" class="text-xs text-white">Welcome, Guest</span>
                 </div>
-                <a href="index.html" class="glass px-3 py-1.5 rounded-full text-white hover:bg-white/20 transition-all duration-300 flex items-center space-x-1 text-sm">
+                <a href="index.html" id="backButton" class="glass px-3 py-1.5 rounded-full text-white hover:bg-white/20 transition-all duration-300 flex items-center space-x-1 text-sm">
                     <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
@@ -186,6 +185,11 @@
         
         // Initialize chat when page loads
         window.addEventListener('load', function() {
+            // Hide back button if in iframe
+            if (window.self !== window.top) {
+                const backBtn = document.getElementById('backButton');
+                if (backBtn) backBtn.style.display = 'none';
+            }
             initializeChat();
             setupMessageNotifications();
             checkAdminStatus();
@@ -244,7 +248,7 @@
                 } catch (error) {
                     console.warn('Admin status tracking blocked by ad blocker or network issue:', error);
                     // Set default status as offline when blocked
-                    updateAdminStatus(false);
+                    updateAdminStatusUI(false);
                     showAdBlockerWarning();
                 }
             }
@@ -269,9 +273,9 @@
                     statusDot.className = 'w-2 h-2 bg-gray-400 rounded-full admin-status-dot';
                     statusText.textContent = 'Offline';
                     statusText.className = 'text-xs text-gray-400 admin-status-text';
-                    messageInput.disabled = true;
-                    messageInput.placeholder = 'Admin is currently offline. Messages will be seen later.';
-                    sendButton.disabled = true;
+                    messageInput.disabled = false;
+                    messageInput.placeholder = 'Admin is offline. Leave a message...';
+                    sendButton.disabled = false;
                 }
             }
         }
@@ -309,12 +313,20 @@
                         initializeChatWithFirebaseUser(user);
                     } else {
                         // User is not logged in, redirect to website login
-                        window.location.href = 'login.html';
+                        if (window.self !== window.top) {
+                            document.body.innerHTML = '<div class="flex flex-col items-center justify-center h-full p-4 text-center"><p class="text-white mb-4">Please log in to chat.</p><button onclick="window.top.location.href=\'login.html\'" class="bg-blue-600 text-white px-4 py-2 rounded">Login</button></div>';
+                        } else {
+                            window.location.href = 'login.html';
+                        }
                     }
                 });
             } else {
                 // Firebase Auth not available, redirect to website login
-                window.location.href = 'login.html';
+                if (window.self !== window.top) {
+                    document.body.innerHTML = '<div class="flex flex-col items-center justify-center h-full p-4 text-center"><p class="text-white mb-4">Please log in to chat.</p><button onclick="window.top.location.href=\'login.html\'" class="bg-blue-600 text-white px-4 py-2 rounded">Login</button></div>';
+                } else {
+                    window.location.href = 'login.html';
+                }
             }
         }
         
@@ -349,7 +361,11 @@
             } catch (error) {
                 console.error('Error initializing chat with Firebase user:', error);
                 // Redirect to website login
-                window.location.href = 'login.html';
+                if (window.self !== window.top) {
+                    document.body.innerHTML = '<div class="flex flex-col items-center justify-center h-full p-4 text-center"><p class="text-white mb-4">Please log in to chat.</p><button onclick="window.top.location.href=\'login.html\'" class="bg-blue-600 text-white px-4 py-2 rounded">Login</button></div>';
+                } else {
+                    window.location.href = 'login.html';
+                }
             }
         }
         
@@ -667,7 +683,11 @@
                 AuthService.signOut()
                     .then(() => {
                         console.log('Signed out from Firebase Auth');
-                        window.location.href = 'login.html';
+                        if (window.self !== window.top) {
+                            window.location.reload();
+                        } else {
+                            window.location.href = 'login.html';
+                        }
                     })
                     .catch(error => {
                         console.error('Error signing out from Firebase Auth:', error);

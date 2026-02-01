@@ -105,7 +105,31 @@ class LoginPage {
         const password = this.elements.passwordInput.value;
 
         try {
-            await window.AuthService.signIn(email, password);
+            const user = await window.AuthService.signIn(email, password);
+            
+            // Check if email is verified
+            if (user && !user.emailVerified) {
+                this.showError('Email not verified. Please check your inbox.');
+                
+                // Add resend button to error message
+                const resendLink = document.createElement('a');
+                resendLink.href = '#';
+                resendLink.className = 'block mt-2 text-sm font-bold underline hover:text-red-800';
+                resendLink.textContent = 'Resend Verification Email';
+                resendLink.onclick = async (ev) => {
+                    ev.preventDefault();
+                    try {
+                        await window.AuthService.sendEmailVerification();
+                        alert('Verification email sent! Please check your inbox.');
+                    } catch (err) {
+                        console.error('Error resending verification:', err);
+                        alert('Failed to send verification email. Please try again later.');
+                    }
+                };
+                this.elements.errorMessage.appendChild(resendLink);
+                return;
+            }
+
             this.elements.successMessage.classList.remove('hidden');
             setTimeout(() => { window.location.href = 'index.html'; }, 1500);
         } catch (error) {
@@ -177,18 +201,21 @@ class LoginPage {
         }
 
         try {
-            const userCredential = await window.AuthService.signUp(email, password);
-            if (userCredential && userCredential.user) {
+            const user = await window.AuthService.signUp(email, password);
+            if (user) {
                 await window.FirebaseService.addUser({
-                    uid: userCredential.user.uid,
+                    uid: user.uid,
                     username: username,
                     displayName: username,
                     email: email,
                     createdAt: new Date().toISOString(),
                     provider: 'email'
                 });
+
+                // Send verification email
+                await window.AuthService.sendEmailVerification();
             }
-            alert('Account created successfully! You can now sign in.');
+            alert('Account created successfully! A verification email has been sent to your inbox. Please verify your email before signing in.');
             this.closeSignUpModal();
         } catch (error) {
             console.error('Sign up error:', error);

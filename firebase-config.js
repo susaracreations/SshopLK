@@ -170,6 +170,23 @@ const firebaseConfig = {
       }
     },
 
+    // Send email verification
+    async sendEmailVerification() {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          console.log('Attempting to send verification email to:', user.email);
+          await user.sendEmailVerification();
+          console.log('Verification email sent successfully');
+        } else {
+          throw new Error('No user signed in to send verification email');
+        }
+      } catch (error) {
+        console.error('Error sending verification email:', error);
+        throw error;
+      }
+    },
+
     // Listen for auth state changes
     onAuthStateChanged(callback) {
       return auth.onAuthStateChanged(callback);

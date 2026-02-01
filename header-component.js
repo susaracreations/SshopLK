@@ -19,17 +19,17 @@ class HeaderComponent {
                     </div>
                 </div>
 
-                <div class="container mx-auto px-4 py-3 lg:py-4">
+                <div class="container mx-auto px-4 py-2 lg:py-4">
                     <div class="flex justify-between items-center">
                         <!-- Left side: Logo -->
-                        <a href="index.html" class="group relative flex items-center gap-3">
-                            <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-white/5 group-hover:border-blue-500/30 transition-all duration-300 overflow-hidden">
+                        <a href="index.html" class="group relative flex items-center gap-2 lg:gap-3">
+                            <div class="relative flex items-center justify-center w-8 h-8 lg:w-10 lg:h-10 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-white/5 group-hover:border-blue-500/30 transition-all duration-300 overflow-hidden">
                                 <div class="absolute inset-0 bg-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                 <svg class="h-6 w-6 text-blue-400 relative z-10 transform group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
-                            <span id="headerSiteName" class="text-xl font-bold tracking-tight text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">S Shop LK</span>
+                            <span id="headerSiteName" class="text-lg lg:text-xl font-bold tracking-tight text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">S Shop LK</span>
                         </a>
 
                         <!-- Right side: Actions -->
@@ -55,7 +55,7 @@ class HeaderComponent {
                                 <!-- Logged In -->
                                 <div id="loggedInUser" class="hidden flex items-center gap-4">
                                     <div class="relative group">
-                                        <button id="userAvatar" class="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/10 hover:ring-blue-500/50 transition-all duration-300 shadow-lg">
+                                        <button id="userAvatar" class="relative w-8 h-8 lg:w-10 lg:h-10 rounded-full overflow-hidden ring-2 ring-white/10 hover:ring-blue-500/50 transition-all duration-300 shadow-lg">
                                             <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-sm font-bold text-white">
                                                 <span id="avatarInitials">U</span>
                                             </div>
@@ -84,7 +84,7 @@ class HeaderComponent {
                             
                             <!-- Menu Button -->
                             <div class="relative">
-                                <button id="menuBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="mobileMenuDropdown" aria-label="Open menu" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 text-gray-300 hover:text-white transition-all duration-300 group backdrop-blur-sm">
+                                <button id="menuBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="mobileMenuDropdown" aria-label="Open menu" class="p-2 lg:p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 text-gray-300 hover:text-white transition-all duration-300 group backdrop-blur-sm">
                                     <svg class="w-6 h-6 transform group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                                     </svg>
@@ -155,12 +155,6 @@ class HeaderComponent {
                                                     </div>
                                                     <span class="font-medium text-sm">Help Center</span>
                                                 </a>
-                                                <button onclick="accessChat()" class="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white transition-colors group text-left">
-                                                    <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                                                    </div>
-                                                    <span class="font-medium text-sm">Chat Support</span>
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -541,4 +535,4 @@ const headerComponent = new HeaderComponent();
 // Auto-initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     headerComponent.init();
-}); 
+});
