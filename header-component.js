@@ -52,9 +52,9 @@ class HeaderComponent {
                                     </a>
                                 </div>
                                 
-                                <!-- Logged In -->
+                                <!-- Logged In - FIXED: Added items-center to ensure vertical alignment -->
                                 <div id="loggedInUser" class="hidden flex items-center gap-4">
-                                    <div class="relative group">
+                                    <div class="relative group flex items-center">
                                         <button id="userAvatar" class="relative w-8 h-8 lg:w-10 lg:h-10 rounded-full overflow-hidden ring-2 ring-white/10 hover:ring-blue-500/50 transition-all duration-300 shadow-lg">
                                             <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-sm font-bold text-white">
                                                 <span id="avatarInitials">U</span>
@@ -83,7 +83,7 @@ class HeaderComponent {
                             </div>
                             
                             <!-- Menu Button -->
-                            <div class="relative">
+                            <div class="relative flex items-center">
                                 <button id="menuBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="mobileMenuDropdown" aria-label="Open menu" class="p-2 lg:p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 text-gray-300 hover:text-white transition-all duration-300 group backdrop-blur-sm">
                                     <svg class="w-6 h-6 transform group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
