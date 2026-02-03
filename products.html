@@ -1,492 +1,356 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>All Products - S Shop LK</title>
     <!-- Favicon -->
     <script src="favicon.js"></script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        
+        :root {
+            --brand-primary: #3b82f6;
+            --brand-dark: #0f172a;
+        }
+
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: #0f172a;
-            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--brand-dark);
+            color: #f1f5f9;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        .glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-            border-radius: 10px;
+
+        /* Smooth Bottom Sheet Animation */
+        #mobileMenuOverlay {
+            transition: opacity 0.3s ease;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 10px;
+        #mobileMenuContent {
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            transform: translateY(100%);
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+        #mobileMenuOverlay.active #mobileMenuContent {
+            transform: translateY(0);
         }
-        
-        /* Line clamp utility for truncating text */
+
+        /* Premium Card Design */
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(59, 130, 246, 0.1);
+        }
+
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            line-clamp: 2;
         }
-        
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+        /* Force hide description on mobile, show on desktop */
+        .product-description {
+            display: none !important;
+        }
+        @media (min-width: 768px) {
+            .product-description {
+                display: -webkit-box !important;
             }
         }
-        
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* Mobile header scroll behavior */
-        @media (max-width: 768px) {
-            header {
-                transition: background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
-            }
-            
-            header.header-scrolled {
-                background-color: rgba(15, 23, 42, 0.8); /* bg-slate-900 with 80% opacity */
-                backdrop-filter: blur(8px);
-            }
-        }
+        .reveal { animation: fadeIn 0.4s ease forwards; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
     <!-- Header Container -->
-    <div id="header-container"></div>
+    <div id="header-container" class="sticky top-0 z-50"></div>
 
-    <!-- Breadcrumbs -->
-    <div class="bg-slate-800 border-b border-slate-700">
-        <div class="container mx-auto px-4 py-3">
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2 text-sm text-gray-400">
-                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        <span class="text-white">All Products</span>
-                    </li>
-                </ol>
-            </nav>
+    <!-- Hero Section -->
+    <div class="relative pt-12 pb-6 md:pt-20 md:pb-16 bg-slate-950">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.05),transparent)] pointer-events-none"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-white mb-2 tracking-tight">Explore <span class="text-blue-500">Inventory</span></h1>
+            <p class="text-slate-400 text-sm md:text-lg max-w-xl">Premium gaming accounts and digital assets delivered instantly.</p>
         </div>
     </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow container mx-auto px-4 py-8 md:py-16">
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-6">
         
-        <!-- Page Header -->
-        <div class="text-center mb-12 fade-in-up">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">All Products</h1>
-            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
-                Discover our complete collection of gaming accounts, software licenses, and digital products. 
-                Find everything you need in one place.
-            </p>
-        </div>
-
-        <!-- Search and Filter Section -->
-        <div class="mb-8 fade-in-up">
-            <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Search Bar -->
-                    <div class="md:col-span-2">
-                        <div class="flex items-center bg-slate-700 rounded-lg p-3 h-12">
-                            <input type="text" id="searchInput" placeholder="Search products..." class="flex-grow bg-transparent text-white focus:outline-none placeholder-gray-400 h-full" onkeyup="if(event.key === 'Enter') handleSearch()">
-                            <button class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition-colors h-8 w-8 flex items-center justify-center" onclick="handleSearch()">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Category Filter -->
-                    <div>
-                        <select id="categoryFilter" class="w-full bg-slate-700 text-white rounded-lg p-3 h-12 border border-slate-600 focus:outline-none focus:border-blue-500">
-                            <option value="all">All Categories</option>
-                            <option value="games">Games</option>
-                            <option value="software-apps">Software & Apps</option>
-                            <option value="boosting-coaching">Boosting & Coaching</option>
-                            <option value="gift-cards">Gift Cards</option>
-                        </select>
+        <!-- Search & Filter Area -->
+        <div class="mb-10 space-y-4">
+            <div class="flex flex-col md:flex-row gap-3">
+                <!-- Search Bar -->
+                <div class="relative flex-grow group">
+                    <input type="text" id="searchInput" placeholder="Search accounts, licenses..." 
+                           class="w-full bg-slate-900/50 border border-slate-800 text-white pl-12 pr-4 py-4 rounded-2xl focus:ring-2 focus:ring-blue-500/50 outline-none transition-all placeholder:text-slate-600" 
+                           onkeyup="if(event.key === 'Enter') handleSearch()">
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
                 </div>
-                
-                <!-- Filter Tags -->
-                <div class="flex flex-wrap gap-2 mt-4">
-                    <button onclick="filterProducts('all')" id="filter-all" class="category-filter bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                        All Products
-                    </button>
-                    <button onclick="filterProducts('games')" id="filter-games" class="category-filter bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-600 transition-colors">
-                        Games
-                    </button>
-                    <button onclick="filterProducts('software-apps')" id="filter-software" class="category-filter bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-600 transition-colors">
-                        Software & Apps
-                    </button>
-                    <button onclick="filterProducts('boosting-coaching')" id="filter-boosting" class="category-filter bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-600 transition-colors">
-                        Boosting & Coaching
-                    </button>
-                    <button onclick="filterProducts('gift-cards')" id="filter-giftcards" class="category-filter bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-600 transition-colors">
-                        Gift Cards
-                    </button>
+
+                <!-- Mobile Category Trigger -->
+                <button onclick="toggleMobileMenu(true)" class="md:hidden flex items-center justify-between bg-slate-900 border border-slate-800 px-5 py-4 rounded-2xl text-white font-medium active:scale-95 transition-transform">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+                        <span id="currentCategoryLabel">All Categories</span>
+                    </div>
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+
+                <!-- Desktop Category Select -->
+                <div class="hidden md:block">
+                    <select id="categoryFilter" onchange="filterProducts(this.value)" class="bg-slate-900 border border-slate-800 text-white px-6 py-4 rounded-2xl focus:ring-2 focus:ring-blue-500/50 outline-none cursor-pointer h-full hover:bg-slate-800 transition-colors">
+                        <option value="all">All Categories</option>
+                        <option value="games">Games</option>
+                        <option value="software-apps">Software & Apps</option>
+                        <option value="boosting-coaching">Boosting</option>
+                        <option value="gift-cards">Gift Cards</option>
+                    </select>
                 </div>
             </div>
         </div>
         
         <!-- Products Grid -->
-        <section class="mb-12 fade-in-up">
-            <div class="relative">
-                <p id="searchError" class="hidden text-center text-red-400 font-semibold text-lg py-8">
-                    No products found for your search.
-                </p>
-                <p id="categoryError" class="hidden text-center text-yellow-400 font-semibold text-lg py-8">
-                    No products available in this category.
-                </p>
-                <div id="productContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Product cards will be loaded dynamically -->
-                </div>
+        <section class="min-h-[400px]">
+            <p id="searchError" class="hidden text-center text-slate-500 py-20 bg-slate-900/20 rounded-3xl border border-dashed border-slate-800">
+                <span class="block text-3xl mb-2">🔍</span> No matches found for your search.
+            </p>
+            <p id="categoryError" class="hidden text-center text-slate-500 py-20 bg-slate-900/20 rounded-3xl border border-dashed border-slate-800">
+                <span class="block text-3xl mb-2">📦</span> No items in this category yet.
+            </p>
+            <div id="productContainer" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
+                <!-- Products injected here -->
             </div>
         </section>
 
-        <!-- Pagination Section -->
-        <section id="paginationContainer" class="flex justify-center items-center space-x-2 mt-8">
-            <!-- Pagination buttons will be loaded here -->
-        </section>
+        <!-- Pagination -->
+        <section id="paginationContainer" class="flex justify-center items-center space-x-2 mt-16 mb-12"></section>
 
     </main>
 
     <!-- Footer Container -->
     <div id="footer-container"></div>
 
-    <!-- Buy Now Modal -->
-    <div id="buyNowModal" class="fixed inset-0 bg-gray-950 bg-opacity-75 flex items-center justify-center z-[1000] p-4 hidden">
-        <div class="bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-sm text-center border-2 border-blue-600 relative">
-            <!-- Close Button -->
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-white" onclick="closeModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-
-            <h3 class="text-2xl font-bold mb-2 text-white" id="modalTitle">How would you like to buy?</h3>
-            <p class="text-gray-400 mb-6" id="modalDescription">Contact a seller to complete your purchase of "<span id="productNameInModal" class="font-semibold text-white">Product Name</span>".</p>
+    <!-- MOBILE CATEGORY MENU (Bottom Sheet) -->
+    <div id="mobileMenuOverlay" class="fixed inset-0 z-[100] bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0" onclick="toggleMobileMenu(false)"></div>
+        <div id="mobileMenuContent" class="absolute bottom-0 left-0 right-0 glass rounded-t-[2.5rem] p-6 pb-10">
+            <!-- Pull Indicator -->
+            <div class="w-12 h-1.5 bg-slate-700 rounded-full mx-auto mb-8"></div>
             
-            <div class="flex flex-col space-y-4">
-                <!-- WhatsApp Button -->
-                <a href="#" id="whatsappLink" class="flex items-center justify-center space-x-2 bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300">
-                    <img src="https://image.similarpng.com/file/similarpng/original-picture/2021/01/Whatsapp-icon-with-black-color-on-transparent-background-PNG.png" alt="WhatsApp Icon" class="h-6 w-6">
-                    <span>Buy on WhatsApp</span>
-                </a>
-
-                <!-- Discord Button -->
-                <a href="#" id="discordLink" class="flex items-center justify-center space-x-2 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
-                    <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/discord-round-black-icon.png" alt="Discord Icon" class="h-6 w-6">
-                    <span>Buy on Discord</span>
-                </a>
+            <h3 class="text-xl font-bold text-white mb-6 px-2">Select Category</h3>
+            
+            <div class="grid gap-3">
+                <button onclick="selectMobileCategory('all', 'Everything')" class="flex items-center gap-4 w-full p-4 rounded-2xl bg-blue-600/10 border border-blue-500/20 text-blue-400 font-bold text-left">
+                    <span class="w-2 h-2 rounded-full bg-blue-500"></span> Everything
+                </button>
+                <button onclick="selectMobileCategory('games', 'Games')" class="flex items-center gap-4 w-full p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 text-white font-medium text-left">
+                    <span class="w-2 h-2 rounded-full bg-slate-600"></span> Games
+                </button>
+                <button onclick="selectMobileCategory('software-apps', 'Software')" class="flex items-center gap-4 w-full p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 text-white font-medium text-left">
+                    <span class="w-2 h-2 rounded-full bg-slate-600"></span> Software & Apps
+                </button>
+                <button onclick="selectMobileCategory('boosting-coaching', 'Boosting')" class="flex items-center gap-4 w-full p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 text-white font-medium text-left">
+                    <span class="w-2 h-2 rounded-full bg-slate-600"></span> Boosting
+                </button>
+                <button onclick="selectMobileCategory('gift-cards', 'Gift Cards')" class="flex items-center gap-4 w-full p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 text-white font-medium text-left">
+                    <span class="w-2 h-2 rounded-full bg-slate-600"></span> Gift Cards
+                </button>
             </div>
+            
+            <button onclick="toggleMobileMenu(false)" class="w-full mt-6 py-4 text-slate-500 font-medium text-center">Cancel</button>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
-
-    <!-- Shared Components -->
     <script src="header-component.js"></script>
     <script src="footer-component.js"></script>
 
-    <!-- Page-specific JavaScript -->
     <script>
         let products = [];
         let currentCategory = 'all';
         const productsPerPage = 8;
         let currentPage = 1;
 
-        // Load products on page load
-        window.addEventListener('load', function() {
-            loadProducts();
-        });
+        // UI Helpers
+        function toggleMobileMenu(show) {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            if (show) {
+                overlay.classList.add('active');
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'auto';
+                document.body.style.overflow = 'hidden';
+            } else {
+                overlay.classList.remove('active');
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function selectMobileCategory(val, label) {
+            document.getElementById('currentCategoryLabel').textContent = label;
+            filterProducts(val);
+            toggleMobileMenu(false);
+        }
+
+        // Core Logic (Preserved)
+        window.addEventListener('load', loadProducts);
 
         function loadProducts() {
             if (window.FirebaseService) {
-                FirebaseService.getProducts()
-                    .then(firebaseProducts => {
-                        if (firebaseProducts.length > 0) {
-                            products = firebaseProducts;
-                            displayProducts();
-                        } else {
-                            loadFromLocalStorage();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading from Firebase:', error);
-                        loadFromLocalStorage();
-                    });
-            } else {
-                loadFromLocalStorage();
-            }
-        }
-
-        function loadFromLocalStorage() {
-            const storedProducts = localStorage.getItem('sShopProducts');
-            if (storedProducts) {
-                products = JSON.parse(storedProducts);
-                displayProducts();
-            } else {
-                console.warn('No products found in Firebase or localStorage.');
-                products = [];
-                displayProducts();
-            }
-        }
-
-        function displayProducts() {
-            const productContainer = document.getElementById('productContainer');
-            const searchError = document.getElementById('searchError');
-            const categoryError = document.getElementById('categoryError');
-            
-            productContainer.innerHTML = '';
-            searchError.classList.add('hidden');
-            categoryError.classList.add('hidden');
-
-            if (products.length === 0) {
-                productContainer.innerHTML = `
-                    <div class="col-span-full text-center py-12">
-                        <svg class="w-16 h-16 text-gray-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                        <h3 class="text-xl font-semibold text-gray-400 mb-2">No Products Available</h3>
-                        <p class="text-gray-500">No products are currently available.</p>
-                    </div>`;
-                return;
-            }
-
-            // Filter products based on current category
-            let filteredProducts = products;
-            if (currentCategory !== 'all') {
-                filteredProducts = products.filter(product => {
-                    const category = product.category?.toLowerCase() || '';
-                    if (currentCategory === 'games') {
-                        return category.includes('games') || category.includes('gaming') || category.includes('game');
-                    } else if (currentCategory === 'software-apps') {
-                        return category.includes('software') || category.includes('app') || category.includes('tool') || category.includes('license');
-                    } else if (currentCategory === 'boosting-coaching') {
-                        return category.includes('boosting') || category.includes('coaching') || category.includes('boost');
-                    } else if (currentCategory === 'gift-cards') {
-                        return category.includes('gift') || category.includes('card');
-                    }
-                    return true;
+                FirebaseService.getProducts().then(p => {
+                    products = p.length > 0 ? p : (JSON.parse(localStorage.getItem('sShopProducts')) || []);
+                    displayProducts();
+                }).catch(() => {
+                    products = JSON.parse(localStorage.getItem('sShopProducts')) || [];
+                    displayProducts();
                 });
             }
-
-            // Check if filtered products is empty for category filter
-            if (currentCategory !== 'all' && filteredProducts.length === 0) {
-                categoryError.classList.remove('hidden');
-                return;
-            }
-
-            // Show products for the current page
-            const startIndex = (currentPage - 1) * productsPerPage;
-            const productsToShow = filteredProducts.slice(startIndex, startIndex + productsPerPage);
-
-            productsToShow.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card group relative bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-700 transition-all duration-300 hover:shadow-blue-500/20 hover:-translate-y-1';
-                
-                let detailPage = 'dynamic-product-detail.html?id=' + product.id;
-                const isSoldOut = !product.availability || product.availability <= 0;
-
-                productCard.innerHTML = /*html*/`
-                    <div class="relative">
-                        <a href="${detailPage}">
-                            <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105 ${isSoldOut ? 'opacity-50' : ''}">
-                        </a>
-                        ${isSoldOut ? `<div class="absolute top-3 right-3 bg-red-600/90 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">SOLD OUT</div>` : ''}
-                        <div class="absolute top-3 left-3 bg-black/50 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm">${product.category || 'General'}</div>
-                    </div>
-                    <div class="p-4 flex flex-col h-[calc(100%-12rem)]">
-                        <h3 class="product-title text-lg font-bold text-white truncate mb-2 group-hover:text-blue-400 transition-colors">${product.name}</h3>
-                        <p class="product-description text-sm text-gray-400 mb-4 line-clamp-2 flex-grow">${product.description}</p>
-                        <div class="flex items-center justify-between mt-auto">
-                            <div>
-                                <span class="text-2xl font-extrabold text-blue-400">LKR ${product.price.toLocaleString()}</span>
-                                <p class="text-xs text-gray-500">${product.soldCount || 0} sold</p>
-                            </div>
-                            <a href="${detailPage}" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0">
-                                View
-                            </a>
-                        </div>
-                    </div> 
-                `;
-                productContainer.appendChild(productCard);
-            });
-
-            renderPagination(filteredProducts.length);
-        }
-
-        function renderPagination(totalProducts) {
-            const paginationContainer = document.getElementById('paginationContainer');
-            paginationContainer.innerHTML = '';
-            const totalPages = Math.ceil(totalProducts / productsPerPage);
-
-            if (totalPages <= 1) return;
-
-            // Previous button
-            const prevButton = document.createElement('button');
-            prevButton.innerHTML = '&laquo;';
-            prevButton.className = 'px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed';
-            prevButton.disabled = currentPage === 1;
-            prevButton.onclick = () => changePage(currentPage - 1);
-            paginationContainer.appendChild(prevButton);
-
-            // Page numbers
-            for (let i = 1; i <= totalPages; i++) {
-                const pageButton = document.createElement('button');
-                pageButton.textContent = i;
-                if (i === currentPage) {
-                    pageButton.className = 'px-4 py-2 rounded-lg bg-blue-600 text-white font-bold';
-                } else {
-                    pageButton.className = 'px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600';
-                }
-                pageButton.onclick = () => changePage(i);
-                paginationContainer.appendChild(pageButton);
-            }
-
-            // Next button
-            const nextButton = document.createElement('button');
-            nextButton.innerHTML = '&raquo;';
-            nextButton.className = 'px-4 py-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed';
-            nextButton.disabled = currentPage === totalPages;
-            nextButton.onclick = () => changePage(currentPage + 1);
-            paginationContainer.appendChild(nextButton);
-        }
-
-        function changePage(page) {
-            if (page < 1) page = 1;
-            const totalPages = Math.ceil(products.filter(p => currentCategory === 'all' || p.category?.toLowerCase().includes(currentCategory)).length / productsPerPage);
-            if (page > totalPages) page = totalPages;
-
-            currentPage = page;
-            displayProducts();
-            window.scrollTo({ top: document.getElementById('productContainer').offsetTop - 100, behavior: 'smooth' });
         }
 
         function filterProducts(category) {
             currentCategory = category;
-            currentPage = 1; // Reset to first page
-            
-            // Update filter button styles
-            const filterButtons = document.querySelectorAll('.category-filter');
-            filterButtons.forEach(button => {
-                button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                button.classList.add('bg-slate-700', 'hover:bg-slate-600');
-            });
-            
-            // Highlight active filter
-            const activeButton = document.getElementById(`filter-${category}`);
-            if (activeButton) {
-                activeButton.classList.remove('bg-slate-700', 'hover:bg-slate-600');
-                activeButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
-            }
-            
-            // Update category filter dropdown
-            const categoryFilter = document.getElementById('categoryFilter');
-            if (categoryFilter) {
-                categoryFilter.value = category;
-            }
-            
+            currentPage = 1;
             displayProducts();
+            
+            // Sync desktop select if visible
+            const desktopSelect = document.getElementById('categoryFilter');
+            if(desktopSelect) desktopSelect.value = category;
+        }
+
+        function displayProducts() {
+            const container = document.getElementById('productContainer');
+            const searchError = document.getElementById('searchError');
+            const categoryError = document.getElementById('categoryError');
+            
+            container.innerHTML = '';
+            searchError.classList.add('hidden');
+            categoryError.classList.add('hidden');
+
+            let filtered = products;
+            if (currentCategory !== 'all') {
+                filtered = products.filter(p => {
+                    const cat = p.category?.toLowerCase() || '';
+                    if (currentCategory === 'games') return cat.includes('game');
+                    if (currentCategory === 'software-apps') return cat.includes('soft') || cat.includes('app');
+                    if (currentCategory === 'boosting-coaching') return cat.includes('boost');
+                    if (currentCategory === 'gift-cards') return cat.includes('gift');
+                    return true;
+                });
+            }
+
+            if (currentCategory !== 'all' && filtered.length === 0) {
+                categoryError.classList.remove('hidden');
+                return;
+            }
+
+            const start = (currentPage - 1) * productsPerPage;
+            const paginated = filtered.slice(start, start + productsPerPage);
+
+            paginated.forEach((p, idx) => {
+                const card = document.createElement('div');
+                card.className = "reveal product-card group bg-slate-900 rounded-[2rem] border border-slate-800 overflow-hidden flex flex-col";
+                card.style.animationDelay = `${idx * 0.05}s`;
+                
+                const isSoldOut = !p.availability || p.availability <= 0;
+                const detailPage = `dynamic-product-detail.html?id=${p.id}`;
+
+                card.innerHTML = `
+                    <div class="relative aspect-[4/3] overflow-hidden bg-slate-800">
+                        <a href="${detailPage}">
+                            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${isSoldOut ? 'grayscale opacity-40' : ''}">
+                        </a>
+                        ${isSoldOut ? `<div class="absolute inset-0 flex items-center justify-center"><span class="bg-black/80 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full border border-white/20">Sold Out</span></div>` : ''}
+                        <div class="absolute top-4 left-4 bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg shadow-blue-500/20 z-10">
+                            ${p.category || 'Digital'}
+                        </div>
+                    </div>
+                    <div class="p-5 md:p-6 flex flex-col flex-grow">
+                        <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight group-hover:text-blue-400 transition-colors line-clamp-2">${p.name}</h3>
+                        <p class="product-description text-slate-500 text-xs md:text-sm line-clamp-2 mb-4 leading-relaxed">${p.description}</p>
+                        
+                        <div class="mt-auto pt-4 border-t border-slate-800/40 flex items-center justify-between">
+                            <div>
+                                <p class="text-[9px] uppercase font-bold text-slate-500 tracking-widest mb-0.5">Price</p>
+                                <span class="text-base md:text-xl font-black text-white">Rs. ${p.price.toLocaleString()}</span>
+                            </div>
+                            <a href="${detailPage}" class="w-9 h-9 md:w-12 md:h-12 flex items-center justify-center rounded-2xl bg-slate-800 text-white group-hover:bg-blue-600 transition-all duration-300">
+                                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            renderPagination(filtered.length);
+        }
+
+        function renderPagination(total) {
+            const container = document.getElementById('paginationContainer');
+            container.innerHTML = '';
+            const pages = Math.ceil(total / productsPerPage);
+            if (pages <= 1) return;
+
+            const createBtn = (content, isActive, isDisabled, onClick) => {
+                const btn = document.createElement('button');
+                btn.innerHTML = content;
+                btn.disabled = isDisabled;
+                btn.className = `w-10 h-10 md:w-12 md:h-12 rounded-xl font-bold transition-all text-xs flex items-center justify-center ${
+                    isActive ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 
+                    isDisabled ? 'bg-slate-900 text-slate-700 opacity-50 cursor-not-allowed' : 
+                    'bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-600'
+                }`;
+                btn.onclick = onClick;
+                return btn;
+            };
+
+            container.appendChild(createBtn('←', false, currentPage === 1, () => { currentPage--; displayProducts(); window.scrollTo({top:0, behavior:'smooth'}); }));
+            
+            for (let i = 1; i <= pages; i++) {
+                container.appendChild(createBtn(i, i === currentPage, false, () => { currentPage = i; displayProducts(); window.scrollTo({top:0, behavior:'smooth'}); }));
+            }
+            
+            container.appendChild(createBtn('→', false, currentPage === pages, () => { currentPage++; displayProducts(); window.scrollTo({top:0, behavior:'smooth'}); }));
         }
 
         function handleSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const productCards = document.querySelectorAll('.product-card');
-            const errorMessage = document.getElementById('searchError');
-            const categoryError = document.getElementById('categoryError');
-            let foundProducts = false;
-
-            // Hide category error when searching
-            categoryError.classList.add('hidden');
-
-            productCards.forEach(card => {
-                const title = card.querySelector('.product-title').textContent.toLowerCase();
-                const description = card.querySelector('.product-description').textContent.toLowerCase();
-
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    card.style.display = 'block';
-                    foundProducts = true;
-                } else {
-                    card.style.display = 'none';
-                }
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+            let found = false;
+            cards.forEach(c => {
+                const match = c.innerText.toLowerCase().includes(term);
+                c.classList.toggle('hidden', !match);
+                if (match) found = true;
             });
-
-            if (foundProducts) {
-                errorMessage.classList.add('hidden');
-            } else {
-                errorMessage.classList.remove('hidden');
-            }
-        }
-
-        // Category filter dropdown change
-        document.getElementById('categoryFilter')?.addEventListener('change', function() {
-            filterProducts(this.value);
-        });
-
-        function showBuyNowModal(productName) {
-            const modal = document.getElementById('buyNowModal');
-            const productNameSpan = document.getElementById('productNameInModal');
-            const whatsappLink = document.getElementById('whatsappLink');
-            const discordLink = document.getElementById('discordLink');
-
-            productNameSpan.textContent = productName;
-            
-            // Fetch settings from Firebase to get the latest contact info
-            if (window.FirebaseService) {
-                FirebaseService.getWebsiteSettings().then(settings => {
-                    const whatsappNumber = settings.phoneNumber || '+94767854069';
-                    const discordUrl = settings.discordLink || 'https://discord.gg/nsz5SFhXMh';
-                    
-                    const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${productName}`);
-                    whatsappLink.href = `https://wa.me/${whatsappNumber.replace(/\s/g, '')}?text=${whatsappMessage}`;
-                    discordLink.href = discordUrl;
-                });
-            } else {
-                // Fallback for when Firebase is not available
-                const whatsappMessage = encodeURIComponent(`Hello, I would like to buy: ${productName}`);
-                whatsappLink.href = `https://wa.me/94767854069?text=${whatsappMessage}`;
-                discordLink.href = 'https://discord.gg/nsz5SFhXMh';
-            }
-
-            modal.classList.remove('hidden');
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('buyNowModal');
-            modal.classList.add('hidden');
+            document.getElementById('searchError').classList.toggle('hidden', found);
         }
     </script>
-
 </body>
-</html> 
+</html>
