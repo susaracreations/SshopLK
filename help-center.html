@@ -7,27 +7,101 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
     <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
+    <script src="favicon.js"></script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.15);
+        }
+
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #0f172a;
+            background-color: var(--slate-900);
             color: #e2e8f0;
+            scroll-behavior: smooth;
         }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            background: rgba(30, 41, 59, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .summary-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: var(--accent-glow);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .faq-item {
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        details summary::-webkit-details-marker { display: none; }
         
-        /* Mobile header scroll behavior */
-        @media (max-width: 768px) {
-            header {
-                transition: background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
-            }
-            
-            header.header-scrolled {
-                background-color: rgba(15, 23, 42, 0.8); /* bg-slate-900 with 80% opacity */
-                backdrop-filter: blur(8px);
-            }
+        details[open] summary svg {
+            transform: rotate(180deg);
         }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        @media (max-width: 1024px) {
+            .desktop-sidebar { display: none; }
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--slate-900); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -35,151 +109,167 @@
     <!-- Header Container -->
     <div id="header-container"></div>
 
-    <!-- Breadcrumbs -->
-    <div class="bg-slate-800 border-b border-slate-700">
-        <div class="container mx-auto px-4 py-3">
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2 text-sm text-gray-400">
-                    <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        <span class="text-white">Help Center</span>
-                    </li>
-                </ol>
-            </nav>
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-16 px-4 overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
+            <div class="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-sky-500/10 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-indigo-500/10 rounded-full blur-[100px]"></div>
         </div>
-    </div>
 
-    <!-- Main Content -->
-    <main class="flex-grow container mx-auto px-4 py-8 md:py-16">
-        <div class="max-w-4xl mx-auto">
-            <!-- Page Header -->
-            <div class="text-center mb-12">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Help Center</h1>
-                <p class="text-xl text-gray-300">Find answers to common questions and get support</p>
-            </div>
+        <div class="container mx-auto max-w-6xl relative z-10">
+            <nav class="flex items-center gap-2 mb-8 text-xs font-medium text-slate-500 uppercase tracking-widest">
+                <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                <span>/</span>
+                <span class="text-sky-400">Support Center</span>
+            </nav>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-none">How can we <span class="gradient-text">help?</span></h1>
+            <p class="text-slate-400 max-w-2xl text-lg leading-relaxed">
+                Find quick answers to common questions about accounts, payments, and delivery. If you can't find what you're looking for, our human support team is just a click away.
+            </p>
+        </div>
+    </section>
 
-            <!-- Quick Contact Section -->
-            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 mb-8 text-center">
-                <h2 class="text-2xl font-bold text-white mb-4">Need Immediate Help?</h2>
-                <p class="text-blue-100 mb-6">Our support team is available 24/7 to assist you</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a id="help-whatsapp-link" href="https://wa.me/94767854069" class="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors flex items-center justify-center space-x-2">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp" class="w-5 h-5">
-                        <span>WhatsApp Support</span>
-                    </a>
-                    <a id="help-discord-link" href="https://discord.gg/nsz5SFhXMh" class="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4945/4945973.png" alt="Discord" class="w-5 h-5">
-                        <span>Discord Community</span>
-                    </a>
+    <!-- Main Content Layout -->
+    <main class="flex-grow container mx-auto max-w-6xl px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+            
+            <!-- Sidebar -->
+            <aside class="lg:col-span-3 desktop-sidebar">
+                <div class="sticky top-32 space-y-8">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Categories</h3>
+                        <nav class="flex flex-col space-y-5">
+                            <a href="#orders" class="nav-link text-sm hover:text-white">Orders & Delivery</a>
+                            <a href="#payments" class="nav-link text-sm hover:text-white">Payments & Billing</a>
+                            <a href="#accounts" class="nav-link text-sm hover:text-white">Account Security</a>
+                            <a href="#contact" class="nav-link text-sm hover:text-white">Direct Support</a>
+                        </nav>
+                    </div>
                 </div>
-            </div>
+            </aside>
 
-            <!-- FAQ Section -->
-            <div class="bg-slate-800 rounded-xl p-8 border border-slate-700 space-y-8">
-                <h2 class="text-3xl font-bold text-white mb-8 text-center">Frequently Asked Questions</h2>
+            <!-- Help Content -->
+            <div class="lg:col-span-9 space-y-20 pb-24">
                 
-                <div class="space-y-6">
-                    <div class="border border-slate-700 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-white mb-3">How do I make a purchase?</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            Browse our products, select the item you want, and click "Buy Now". You'll be redirected to contact our support team via WhatsApp or Discord to complete your purchase securely.
-                        </p>
-                    </div>
-
-                    <div class="border border-slate-700 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-white mb-3">What payment methods do you accept?</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            We accept various payment methods including bank transfers, mobile payments, and digital wallets. Payment details will be provided during the purchase process.
-                        </p>
-                    </div>
-
-                    <div class="border border-slate-700 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-white mb-3">How long does delivery take?</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            Digital products are typically delivered instantly or within 24 hours. Physical items may take 3-7 business days depending on your location.
-                        </p>
-                    </div>
-
-                    <div class="border border-slate-700 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-white mb-3">What if I have issues with my purchase?</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            Contact our support team immediately via WhatsApp or Discord. We provide 14-day insurance on all purchases and will assist you with any issues.
-                        </p>
-                    </div>
-
-                    <div class="border border-slate-700 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-white mb-3">Are your products legitimate?</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            Yes, all our products are legitimate and sourced from authorized distributors. We are a trusted seller with over 1000 successful sales and provide insurance on all purchases.
-                        </p>
-                    </div>
-
-                    <div class="border border-slate-700 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-white mb-3">Can I get a refund?</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            Refunds are handled on a case-by-case basis. If you experience issues with your purchase, contact our support team within 14 days for assistance.
-                        </p>
-                    </div>
-
-                    <div class="border border-slate-700 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-white mb-3">How do I create an account?</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            Click "Sign In" in the header, then "Sign Up" to create your account. You can browse products without an account, but creating one allows you to track orders and save preferences.
-                        </p>
-                    </div>
-
-                    <div class="border border-slate-700 rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-white mb-3">What regions do you serve?</h3>
-                        <p class="text-gray-300 leading-relaxed">
-                            We primarily serve Sri Lanka and surrounding regions. Some products may have regional restrictions, which will be clearly indicated on the product page.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="bg-slate-800 rounded-xl p-8 border border-slate-700 mt-8">
-                <h2 class="text-2xl font-bold text-white mb-6 text-center">Contact Information</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="text-center">
-                            <div class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp" class="w-8 h-8">
+                <!-- Orders Section -->
+                <section id="orders" class="scroll-mt-32">
+                    <div class="flex flex-col gap-4 mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="summary-badge">Logistics</span>
+                            <span class="text-slate-600 font-mono text-xs">HELP_01</span>
                         </div>
-                        <h3 class="text-lg font-semibold text-white mb-2">WhatsApp Support</h3>
-                        <p class="text-gray-300 mb-3">24/7 Customer Support</p>
-                            <a id="contact-whatsapp-link" href="https://wa.me/94767854069" class="text-green-400 hover:text-green-300 font-semibold">+94 767 854 069</a>
+                        <h2 class="text-3xl font-bold text-white">Orders & Delivery</h2>
                     </div>
-                    <div class="text-center">
-                        <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <img src="https://cdn-icons-png.flaticon.com/512/4945/4945973.png" alt="Discord" class="w-8 h-8">
-                        </div>
-                        <h3 class="text-lg font-semibold text-white mb-2">Discord Community</h3>
-                        <p class="text-gray-300 mb-3">Join our community</p>
-                            <a id="contact-discord-link" href="https://discord.gg/nsz5SFhXMh" class="text-blue-400 hover:text-blue-300 font-semibold">Join Discord Server</a>
+                    <div class="glass-card rounded-3xl divide-y divide-white/5 overflow-hidden">
+                        <details class="faq-item group" open>
+                            <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                                <span class="text-white font-medium">How long does delivery take?</span>
+                                <svg class="w-5 h-5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="px-6 pb-6 text-slate-400 text-sm leading-relaxed">
+                                Digital items are typically delivered within 5-30 minutes after payment verification. Some specialized gaming accounts may take up to 2 hours for security auditing.
+                            </div>
+                        </details>
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                                <span class="text-white font-medium">Where do I find my credentials?</span>
+                                <svg class="w-5 h-5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="px-6 pb-6 text-slate-400 text-sm leading-relaxed">
+                                Your account details are sent to the email address provided during checkout. Please check your "Spam" or "Promotions" folder if you don't see it in your Inbox.
+                            </div>
+                        </details>
                     </div>
-                </div>
-            </div>
+                </section>
 
-            <!-- Additional Resources -->
-            <div class="bg-slate-800 rounded-xl p-8 border border-slate-700 mt-8">
-                <h2 class="text-2xl font-bold text-white mb-6 text-center">Additional Resources</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <a href="terms-of-service.html" class="bg-slate-700 rounded-lg p-4 text-center hover:bg-slate-600 transition-colors">
-                        <h3 class="text-lg font-semibold text-white mb-2">Terms of Service</h3>
-                        <p class="text-gray-400 text-sm">Read our terms and conditions</p>
-                    </a>
-                    <a href="privacy-policy.html" class="bg-slate-700 rounded-lg p-4 text-center hover:bg-slate-600 transition-colors">
-                        <h3 class="text-lg font-semibold text-white mb-2">Privacy Policy</h3>
-                        <p class="text-gray-400 text-sm">Learn about data protection</p>
-                    </a>
-                    <a href="about-us.html" class="bg-slate-700 rounded-lg p-4 text-center hover:bg-slate-600 transition-colors">
-                        <h3 class="text-lg font-semibold text-white mb-2">About Us</h3>
-                        <p class="text-gray-400 text-sm">Learn more about S Shop LK</p>
-                    </a>
-                </div>
+                <!-- Payments Section -->
+                <section id="payments" class="scroll-mt-32">
+                    <div class="flex flex-col gap-4 mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="summary-badge">Finance</span>
+                            <span class="text-slate-600 font-mono text-xs">HELP_02</span>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white">Payments & Billing</h2>
+                    </div>
+                    <div class="glass-card rounded-3xl divide-y divide-white/5 overflow-hidden">
+                        <details class="faq-item group" open>
+                            <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                                <span class="text-white font-medium">Which payment methods are accepted?</span>
+                                <svg class="w-5 h-5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="px-6 pb-6 text-slate-400 text-sm leading-relaxed">
+                                <p class="mb-3">To keep our prices competitive, we exclusively accept the following manual payment methods:</p>
+                                <ul class="space-y-2 list-disc list-inside">
+                                    <li><span class="text-sky-400 font-bold">Bank Transfer:</span> Standard bank deposit or online transfer (LankaPay).</li>
+                                    <li><span class="text-sky-400 font-bold">eZ Cash:</span> Mobile wallet transfer via Dialog.</li>
+                                </ul>
+                                <p class="mt-3 text-xs text-slate-500 italic">Note: After transfer, you must send a clear screenshot of the receipt to our WhatsApp support for verification.</p>
+                            </div>
+                        </details>
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                                <span class="text-white font-medium">How do I verify my Bank/eZ Cash transfer?</span>
+                                <svg class="w-5 h-5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="px-6 pb-6 text-slate-400 text-sm leading-relaxed">
+                                Once you have made the payment, please contact our support desk on WhatsApp with your Order ID and a screenshot of the payment receipt. Our team will verify the transaction and release your digital product instantly.
+                            </div>
+                        </details>
+                    </div>
+                </section>
+
+                <!-- Accounts Section -->
+                <section id="accounts" class="scroll-mt-32">
+                    <div class="flex flex-col gap-4 mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="summary-badge">Identity</span>
+                            <span class="text-slate-600 font-mono text-xs">HELP_03</span>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white">Account Security</h2>
+                    </div>
+                    <div class="glass-card rounded-3xl divide-y divide-white/5 overflow-hidden">
+                        <details class="faq-item group">
+                            <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                                <span class="text-white font-medium">Can I change the email on my new account?</span>
+                                <svg class="w-5 h-5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="px-6 pb-6 text-slate-400 text-sm leading-relaxed">
+                                For most full-access accounts, yes. However, we recommend waiting 24-48 hours after receiving the credentials before making major security changes to avoid triggering platform security flags.
+                            </div>
+                        </details>
+                    </div>
+                </section>
+
+                <!-- Support Section -->
+                <section id="contact" class="scroll-mt-32">
+                    <div class="flex flex-col gap-4 mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="summary-badge">Escalation</span>
+                            <span class="text-slate-600 font-mono text-xs">HELP_05</span>
+                        </div>
+                        <h2 class="text-3xl font-bold text-white">Direct Support Channels</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <a id="help-whatsapp-link" href="#" target="_blank" class="group p-8 glass-card rounded-3xl flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-green-500/20 transition-all duration-500">
+                                <svg class="w-8 h-8 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2">WhatsApp Verification</h4>
+                            <p class="text-slate-400 text-sm mb-6">Send your payment screenshots here for instant manual verification.</p>
+                            <span class="mt-auto py-2 px-6 bg-green-500/10 text-green-400 rounded-full text-xs font-bold border border-green-500/20 group-hover:bg-green-500 group-hover:text-white transition-all">Verify Payment</span>
+                        </a>
+
+                        <a id="help-discord-link" href="#" target="_blank" class="group p-8 glass-card rounded-3xl flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-indigo-500/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-indigo-500/20 transition-all duration-500">
+                                <svg class="w-8 h-8 text-indigo-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.125-.094.249-.192.37-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.419-2.157 2.419z"/></svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2">Community Support</h4>
+                            <p class="text-slate-400 text-sm mb-6">Join our server for announcements and community-driven help.</p>
+                            <span class="mt-auto py-2 px-6 bg-indigo-500/10 text-indigo-400 rounded-full text-xs font-bold border border-indigo-500/20 group-hover:bg-indigo-500 group-hover:text-white transition-all">Join Server</span>
+                        </a>
+                    </div>
+                </section>
+
             </div>
         </div>
     </main>
@@ -198,8 +288,28 @@
     <script src="footer-component.js"></script>
 
     <script>
+        // Scroll spy for sidebar
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        sections.forEach(section => observer.observe(section));
+
+        // Firebase Data Integration
         document.addEventListener('DOMContentLoaded', function() {
-            // Load contact info from Firebase settings
             const checkFirebase = () => {
                 if (window.FirebaseService) {
                     window.FirebaseService.getWebsiteSettings().then(settings => {
@@ -207,11 +317,9 @@
                             const whatsappNumber = settings.phoneNumber || '+94767854069';
                             const discordUrl = settings.discordLink || 'https://discord.gg/nsz5SFhXMh';
 
-                            document.getElementById('help-whatsapp-link').href = `https://wa.me/${whatsappNumber.replace(/\s/g, '')}`;
+                            const cleanWa = whatsappNumber.replace(/\s/g, '');
+                            document.getElementById('help-whatsapp-link').href = `https://wa.me/${cleanWa}`;
                             document.getElementById('help-discord-link').href = discordUrl;
-                            document.getElementById('contact-whatsapp-link').href = `https://wa.me/${whatsappNumber.replace(/\s/g, '')}`;
-                            document.getElementById('contact-whatsapp-link').textContent = whatsappNumber;
-                            document.getElementById('contact-discord-link').href = discordUrl;
                         }
                     });
                 } else {
@@ -222,4 +330,4 @@
         });
     </script>
 </body>
-</html> 
+</html>

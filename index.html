@@ -144,33 +144,6 @@
     <!-- Replace header -->
     <div id="header-container"></div>
 
-    <!-- Chat Widget -->
-    <div id="chat-widget" class="fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-6 z-50 w-full sm:w-96 h-full sm:h-[500px] bg-slate-900 sm:rounded-2xl shadow-2xl border-0 sm:border border-slate-700 transform transition-all duration-300 translate-y-10 opacity-0 pointer-events-none flex flex-col overflow-hidden">
-        <div class="bg-slate-800 p-3 flex justify-between items-center border-b border-slate-700">
-            <div class="flex items-center space-x-2">
-                <div class="relative">
-                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                </div>
-                <h3 class="text-white font-bold text-sm">Live Support</h3>
-            </div>
-            <button onclick="toggleChatWidget()" class="text-slate-400 hover:text-white transition-colors">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-        <iframe id="chat-iframe" class="flex-1 w-full h-full bg-slate-900" frameborder="0"></iframe>
-    </div>
-
-    <!-- Chat Toggle Button -->
-    <div class="fixed bottom-6 right-6 z-50">
-        <button onclick="toggleChatWidget()" id="chat-launcher" aria-label="Chat with Admin" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 flex items-center justify-center">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-        </button>
-    </div>
-
     <!-- Hero Section -->
     <section id="heroSection" aria-labelledby="hero-heading" class="animated-hero-bg text-white py-16 md:py-28 relative overflow-hidden">
         <!-- Background Image Overlay -->
@@ -565,7 +538,7 @@
             // Ctrl + Alt + S (Windows/Linux) or Cmd + Alt + S (Mac)
             if ((event.ctrlKey || event.metaKey) && event.altKey && event.key === 's') {
                 event.preventDefault(); // Prevent default browser action
-                window.location.href = 'admin.html';
+                window.location.href = 'admin-login.html';
             }
         });
     }
@@ -1141,22 +1114,6 @@
         }
         }
 
-    function toggleChatWidget() {
-        const widget = document.getElementById('chat-widget');
-        const iframe = document.getElementById('chat-iframe');
-        
-        if (widget.classList.contains('opacity-0')) {
-            // Open
-            widget.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
-            if (!iframe.src) {
-                iframe.src = 'chat-simple.html';
-            }
-        } else {
-            // Close
-            widget.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
-        }
-    }
-
     // Retry mechanism with exponential backoff
     async function retryFirebaseCall(apiCall, maxRetries = 3, baseDelay = 1000) {
         for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -1185,6 +1142,7 @@
     }
 
     </script>
+    <script src="chat-widget.js"></script>
 
 </body>
 </html>
