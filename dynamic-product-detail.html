@@ -11,50 +11,12 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="font-loader.js"></script>
+    <script src="breadcrumb.js"></script>
     <style>
-        
         body {
             background-color: #0f172a;
             color: #f8fafc;
             -webkit-font-smoothing: antialiased;
-        }
-
-        /* Updated Breadcrumb Styling to match image_31ffd9.png */
-        .breadcrumb-bar {
-            background-color: #161e2d;
-            border-bottom: 1px solid #1e293b;
-            width: 100%;
-            padding: 1rem 0;
-            margin-bottom: 2.5rem;
-        }
-
-        .breadcrumb-container {
-            max-width: 80rem;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.875rem;
-        }
-
-        .breadcrumb-link {
-            color: #94a3b8;
-            transition: color 0.2s;
-        }
-
-        .breadcrumb-link:hover {
-            color: #f8fafc;
-        }
-
-        .breadcrumb-separator {
-            color: #475569;
-            font-size: 0.75rem;
-        }
-
-        .breadcrumb-current {
-            color: #f8fafc;
-            font-weight: 600;
         }
 
         /* Product Gallery Fix */
@@ -135,23 +97,8 @@
 
     <div id="header-container"></div>
 
-    <!-- New Breadcrumb Bar (Matches Reference Image) -->
-    <div class="breadcrumb-bar">
-        <nav class="breadcrumb-container">
-            <a href="index.html" class="breadcrumb-link">Home</a>
-            <span class="breadcrumb-separator">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </span>
-            <a id="breadcrumb-category" href="#" class="breadcrumb-link">Category</a>
-            <span class="breadcrumb-separator">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </span>
-            <span class="breadcrumb-current" id="breadcrumb-product-name">Product</span>
-        </nav>
-    </div>
-
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 md:px-8 pb-10 flex-grow max-w-7xl flex flex-col items-center">
+    <!-- Main Content - Added pt-12 for top spacing -->
+    <main class="container mx-auto px-4 md:px-8 pt-12 pb-10 flex-grow max-w-7xl flex flex-col items-center">
         
         <!-- Loading / Error States -->
         <div id="loading-state" class="flex flex-col items-center justify-center py-32">
@@ -316,10 +263,10 @@
 
         function displayProduct(product) {
             document.title = `${product.name} | S Shop LK`;
-            const categoryLink = document.getElementById('breadcrumb-category');
-            categoryLink.textContent = product.category || 'Shop All';
-            categoryLink.href = `category-${(product.category || 'all').toLowerCase().replace(/ /g, '-')}.html`;
-            document.getElementById('breadcrumb-product-name').textContent = product.name;
+            // Update the dynamic breadcrumb with product data
+            if (window.breadcrumbComponent) {
+                window.breadcrumbComponent.updateForProduct(product);
+            }
             document.getElementById('product-image').src = product.image;
             document.getElementById('product-name').textContent = product.name;
             document.getElementById('product-description').textContent = product.description;
