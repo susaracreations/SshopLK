@@ -19,12 +19,12 @@
             border-radius: 24px;
             overflow: hidden;
             position: relative;
-            background-color: #0a0a0a;
+            background-color: #000b29;
             color: #ffffff;
             display: flex;
             align-items: center;
             min-height: 240px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 17, 43, 0.5);
             /* Animations removed */
             opacity: 1;
             transform: none;
@@ -54,10 +54,10 @@
             height: 100%;
             z-index: 2;
             background: linear-gradient(90deg, 
-                rgba(10,10,10,1) 0%, 
-                rgba(10,10,10,0.9) 25%, 
-                rgba(10,10,10,0.4) 60%, 
-                rgba(10,10,10,0.1) 100%
+                rgb(0, 16, 41) 0%, 
+                rgba(0, 19, 43, 0.9) 25%, 
+                rgba(0, 16, 41, 0.4) 60%, 
+                rgba(0, 14, 31, 0.1) 100%
             );
         }
 
@@ -96,7 +96,7 @@
         }
 
         .game-banner-cta {
-            background-color: #ffffff;
+            background-color: #ffd000;
             color: #000000;
             padding: clamp(10px, 1.5vw, 14px) clamp(20px, 2.5vw, 28px);
             border-radius: 50px;
@@ -107,12 +107,12 @@
             align-items: center;
             gap: 10px;
             white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+            box-shadow: 0 4px 15px rgba(255, 238, 0, 0.1);
             transition: background-color 0.2s ease;
         }
 
         .game-banner-cta:hover {
-            background-color: #f8f8f8;
+            background-color: #ffb000;
         }
 
         .cart-icon {
@@ -158,7 +158,7 @@
             }
 
             .game-banner-overlay {
-                 background: linear-gradient(90deg, rgba(10,10,10,0.9) 40%, rgba(10,10,10,0.3) 100%);
+                 background: linear-gradient(90deg, rgba(0, 11, 41, 0.9) 40%, rgba(0, 18, 58, 0.3) 100%);
             }
         }
 

@@ -1,14 +1,15 @@
 class PlatformsAnimation {
     constructor() {
         this.containerId = 'platforms-animation-container';
-        this.lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
         this.trackElement = null;
         
-        // Animation State
-        this.targetTranslate = 0;
-        this.currentTranslate = 0;
-        this.lerpFactor = 0.1; // Adjust for "weight" (lower = smoother/slower)
-        this.isScrolling = false;
+        // Physics & Animation State
+        this.currentX = 0;
+        this.baseSpeed = 0.6;       // Constant "butter" flow
+        this.scrollVelocity = 0;    // Momentum from scrolling
+        this.friction = 0.92;       // Smooth decay
+        this.lastScrollTop = 0;
+        this.isHovered = false;
     }
 
     init() {
@@ -18,8 +19,8 @@ class PlatformsAnimation {
             this.render(container);
             this.trackElement = container.querySelector('.pa-platform-track');
             
-            // Start the smooth animation loop
             this.setupScrollListener();
+            this.setupInteractions(container);
             this.animate();
         }
     }
@@ -39,115 +40,136 @@ class PlatformsAnimation {
                 width: 100%;
                 overflow: hidden;
                 position: relative;
-                padding: 1rem 0;
-                background-color: #0f172a; 
+                padding: 2rem 0;
+                /* Glass Effect */
+                background: rgba(0, 16, 37, 0.45);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border-top: 1px solid rgba(255, 255, 255, 0);
+                border-bottom: 1px solid rgba(255, 255, 255, 0);
                 font-family: 'Inter', sans-serif;
                 user-select: none;
-                pointer-events: none;
-                -webkit-font-smoothing: antialiased;
-                display: flex;
-                align-items: center;
-                mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-                -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+                /* Soft fade edges */
+                mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+                -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
             }
 
             .pa-platform-track {
                 display: flex;
-                flex-direction: row;
-                flex-wrap: nowrap;
-                gap: 4rem; /* Decreased gap from 8rem */
-                align-items: center;
+                gap: 5rem;
                 width: max-content;
                 will-change: transform;
                 padding: 2rem 0;
-                /* We remove CSS transitions to allow JS to handle smooth interpolation (LERP) */
-                transition: none;
             }
 
             .pa-platform-item {
                 display: flex;
                 align-items: center;
-                gap: 12px; /* Decreased internal item gap */
-                opacity: 0.9;
-                flex-shrink: 0;
-                position: relative;
+                gap: 14px;
+                cursor: pointer;
+                transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, filter 0.4s ease;
+                /* Initial "resting" state */
+                opacity: 0.5;
+                filter: grayscale(100%);
+            }
+
+            /* Human-like interaction: Wakes up on hover */
+            .pa-platform-item:hover {
+                opacity: 1;
+                filter: grayscale(0%);
+                transform: translateY(-2px) scale(1.05);
             }
 
             .pa-platform-logo {
-                height: 28px;
+                height: 32px;
                 width: auto;
                 object-fit: contain;
                 display: block;
-                filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+                transition: all 0.4s ease;
             }
 
             .pa-platform-text {
-                color: #ffffff;
-                font-weight: 800;
-                font-size: 1rem;
-                letter-spacing: 0.12em;
+                color: #e2e8f0; /* Soft white/gray */
+                font-weight: 700;
+                font-size: 1.1rem;
+                letter-spacing: 0.05em;
                 text-transform: uppercase;
-                line-height: 1;
-                display: inline-block;
                 white-space: nowrap;
             }
 
-            .pa-steam-text { font-weight: 500; letter-spacing: 0.2em; }
-            .pa-epic-store-text { font-size: 1rem; transform: scaleY(1.05); font-weight: 900; }
-            .pa-ea-text { color: #ff4747; font-size: 1.15rem; }
-            .pa-xbox-text { color: #107c10; font-size: 1.1rem; }
+            /* Brand Specific Tweaks */
+            .pa-steam-text { font-weight: 600; letter-spacing: 0.1em; }
+            .pa-epic-store-text { font-weight: 800; font-style: italic; }
+            .pa-ea-text { color: #ff4747; }
+            .pa-xbox-text { color: #107c10; }
+            .pa-battle-text span { color: #00aeff; }
+            .pa-ps-text { color: #0070d1; }
 
-            @media (max-width: 1024px) {
-                .pa-platform-track { gap: 3rem; padding: 1.5rem 0; }
-                .pa-platform-logo { height: 22px; }
-                .pa-platform-text { font-size: 0.85rem; }
+            /* Dark Mode Support */
+            @media (prefers-color-scheme: light) {
+                .pa-platform-text { color: #334155; }
+                .pa-platform-item { filter: grayscale(100%) brightness(0.8); }
+                .pa-platform-item:hover { filter: grayscale(0%) brightness(1); }
             }
 
-            @media (max-width: 480px) {
-                .pa-scroll-wrapper { padding: 0.5rem 0; }
-                .pa-platform-track { gap: 2rem; padding: 1rem 0; }
-                .pa-platform-logo { height: 16px; }
-                .pa-platform-text { font-size: 0.75rem; letter-spacing: 0.08em; }
-                .pa-platform-item { gap: 8px; }
+            @media (max-width: 1024px) {
+                .pa-platform-track { gap: 3rem; }
+                .pa-platform-logo { height: 24px; }
+                .pa-platform-text { font-size: 0.9rem; }
             }
         `;
         document.head.appendChild(style);
     }
 
     setupScrollListener() {
+        // Use a single listener for performance
         window.addEventListener('scroll', () => {
             const st = window.pageYOffset || document.documentElement.scrollTop;
-            const diff = st - this.lastScrollTop;
-            
-            // Interaction: Update target position based on scroll delta
-            // Multiplier 0.8 controls the "speed" of horizontal travel per vertical scroll
-            this.targetTranslate -= diff * 0.8;
-            
+            const delta = st - this.lastScrollTop;
             this.lastScrollTop = st <= 0 ? 0 : st;
+
+            // Inject momentum based on scroll speed
+            // We limit the max velocity to prevent visual glitching
+            const velocity = delta * 0.5; 
+            this.scrollVelocity += Math.max(Math.min(velocity, 50), -50);
         }, { passive: true });
     }
 
+    setupInteractions(container) {
+        container.addEventListener('mouseenter', () => this.isHovered = true);
+        container.addEventListener('mouseleave', () => this.isHovered = false);
+    }
+
     animate() {
-        // LERP: Linear Interpolation for smooth motion
-        this.currentTranslate += (this.targetTranslate - this.currentTranslate) * this.lerpFactor;
+        // 1. Determine Target Speed
+        // Slow down when hovered for readability
+        const currentBaseSpeed = this.isHovered ? 0.2 : this.baseSpeed;
 
-        // Loop Logic
-        // We calculate half width of the track (since it contains two identical sets)
+        // 2. Apply Physics
+        // Move left by default (subtracting from X)
+        // scrollVelocity adds to this movement
+        this.currentX -= (currentBaseSpeed + this.scrollVelocity);
+
+        // Friction decays the scroll momentum
+        this.scrollVelocity *= this.friction;
+
+        // 3. Infinite Loop Logic
         if (this.trackElement) {
-            const halfWidth = this.trackElement.offsetWidth / 2;
+            // We have 4 sets of items. We reset when we've moved 1 set's worth.
+            // Total width is roughly track.scrollWidth.
+            // Reset condition: |currentX| >= totalWidth / 2 (assuming 2 halves logic for simplicity)
             
-            // If we move too far left, wrap to 0
-            if (this.currentTranslate <= -halfWidth) {
-                this.targetTranslate += halfWidth;
-                this.currentTranslate += halfWidth;
-            }
-            // If we move too far right (upward scroll), wrap to -halfWidth
-            else if (this.currentTranslate > 0) {
-                this.targetTranslate -= halfWidth;
-                this.currentTranslate -= halfWidth;
+            const totalWidth = this.trackElement.scrollWidth;
+            const halfWidth = totalWidth / 2;
+
+            // Wrap around
+            if (this.currentX <= -halfWidth) {
+                this.currentX += halfWidth;
+            } else if (this.currentX > 0) {
+                this.currentX -= halfWidth;
             }
 
-            this.trackElement.style.transform = `translate3d(${this.currentTranslate}px, 0, 0)`;
+            this.trackElement.style.transform = `translate3d(${this.currentX}px, 0, 0)`;
         }
 
         requestAnimationFrame(() => this.animate());
@@ -157,33 +179,44 @@ class PlatformsAnimation {
         const brands = `
             <div class="pa-platform-item">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/960px-Steam_icon_logo.svg.png?20220611141426" alt="Steam" class="pa-platform-logo">
-                <span class="pa-platform-text pa-steam-text">STEAM<sup>®</sup></span>
+                <span class="pa-platform-text pa-steam-text">STEAM</span>
             </div>
             <div class="pa-platform-item">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Epic_Games_logo.svg" alt="Epic Store" class="pa-platform-logo" style="filter: invert(1); height: 32px;">
-                <span class="pa-epic-store-text pa-platform-text">STORE</span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Epic_Games_logo.svg" alt="Epic" class="pa-platform-logo" style="filter: invert(1);">
+                <span class="pa-platform-text pa-epic-store-text">EPIC</span>
             </div>
             <div class="pa-platform-item">
                 <img src="https://cdn.simpleicons.org/ubisoft/white" alt="Ubisoft" class="pa-platform-logo">
                 <span class="pa-platform-text">UBISOFT</span>
             </div>
             <div class="pa-platform-item">
-                <img src="https://cdn.simpleicons.org/ea/ff4747" alt="EA Play" class="pa-platform-logo">
-                <span class="pa-platform-text pa-ea-text">Play</span>
+                <img src="https://cdn.simpleicons.org/ea/ff4747" alt="EA" class="pa-platform-logo">
+                <span class="pa-platform-text pa-ea-text">EA Play</span>
             </div>
             <div class="pa-platform-item">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/960px-Xbox_one_logo.svg.png" alt="Xbox" class="pa-platform-logo" style="filter: brightness(0) saturate(100%) invert(29%) sepia(91%) saturate(1210%) hue-rotate(84deg) brightness(94%) contrast(92%);">
                 <span class="pa-platform-text pa-xbox-text">XBOX</span>
             </div>
             <div class="pa-platform-item">
+                <img src="https://cdn.simpleicons.org/playstation/0070d1" alt="PlayStation" class="pa-platform-logo">
+                <span class="pa-platform-text pa-ps-text">PLAYSTATION</span>
+            </div>
+            <div class="pa-platform-item">
                 <img src="https://cdn.simpleicons.org/battledotnet/00aeff" alt="Battle.net" class="pa-platform-logo">
-                <span class="pa-platform-text pa-battle-text">BATTLE<span style="color:#00aeff">.</span>NET</span>
+                <span class="pa-platform-text pa-battle-text">BATTLE<span>.</span>NET</span>
+            </div>
+            <div class="pa-platform-item">
+                <img src="https://cdn.simpleicons.org/riotgames/d32936" alt="Riot" class="pa-platform-logo">
+                <span class="pa-platform-text">RIOT</span>
             </div>
         `;
 
+        // Duplicate 4 times to ensure smooth infinite scroll on large screens
         container.innerHTML = `
             <div class="pa-scroll-wrapper">
                 <div class="pa-platform-track">
+                    ${brands}
+                    ${brands}
                     ${brands}
                     ${brands}
                 </div>

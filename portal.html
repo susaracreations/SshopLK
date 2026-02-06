@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | PSDS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-page: #f2f4f8;
+            --bg-card: #ffffff;
+            --text-main: #1d1d1f;
+            --text-sub: #86868b;
+            --accent-color: #c9a76d;
+            --accent-hover: #b5925a;
+            --error-red: #d32f2f;
+        }
+
+        /* --- GLOBAL RESET --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            background-image: radial-gradient(circle at 50% 0%, #2a2a2a 0%, #121212 70%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* --- MAIN CARD --- */
+        .login-card {
+            background: #1e1e1e;
+            width: 900px;
+            height: 600px;
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        /* LEFT SIDE: BRANDING */
+        .brand-side {
+            width: 45%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-side::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(201, 167, 109, 0.05) 0%, transparent 60%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .brand-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+            z-index: 2;
+            filter: drop-shadow(0 0 15px rgba(201, 167, 109, 0.3));
+        }
+
+        .brand-text {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .brand-text h2 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .brand-text p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* RIGHT SIDE: FORMS */
+        .form-side {
+            width: 55%;
+            position: relative;
+            background: #1e1e1e;
+        }
+
+        .forms-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .auth-form {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+
+        #loginFormWrapper {
+            top: 0;
+            left: 0;
+        }
+
+        #signupFormWrapper {
+            top: 0;
+            left: 100%;
+            opacity: 0;
+        }
+
+        .container.show-signup .forms-wrapper {
+            transform: translateX(-100%);
+        }
+
+        .container.show-signup #signupFormWrapper {
+            opacity: 1;
+        }
+
+        .container.show-signup #loginFormWrapper {
+            opacity: 0;
+        }
+
+        /* UI ELEMENTS */
+        h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .welcome-sub {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: #aaa;
+            margin-bottom: 6px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            color: #fff;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: #333;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #c9a76d 0%, #b5925a 100%);
+            color: #121212;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 5px 15px rgba(201, 167, 109, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #333;
+        }
+
+        .divider span {
+            padding: 0 10px;
+        }
+
+        /* SOCIAL ICONS */
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .social-btn {
+            height: 48px;
+            border-radius: 12px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        /* Hover Effects */
+        .social-btn:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        .social-btn svg {
+            height: 20px;
+            width: 20px;
+        }
+
+        .form-footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .google-card {
+            background: #202124;
+            width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .modal-overlay.active .google-card {
+            transform: scale(1);
+        }
+
+        .g-header {
+            padding: 24px 24px 10px;
+            text-align: center;
+        }
+
+        .g-header h3 {
+            color: #e8eaed;
+            font-weight: 400;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .g-header p {
+            color: #e8eaed;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .g-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid #3c4043;
+        }
+
+        .g-item:hover {
+            background: #303134;
+        }
+
+        .g-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #8ab4f8;
+            color: #202124;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+        }
+
+        .g-name {
+            color: #e8eaed;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #fff;
+            color: #121212;
+            padding: 12px 24px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+            z-index: 3000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error-red);
+        }
+
+        .toast.success {
+            border-left: 4px solid #4caf50;
+        }
+
+        /* MOBILE */
+        @media (max-width: 950px) {
+            .login-card {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                border: none;
+            }
+
+            .brand-side {
+                display: none;
+            }
+
+            .form-side {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="toast" class="toast">
+        <i id="toastIcon" class="fas fa-info-circle"></i>
+        <span id="toastMsg">Notification</span>
+    </div>
+
+    <div class="login-card container" id="mainContainer">
+
+        <div class="brand-side">
+            <img src="PSDS LOGO NEW.png" alt="PSDS Logo" class="brand-logo">
+            <div class="brand-text">
+                <h2>PSDS Portal</h2>
+                <p>Welcome to the premier community for creative photographers.</p>
+            </div>
+        </div>
+
+        <div class="form-side">
+            <div class="forms-wrapper">
+
+                <div class="auth-form" id="loginFormWrapper">
+                    <h1>Sign in</h1>
+                    <p class="welcome-sub">Welcome back! Please enter your details.</p>
+
+                    <form id="loginForm">
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" id="loginEmail" class="input-field" placeholder="Enter your email"
+                                required>
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" id="loginPass" class="input-field" placeholder="••••••••" required>
+                        </div>
+
+                        <div style="text-align: right; margin-bottom: 20px;">
+                            <span class="link" onclick="openModal('forgotModal')">Forgot password?</span>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Sign in</button>
+                    </form>
+
+                    <div class="divider"><span>OR</span></div>
+
+                    <div class="social-grid">
+                        <div class="social-btn" onclick="handleGoogleLogin()">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                style="height:20px; width:20px;">
+                                <path
+                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                    fill="#4285F4" />
+                                <path
+                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                    fill="#34A853" />
+                                <path
+                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.21.81-.63z"
+                                    fill="#FBBC05" />
+                                <path
+                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                    fill="#EA4335" />
+                            </svg>
+                        </div>
+                        <div class="social-btn" onclick="simulateSocialLogin('Facebook')">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1877F2"
+                                style="height:20px; width:20px;">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                        </div>
+                        <div class="social-btn" onclick="handleGithubLogin()">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"
+                                style="height:20px; width:20px;">
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+                        Don't have an account? <span class="link" onclick="toggleMode()">Create one</span>
+                    </div>
+                </div>
+
+                <div class="auth-form" id="signupFormWrapper">
+                    <h1>Create account</h1>
+                    <p class="welcome-sub">Join the society today. It's free!</p>
+
+                    <form id="registerForm">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="regName" class="input-field" placeholder="John Doe" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" id="regEmail" class="input-field" placeholder="Enter your email"
+                                required>
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" id="regPass" class="input-field" placeholder="Create a password"
+                                required>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Create account</button>
+                    </form>
+
+                    <div class="divider"><span>OR</span></div>
+
+                    <div class="social-grid">
+                        <div class="social-btn" onclick="handleGoogleLogin()">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                style="height:20px; width:20px;">
+                                <path
+                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                    fill="#4285F4" />
+                                <path
+                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                    fill="#34A853" />
+                                <path
+                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.21.81-.63z"
+                                    fill="#FBBC05" />
+                                <path
+                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                    fill="#EA4335" />
+                            </svg>
+                        </div>
+                        <div class="social-btn" onclick="simulateSocialLogin('Facebook')">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1877F2"
+                                style="height:20px; width:20px;">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                        </div>
+                        <div class="social-btn" onclick="handleGithubLogin()">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff"
+                                style="height:20px; width:20px;">
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+                        Already have an account? <span class="link" onclick="toggleMode()">Log in</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="forgotModal">
+        <div class="google-card" style="padding: 30px; text-align: center;">
+            <i class="fas fa-lock" style="font-size: 40px; color: #c9a76d; margin-bottom: 20px;"></i>
+            <h2 style="color: #fff; margin-bottom: 10px;">Reset Password</h2>
+            <p style="color: #aaa; margin-bottom: 25px; font-size: 14px;">Enter your email to receive a link.</p>
+            <input type="email" id="resetEmail" class="input-field" placeholder="name@example.com"
+                style="margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" style="background: #333; color: #fff;"
+                    onclick="closeModal('forgotModal')">Cancel</button>
+                <button class="btn-primary" onclick="handleReset()">Send Link</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+    apiKey: "AIzaSyBXQxty-9mU_PFONIE0RGgs3gg2G8gi1ng",
+    authDomain: "sshop-lk.firebaseapp.com",
+    projectId: "sshop-lk",
+    storageBucket: "sshop-lk.firebasestorage.app",
+    messagingSenderId: "1032750720586",
+    appId: "1:1032750720586:web:3b08580929f8e1686f68b3",
+    measurementId: "G-4XQTJVKS72"
+  };
+  
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // --- HELPER: SAVE TO DB ---
+        function saveUserToDB(user) {
+            return db.collection("users").doc(user.uid).set({
+                name: user.displayName || "Member",
+                email: user.email,
+                photo: user.photoURL || "",
+                lastLogin: new Date().toISOString(),
+                role: "member"
+            }, { merge: true });
+        }
+
+        // --- 1. SIGN UP (With Verification Email) ---
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+            const name = document.getElementById('regName').value;
+
+            firebase.auth().createUserWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    // 1. Update Name
+                    user.updateProfile({ displayName: name }).then(() => {
+
+                        // 2. SEND VERIFICATION EMAIL
+                        user.sendEmailVerification().then(() => {
+                            // 3. Force Logout
+                            firebase.auth().signOut();
+
+                            // 4. Show Message with Spam warning
+                            alert(
+                                `Verification email sent to ${email}!\n\n` +
+                                `NOTE: Since this is a free student project, the email will come from "noreply@${firebaseConfig.projectId}.firebaseapp.com".\n\n` +
+                                `Please check your SPAM or JUNK folder if you don't see it.`
+                            );
+                            toggleMode(); // Go back to login screen
+                        });
+                    });
+                })
+                .catch((error) => {
+                    showToast(error.message, 'error');
+                });
+        });
+
+        // --- 2. SIGN IN (Check Verification) ---
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+
+            firebase.auth().signInWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    // --- CRITICAL CHECK: IS EMAIL VERIFIED? ---
+                    if (user.emailVerified) {
+                        showToast(`Welcome back!`);
+                        saveUserToDB(user);
+                        localStorage.setItem('currentUser', JSON.stringify({
+                            name: user.displayName || "Member",
+                            email: user.email,
+                            photo: user.photoURL
+                        }));
+                        setTimeout(() => window.location.href = '/index.html', 1500);
+
+                    } else {
+                        firebase.auth().signOut();
+                        alert("Your email is not verified yet! Please check your inbox (and spam folder) for the verification link.");
+                    }
+                })
+                .catch((error) => {
+                    showToast("Invalid email or password", 'error');
+                });
+        });
+
+        // --- GOOGLE/GITHUB ---
+        function handleSocialLogin(providerName) {
+            const provider = providerName === 'google'
+                ? new firebase.auth.GoogleAuthProvider()
+                : new firebase.auth.GithubAuthProvider();
+
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    saveUserToDB(user);
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        name: user.displayName || user.email,
+                        email: user.email,
+                        photo: user.photoURL
+                    }));
+                    showToast(`Welcome ${user.displayName}!`);
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                }).catch((e) => showToast(e.message, 'error'));
+        }
+
+        // Mapping buttons
+        function handleGoogleLogin() { handleSocialLogin('google'); }
+        function handleGithubLogin() { handleSocialLogin('github'); }
+
+        // --- UTILS ---
+        const container = document.getElementById('mainContainer');
+        function toggleMode() { container.classList.toggle('show-signup'); }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const txt = document.getElementById('toastMsg');
+            txt.textContent = msg;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function handleReset() {
+            const email = document.getElementById('resetEmail').value;
+            if (email) {
+                firebase.auth().sendPasswordResetEmail(email)
+                    .then(() => { closeModal('forgotModal'); alert("Reset link sent!"); })
+                    .catch(e => alert(e.message));
+            }
+        }
+        function simulateSocialLogin(provider) {
+            alert("Facebook login requires App Review. Use Google or GitHub for now!");
+        }
+        // --- PASSWORD RESET LOGIC (With "User Check") ---
+        function handleReset() {
+            const emailInput = document.getElementById('resetEmail');
+            const email = emailInput.value;
+
+            // 1. Check if empty
+            if (!email) {
+                showToast("Please enter your email address first.", "error");
+                return;
+            }
+
+            // 2. Try to send the email
+            firebase.auth().sendPasswordResetEmail(email)
+                .then(() => {
+                    // SUCCESS: User exists, email sent
+                    closeModal('forgotModal');
+                    emailInput.value = "";
+                    alert(
+                        `Password reset link sent to: ${email}\n\n` +
+                        `Please check your Inbox (and Spam folder).`
+                    );
+                })
+                .catch((error) => {
+                    console.error(error); // Debugging
+
+                    // --- THIS IS THE CHECK YOU ASKED FOR ---
+                    if (error.code === 'auth/user-not-found') {
+                        // User does NOT exist
+                        closeModal('forgotModal');
+                        alert("No account found with this email!\n\nPlease create an account first.");
+
+                        // Smart Move: Automatically switch to the Sign Up form
+                        const container = document.getElementById('mainContainer');
+                        if (!container.classList.contains('show-signup')) {
+                            toggleMode();
+                        }
+                    }
+                    else if (error.code === 'auth/invalid-email') {
+                        showToast("That email address is invalid.", "error");
+                    }
+                    else {
+                        showToast("Error: " + error.message, "error");
+                    }
+                });
+        }
+
+    </script>
+</body>
+
+</html>
