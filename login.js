@@ -261,15 +261,10 @@ class LoginPage {
         this.elements.googleSignInBtn?.addEventListener('click', async () => {
             this.hideMessages(this.elements.googleErrorMessage);
             const provider = new window.firebase.auth.GoogleAuthProvider();
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
             try {
-                if (isMobile) {
-                    await window.auth.signInWithRedirect(provider);
-                } else {
-                    const result = await window.auth.signInWithPopup(provider);
-                    await handleResult(result);
-                }
+                const result = await window.auth.signInWithPopup(provider);
+                await handleResult(result);
             } catch (error) {
                 console.error('Google sign-in error:', error);
                 this.showError(this.getAuthErrorMessage(error.code), this.elements.googleErrorMessage);

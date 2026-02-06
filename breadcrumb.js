@@ -12,7 +12,7 @@ class BreadcrumbComponent {
             'categories.html': 'Categories',
             'login.html': 'Sign In',
             'register.html': 'Register',
-            'profile.html': 'Account',
+            'profile.html': 'My Account',
             'cart.html': 'Cart',
             'checkout.html': 'Checkout',
             'about-us.html': 'About Us',

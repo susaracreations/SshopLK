@@ -7,13 +7,13 @@
 
 (function() {
     // CONFIGURATION: Add your image URL here
-    const backgroundImageURL = "https://i.ibb.co/Jw0rTf66/56ef3466fba6.png"; 
+    const backgroundImageURL = "https://i.ibb.co/qYQD37Qt/63ddec68dd35.jpg"; 
 
     // 1. Create and Inject Styles
     const style = document.createElement('style');
     style.textContent = `
         .game-banner-container {
-            width: 100%;
+            width: calc(100% - 20px);
             max-width: 1200px;
             margin: 15px auto;
             border-radius: 24px;
@@ -25,14 +25,10 @@
             align-items: center;
             min-height: 240px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .game-banner-container.visible {
+            /* Animations removed */
             opacity: 1;
-            transform: translateY(0);
+            transform: none;
+            box-sizing: border-box;
         }
 
         /* The Custom Background Image Layer */
@@ -46,10 +42,10 @@
             background-image: url('${backgroundImageURL}');
             background-size: cover;
             background-position: center right;
-            opacity: 0.6; /* Adjust this for general brightness of the image */
+            opacity: 0.6;
         }
 
-        /* Fading Overlay: Makes the image fade into the black background on the left */
+        /* Fading Overlay */
         .game-banner-overlay {
             position: absolute;
             top: 0;
@@ -68,12 +64,13 @@
         .game-banner-content {
             position: relative;
             z-index: 3;
-            padding: 30px 50px;
+            padding: 30px 5%;
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 20px;
+            box-sizing: border-box;
         }
 
         .game-banner-text {
@@ -81,7 +78,7 @@
         }
 
         .game-banner-title {
-            font-size: 38px;
+            font-size: clamp(24px, 4vw, 38px);
             font-weight: 800;
             line-height: 1.1;
             margin: 0 0 12px 0;
@@ -90,7 +87,7 @@
         }
 
         .game-banner-subtitle {
-            font-size: 17px;
+            font-size: clamp(14px, 1.5vw, 17px);
             color: #d0d0d0;
             margin: 0;
             font-weight: 400;
@@ -101,68 +98,81 @@
         .game-banner-cta {
             background-color: #ffffff;
             color: #000000;
-            padding: 14px 28px;
+            padding: clamp(10px, 1.5vw, 14px) clamp(20px, 2.5vw, 28px);
             border-radius: 50px;
             font-weight: 700;
-            font-size: 17px;
+            font-size: clamp(14px, 1.5vw, 17px);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             white-space: nowrap;
             box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+            transition: background-color 0.2s ease;
         }
 
         .game-banner-cta:hover {
-            transform: scale(1.05);
             background-color: #f8f8f8;
         }
 
         .cart-icon {
-            width: 20px;
-            height: 20px;
+            width: clamp(16px, 1.8vw, 20px);
+            height: clamp(16px, 1.8vw, 20px);
         }
 
+        /* Medium screens (Tablets) */
+        @media (max-width: 900px) {
+            .game-banner-container {
+                min-height: 180px;
+            }
+            .game-banner-content {
+                padding: 20px 30px;
+            }
+        }
+
+        /* Mobile specific adjustments */
         @media (max-width: 600px) {
             .game-banner-container {
                 min-height: 100px;
                 border-radius: 16px;
-                margin: 10px;
-                width: calc(100% - 20px);
+                margin: 10px auto;
             }
             
             .game-banner-content {
                 padding: 15px 20px;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
                 gap: 10px;
             }
 
             .game-banner-title {
-                font-size: 18px;
-                margin: 0;
                 letter-spacing: -0.5px;
+                margin-bottom: 0;
             }
 
             .game-banner-subtitle {
-                display: none;
+                display: none; /* Keep mobile clean */
             }
 
             .game-banner-cta {
-                padding: 10px 16px;
-                font-size: 13px;
+                padding: 8px 14px;
                 border-radius: 12px;
             }
 
-            .cart-icon {
-                width: 14px;
-                height: 14px;
-            }
-            
             .game-banner-overlay {
-                 background: linear-gradient(90deg, rgba(10,10,10,0.85) 50%, rgba(10,10,10,0.4) 100%);
+                 background: linear-gradient(90deg, rgba(10,10,10,0.9) 40%, rgba(10,10,10,0.3) 100%);
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 400px) {
+            .game-banner-title {
+                font-size: 16px;
+            }
+            .game-banner-cta {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .cart-icon {
+                display: none; /* Hide icon on tiny screens to save space */
             }
         }
     `;
@@ -205,9 +215,4 @@
             document.body.appendChild(banner);
         }
     }
-
-    // Trigger appearance animation
-    setTimeout(() => {
-        banner.classList.add('visible');
-    }, 100);
 })();

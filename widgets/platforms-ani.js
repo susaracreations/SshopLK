@@ -1,6 +1,14 @@
 class PlatformsAnimation {
     constructor() {
         this.containerId = 'platforms-animation-container';
+        this.lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        this.trackElement = null;
+        
+        // Animation State
+        this.targetTranslate = 0;
+        this.currentTranslate = 0;
+        this.lerpFactor = 0.1; // Adjust for "weight" (lower = smoother/slower)
+        this.isScrolling = false;
     }
 
     init() {
@@ -8,15 +16,19 @@ class PlatformsAnimation {
         if (container) {
             this.injectStyles();
             this.render(container);
+            this.trackElement = container.querySelector('.pa-platform-track');
+            
+            // Start the smooth animation loop
+            this.setupScrollListener();
+            this.animate();
         }
     }
 
     injectStyles() {
         if (document.getElementById('platforms-ani-styles')) return;
 
-        // Inject Font
         const fontLink = document.createElement('link');
-        fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap';
+        fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800;900&display=swap';
         fontLink.rel = 'stylesheet';
         document.head.appendChild(fontLink);
 
@@ -27,54 +39,38 @@ class PlatformsAnimation {
                 width: 100%;
                 overflow: hidden;
                 position: relative;
-                padding: 0;
+                padding: 1rem 0;
                 background-color: #0f172a; 
                 font-family: 'Inter', sans-serif;
                 user-select: none;
                 pointer-events: none;
                 -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                /* Creative Masking */
-                -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-                mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+                display: flex;
+                align-items: center;
+                mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+                -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
             }
 
             .pa-platform-track {
                 display: flex;
                 flex-direction: row;
                 flex-wrap: nowrap;
-                gap: 6rem;
+                gap: 4rem; /* Decreased gap from 8rem */
                 align-items: center;
                 width: max-content;
-                animation: pa-scroll 45s linear infinite;
                 will-change: transform;
-                padding: 1.5rem 0;
-            }
-
-            @keyframes pa-scroll {
-                0% { transform: translate3d(0, 0, 0); }
-                100% { transform: translate3d(-50%, 0, 0); }
-            }
-
-            /* Creative Floating Effect */
-            @keyframes pa-float {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-3px); }
+                padding: 2rem 0;
+                /* We remove CSS transitions to allow JS to handle smooth interpolation (LERP) */
+                transition: none;
             }
 
             .pa-platform-item {
                 display: flex;
                 align-items: center;
-                gap: 16px;
+                gap: 12px; /* Decreased internal item gap */
                 opacity: 0.9;
                 flex-shrink: 0;
-                filter: saturate(0.9);
-                animation: pa-float 4s ease-in-out infinite;
-            }
-
-            /* Staggering the float animation for creativity */
-            .pa-platform-item:nth-child(even) {
-                animation-delay: -2s;
+                position: relative;
             }
 
             .pa-platform-logo {
@@ -82,82 +78,90 @@ class PlatformsAnimation {
                 width: auto;
                 object-fit: contain;
                 display: block;
-                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+                filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
             }
 
             .pa-platform-text {
                 color: #ffffff;
                 font-weight: 800;
                 font-size: 1rem;
-                letter-spacing: 0.08em;
+                letter-spacing: 0.12em;
                 text-transform: uppercase;
                 line-height: 1;
                 display: inline-block;
                 white-space: nowrap;
             }
 
-            .pa-steam-text { font-weight: 600; letter-spacing: 0.15em; }
-            .pa-epic-store-text { font-size: 1rem; font-weight: 900; transform: scaleY(1.1); }
-            .pa-ea-text { color: #ff4747; font-weight: 900; font-size: 1.15rem; }
-            .pa-xbox-text { color: #107c10; font-weight: 800; font-size: 1.1rem; }
-            .pa-battle-text { font-weight: 600; font-size: 1rem; }
-            .pa-battle-accent { color: #00aeff; font-weight: 900; }
+            .pa-steam-text { font-weight: 500; letter-spacing: 0.2em; }
+            .pa-epic-store-text { font-size: 1rem; transform: scaleY(1.05); font-weight: 900; }
+            .pa-ea-text { color: #ff4747; font-size: 1.15rem; }
+            .pa-xbox-text { color: #107c10; font-size: 1.1rem; }
 
-            /* Professional Edge Fades with a hint of blur */
-            .pa-scroll-wrapper::before,
-            .pa-scroll-wrapper::after {
-                content: "";
-                position: absolute;
-                top: 0;
-                width: 12%;
-                height: 100%;
-                z-index: 2;
-                pointer-events: none;
-                backdrop-filter: blur(1px); /* Creative touch: slight edge blur */
-            }
-            .pa-scroll-wrapper::before {
-                left: 0;
-                background: linear-gradient(to right, #0f172a, transparent);
-            }
-            .pa-scroll-wrapper::after {
-                right: 0;
-                background: linear-gradient(to left, #0f172a, transparent);
-            }
-
-            /* Optimized & Smaller Mobile Transitions */
-            @media (max-width: 768px) {
-                .pa-platform-track { 
-                    gap: 3.5rem; 
-                    animation-duration: 30s;
-                    padding: 1rem 0;
-                }
-                .pa-platform-logo { height: 20px; }
+            @media (max-width: 1024px) {
+                .pa-platform-track { gap: 3rem; padding: 1.5rem 0; }
+                .pa-platform-logo { height: 22px; }
                 .pa-platform-text { font-size: 0.85rem; }
-                .pa-platform-item { gap: 10px; }
-                .pa-ea-text { font-size: 1rem; }
-                .pa-xbox-text { font-size: 0.95rem; }
-                .pa-epic-store-text { font-size: 0.85rem; }
             }
 
             @media (max-width: 480px) {
-                .pa-platform-track { gap: 2.5rem; animation-duration: 22s; }
-                .pa-platform-logo { height: 18px; }
-                .pa-platform-text { font-size: 0.75rem; letter-spacing: 0.05em; }
-                .pa-scroll-wrapper::before, .pa-scroll-wrapper::after { width: 8%; }
+                .pa-scroll-wrapper { padding: 0.5rem 0; }
+                .pa-platform-track { gap: 2rem; padding: 1rem 0; }
+                .pa-platform-logo { height: 16px; }
+                .pa-platform-text { font-size: 0.75rem; letter-spacing: 0.08em; }
+                .pa-platform-item { gap: 8px; }
             }
         `;
         document.head.appendChild(style);
     }
 
+    setupScrollListener() {
+        window.addEventListener('scroll', () => {
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            const diff = st - this.lastScrollTop;
+            
+            // Interaction: Update target position based on scroll delta
+            // Multiplier 0.8 controls the "speed" of horizontal travel per vertical scroll
+            this.targetTranslate -= diff * 0.8;
+            
+            this.lastScrollTop = st <= 0 ? 0 : st;
+        }, { passive: true });
+    }
+
+    animate() {
+        // LERP: Linear Interpolation for smooth motion
+        this.currentTranslate += (this.targetTranslate - this.currentTranslate) * this.lerpFactor;
+
+        // Loop Logic
+        // We calculate half width of the track (since it contains two identical sets)
+        if (this.trackElement) {
+            const halfWidth = this.trackElement.offsetWidth / 2;
+            
+            // If we move too far left, wrap to 0
+            if (this.currentTranslate <= -halfWidth) {
+                this.targetTranslate += halfWidth;
+                this.currentTranslate += halfWidth;
+            }
+            // If we move too far right (upward scroll), wrap to -halfWidth
+            else if (this.currentTranslate > 0) {
+                this.targetTranslate -= halfWidth;
+                this.currentTranslate -= halfWidth;
+            }
+
+            this.trackElement.style.transform = `translate3d(${this.currentTranslate}px, 0, 0)`;
+        }
+
+        requestAnimationFrame(() => this.animate());
+    }
+
     render(container) {
-        const itemsHTML = `
+        const brands = `
             <div class="pa-platform-item">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/960px-Steam_icon_logo.svg.png?20220611141426" alt="Steam" class="pa-platform-logo">
                 <span class="pa-platform-text pa-steam-text">STEAM<sup>®</sup></span>
             </div>
             <div class="pa-platform-item">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Epic_Games_logo.svg" alt="Epic Store" class="pa-platform-logo" style="filter: invert(1); height: 32px;">
-                <span class="pa-epic-store-text">STORE</span>
+                <span class="pa-epic-store-text pa-platform-text">STORE</span>
             </div>
             <div class="pa-platform-item">
                 <img src="https://cdn.simpleicons.org/ubisoft/white" alt="Ubisoft" class="pa-platform-logo">
@@ -173,23 +177,30 @@ class PlatformsAnimation {
             </div>
             <div class="pa-platform-item">
                 <img src="https://cdn.simpleicons.org/battledotnet/00aeff" alt="Battle.net" class="pa-platform-logo">
-                <span class="pa-platform-text pa-battle-text">BATTLE<span class="pa-battle-accent">.</span>NET</span>
+                <span class="pa-platform-text pa-battle-text">BATTLE<span style="color:#00aeff">.</span>NET</span>
             </div>
         `;
 
         container.innerHTML = `
             <div class="pa-scroll-wrapper">
                 <div class="pa-platform-track">
-                    ${itemsHTML}
-                    ${itemsHTML}
-                    ${itemsHTML}
+                    ${brands}
+                    ${brands}
                 </div>
             </div>
         `;
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const platformsAnimation = new PlatformsAnimation();
-    platformsAnimation.init();
-});
+(function() {
+    const start = () => {
+        const platformsAnimation = new PlatformsAnimation();
+        platformsAnimation.init();
+    };
+    
+    if (document.readyState === 'complete') {
+        start();
+    } else {
+        window.addEventListener('load', start);
+    }
+})();

@@ -165,6 +165,7 @@ class HeaderComponent {
                 </div>
             </header>
         `;
+        this.userUnsubscribe = null;
     }
 
     // Initialize the header component
@@ -331,86 +332,79 @@ class HeaderComponent {
             AuthService.onAuthStateChanged((user) => {
                 this.updateAuthUI(user);
             });
+        } else {
+            setTimeout(() => this.setupAuthState(), 500);
         }
     }
 
     updateAuthUI(user) {
         const guestUser = document.getElementById('guestUser');
         const loggedInUser = document.getElementById('loggedInUser');
-        const avatarInitials = document.getElementById('avatarInitials');
-        const dropdownUsername = document.getElementById('dropdownUsername');
-        const dropdownEmail = document.getElementById('dropdownEmail');
         
         if (!guestUser || !loggedInUser) return;
         
         if (user) {
             // User is signed in
-            if (window.FirebaseService) {
-                FirebaseService.getUser(user.uid).then(userData => {
-                    const displayName = user.displayName || (userData && userData.displayName) || (userData && userData.username) || user.email.split('@')[0];
-                    const photoURL = user.photoURL || (userData && userData.photoURL);
-                    const email = user.email || (userData && userData.email) || 'No email';
-                    const initials = this.getInitials(displayName);
+            guestUser.classList.add('hidden');
+            loggedInUser.classList.remove('hidden');
 
-                    guestUser.classList.add('hidden');
-                    loggedInUser.classList.remove('hidden');
+            // Initial render with Auth data
+            this.renderUserInfo({
+                displayName: user.displayName || user.email.split('@')[0],
+                email: user.email,
+                photoURL: user.photoURL
+            });
 
-                    if (dropdownUsername) dropdownUsername.textContent = displayName;
-                    if (dropdownEmail) dropdownEmail.textContent = email;
+            // Setup Real-time Listener for Profile Updates
+            if (window.db) {
+                if (this.userUnsubscribe) this.userUnsubscribe();
 
-                    const userAvatarContainer = document.getElementById('userAvatar');
-                    if (photoURL) {
-                        userAvatarContainer.innerHTML = `<img src="${photoURL}" alt="Profile Picture" class="w-full h-full object-cover rounded-full">`;
-                    } else {
-                        userAvatarContainer.innerHTML = `<span id="avatarInitials">${initials}</span>`;
-                    }
-
-                    FirebaseService.setUserOnline(user.uid, displayName);
-                }).catch(error => {
-                    console.error("Error fetching user data for header:", error);
-                    // Fallback to basic user info
-                    const displayName = user.displayName || user.email.split('@')[0];
-                    const photoURL = user.photoURL;
-                    const email = user.email || 'No email';
-                    const initials = this.getInitials(displayName);
-
-                    guestUser.classList.add('hidden');
-                    loggedInUser.classList.remove('hidden');
-
-                    if (dropdownUsername) dropdownUsername.textContent = displayName;
-                    if (dropdownEmail) dropdownEmail.textContent = email;
-
-                    const userAvatarContainer = document.getElementById('userAvatar');
-                    if (photoURL) {
-                        userAvatarContainer.innerHTML = `<img src="${photoURL}" alt="Profile Picture" class="w-full h-full object-cover rounded-full">`;
-                    } else {
-                        userAvatarContainer.innerHTML = `<span id="avatarInitials">${initials}</span>`;
-                    }
-                });
-            } else {
-                // Fallback if FirebaseService is not ready
-                const displayName = user.displayName || user.email.split('@')[0];
-                const photoURL = user.photoURL;
-                const email = user.email || 'No email';
-                const initials = this.getInitials(displayName);
-
-                guestUser.classList.add('hidden');
-                loggedInUser.classList.remove('hidden');
-
-                if (dropdownUsername) dropdownUsername.textContent = displayName;
-                if (dropdownEmail) dropdownEmail.textContent = email;
-
-                const userAvatarContainer = document.getElementById('userAvatar');
-                if (photoURL) {
-                    userAvatarContainer.innerHTML = `<img src="${photoURL}" alt="Profile Picture" class="w-full h-full object-cover rounded-full">`;
-                } else {
-                    userAvatarContainer.innerHTML = `<span id="avatarInitials">${initials}</span>`;
-                }
+                this.userUnsubscribe = window.db.collection('users').doc(user.uid)
+                    .onSnapshot((doc) => {
+                        if (doc.exists) {
+                            const userData = doc.data();
+                            this.renderUserInfo({
+                                displayName: userData.displayName || userData.username || user.displayName,
+                                email: userData.email || user.email,
+                                photoURL: userData.photoURL || user.photoURL
+                            });
+                            
+                            if (window.FirebaseService) {
+                                FirebaseService.setUserOnline(user.uid, userData.displayName || userData.username);
+                            }
+                        }
+                    }, error => console.error("Header profile sync error:", error));
             }
         } else {
             // User is signed out
             guestUser.classList.remove('hidden');
             loggedInUser.classList.add('hidden');
+            
+            if (this.userUnsubscribe) {
+                this.userUnsubscribe();
+                this.userUnsubscribe = null;
+            }
+        }
+    }
+
+    renderUserInfo(data) {
+        const dropdownUsername = document.getElementById('dropdownUsername');
+        const dropdownEmail = document.getElementById('dropdownEmail');
+        const userAvatarContainer = document.getElementById('userAvatar');
+        const initials = this.getInitials(data.displayName);
+
+        if (dropdownUsername) dropdownUsername.textContent = data.displayName;
+        if (dropdownEmail) dropdownEmail.textContent = data.email;
+
+        if (userAvatarContainer) {
+            if (data.photoURL) {
+                userAvatarContainer.innerHTML = `<img src="${data.photoURL}" alt="Profile" class="w-full h-full object-cover rounded-full">`;
+            } else {
+                userAvatarContainer.innerHTML = `
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-sm font-bold text-white">
+                        <span id="avatarInitials">${initials}</span>
+                    </div>`;
+            }
         }
     }
 

@@ -10,6 +10,7 @@ class ProfilePage {
         this.toggleEditMode = this.toggleEditMode.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.handleAvatarUpload = this.handleAvatarUpload.bind(this);
     }
 
     init() {
@@ -21,6 +22,7 @@ class ProfilePage {
         const editProfileBtn = document.getElementById('editProfileBtn');
         const profileForm = document.getElementById('profileForm');
         const navItems = document.querySelectorAll('.nav-item');
+        const avatarInput = document.getElementById('avatarInput');
 
         if (editProfileBtn) {
             editProfileBtn.addEventListener('click', this.toggleEditMode);
@@ -32,6 +34,9 @@ class ProfilePage {
             navItems.forEach(item => {
                 item.addEventListener('click', (e) => this.handleTabSwitch(e));
             });
+        }
+        if (avatarInput) {
+            avatarInput.addEventListener('change', this.handleAvatarUpload);
         }
 
         // Example listener for security form
@@ -106,7 +111,13 @@ class ProfilePage {
 
         document.getElementById('profileName').textContent = displayName;
         document.getElementById('profileEmail').textContent = email;
-        document.getElementById('profileInitials').textContent = initials;
+        
+        const profileAvatar = document.getElementById('profileAvatar');
+        if (data.photoURL) {
+            profileAvatar.innerHTML = `<img src="${data.photoURL}" alt="${displayName}" class="w-full h-full object-cover">`;
+        } else {
+            profileAvatar.innerHTML = `<span id="profileInitials">${initials}</span>`;
+        }
 
         if (data.createdAt) {
             const daysSince = Math.floor((new Date() - new Date(data.createdAt)) / (1000 * 60 * 60 * 24));
@@ -194,6 +205,51 @@ class ProfilePage {
         } catch (error) {
             console.error('Error updating profile:', error);
             this.showToast('Error updating profile. Please try again.', 'error');
+        }
+    }
+
+    async handleAvatarUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            this.showToast('Please select an image file.', 'error');
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            this.showToast('Image size should be less than 5MB.', 'error');
+            return;
+        }
+
+        try {
+            this.showToast('Uploading image...', 'success');
+            
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            // REPLACE THIS WITH YOUR IMGBB API KEY
+            const API_KEY = '9e45c2a61b049286d6230275e700a932'; 
+            
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY}`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const photoURL = data.data.display_url;
+                await FirebaseService.updateUser(this.currentUser.uid, { photoURL });
+                this.userData.photoURL = photoURL;
+                this.updateProfileDisplay(this.userData);
+                this.showToast('Profile picture updated!', 'success');
+            } else {
+                throw new Error(data.error ? data.error.message : 'Upload failed');
+            }
+        } catch (error) {
+            console.error('Error uploading avatar:', error);
+            this.showToast('Failed to upload image. Check API key.', 'error');
         }
     }
 
