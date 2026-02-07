@@ -41,6 +41,7 @@ class PlatformsAnimation {
                 overflow: hidden;
                 position: relative;
                 padding: 2rem 0;
+                margin-bottum: 2rem;
                 /* Glass Effect */
                 background: rgba(0, 16, 37, 0.45);
                 backdrop-filter: blur(12px);

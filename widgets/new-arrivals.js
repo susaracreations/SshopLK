@@ -13,7 +13,7 @@ class NewArrivalsWidget {
 
     renderStructure(container) {
         container.innerHTML = `
-        <section id="featured-products-section" class="mb-16">
+        <section id="featured-products-section">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 px-2">
                 <div>
                     <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">New Arrivals</h2>
