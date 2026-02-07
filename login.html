@@ -1,274 +1,475 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - S Shop LK</title>
-    <!-- Favicon -->
+    <title>Portal - S Shop LK</title>
     <link rel="icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
-    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png">
     <script src="favicon.js"></script>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="font-loader.js"></script>
     <script src="breadcrumb.js"></script>
+
     <style>
         body {
             background-color: #0f172a;
             color: #e2e8f0;
             overflow-x: hidden;
         }
-        /* Custom scrollbar for a professional look */
-        ::-webkit-scrollbar {
-            width: 8px;
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+        .login-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #173783 100%);
         }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
+
+        /* Sliding Logic Preservation */
+        .forms-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 4px;
+
+        .auth-form {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+            background: white;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
+
+        #loginFormWrapper {
+            top: 0;
+            left: 0;
+            opacity: 1;
+            z-index: 2;
         }
-        /* Desktop split-view specific styles */
-        @media (min-width: 1024px) {
-            .login-split-container {
-                display: flex;
-                min-height: calc(100vh - 80px); /* Subtract header height roughly */
-            }
-            .login-hero {
-                flex: 1;
-                background: linear-gradient(135deg, #0f172a 0%, #173783 100%);
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                padding: 4rem;
-                position: relative;
-                overflow: hidden;
-            }
-            .login-hero::before {
-                content: '';
-                position: absolute;
-                top: -10%;
-                right: -10%;
-                width: 400px;
-                height: 400px;
-                background: rgba(59, 130, 246, 0.1);
-                border-radius: 50%;
-                filter: blur(80px);
-            }
-            .login-form-side {
-                width: 500px;
-                background: #ffffff;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 2rem;
-            }
+
+        #signupFormWrapper {
+            top: 0;
+            left: 100%;
+            opacity: 0;
+            z-index: 1;
         }
+
+        /* Active State */
+        #mainContainer.show-signup .forms-wrapper {
+            transform: translateX(-100%);
+        }
+
+        #mainContainer.show-signup #signupFormWrapper {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        #mainContainer.show-signup #loginFormWrapper {
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #fff;
+            color: #121212;
+            padding: 12px 24px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+            z-index: 3000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.error { border-left: 4px solid #d32f2f; }
+        .toast.success { border-left: 4px solid #4caf50; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
     </style>
 </head>
+
 <body class="flex flex-col min-h-screen">
 
-    <!-- Header Component -->
+    <!-- Header -->
     <div id="header-container" class="w-full"></div>
 
-    <main class="flex-grow flex flex-col">
-        <!-- Main Layout Container -->
-        <div class="login-split-container flex-grow w-full">
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <i id="toastIcon" class="fas fa-info-circle"></i>
+        <span id="toastMsg">Notification</span>
+    </div>
+
+    <main class="flex-grow flex flex-col w-full">
+        
+        <!-- Main Card -->
+        <div id="mainContainer" class="flex w-full bg-white overflow-hidden min-h-[650px] lg:min-h-[850px] relative flex-grow">
             
-            <!-- Left Side: Hero (Visible on Desktop) -->
-            <div class="login-hero hidden lg:flex">
-                <div class="z-10 max-w-lg">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <img src="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png" alt="Logo" class="h-16 w-16">
-                        <span class="text-4xl font-black tracking-tight text-white">S Shop LK</span>
-                    </div>
-                    <h2 class="text-5xl font-bold text-white leading-tight mb-6">
-                        Elevate Your <br> <span class="text-blue-400">Shopping Experience</span>
+            <!-- Left Side (Brand) -->
+            <div class="hidden lg:flex lg:w-1/2 login-gradient p-12 flex-col justify-between text-white relative">
+                <div class="absolute top-[-10%] left-[-10%] w-64 h-64 rounded-full bg-white/10 blur-3xl"></div>
+                <div class="absolute bottom-[-5%] right-[-5%] w-96 h-96 rounded-full bg-indigo-900/20 blur-3xl"></div>
+
+                <div class="relative z-10 flex items-center space-x-3">
+                    <img src="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png" alt="Logo" class="h-12 w-12">
+                    <span class="text-3xl font-black tracking-tight">S Shop LK</span>
+                </div>
+
+                <div class="relative z-10">
+                    <h2 class="text-5xl font-extrabold leading-tight mb-6">
+                        Join the <br> <span class="text-blue-400">Community</span>
                     </h2>
-                    <p class="text-blue-100 text-lg mb-8 opacity-80 leading-relaxed">
-                        Access exclusive deals, track your orders in real-time, and discover the best products handpicked just for you in Sri Lanka's premium marketplace.
+                    <p class="text-blue-100 text-lg opacity-80 leading-relaxed">
+                        Access exclusive deals, track your orders, and manage your digital assets in one place.
                     </p>
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <h4 class="text-white font-bold">Fast Delivery</h4>
-                            <p class="text-blue-200 text-sm opacity-70">Every oder done with maximum 1-2 hours.</p>
-                        </div>
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                            <h4 class="text-white font-bold">Secure Payment</h4>
-                            <p class="text-blue-200 text-sm opacity-70">100% safe transactions guaranteed.</p>
-                        </div>
+                </div>
+
+                <div class="relative z-10 grid grid-cols-2 gap-4">
+                    <div class="bg-white/10 p-4 rounded-xl border border-white/10 backdrop-blur-sm">
+                        <h4 class="font-bold">Secure</h4>
+                        <p class="text-xs text-blue-200 opacity-70">Encrypted data</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-xl border border-white/10 backdrop-blur-sm">
+                        <h4 class="font-bold">Fast</h4>
+                        <p class="text-xs text-blue-200 opacity-70">Instant access</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Side: Form (Responsive) -->
-            <div class="login-form-side flex-grow lg:flex-none">
-                <div class="bg-white lg:bg-transparent rounded-2xl lg:rounded-none shadow-2xl lg:shadow-none p-8 w-full max-w-md mx-auto">
+            <!-- Right Side (Forms) -->
+            <div class="w-full lg:w-1/2 relative bg-white text-gray-900">
+                <div class="forms-wrapper">
                     
-                    <!-- Header (Mobile Version Only has the Icon) -->
-                    <div class="text-center mb-8">
-                        <div class="flex items-center justify-center space-x-2 mb-4 lg:hidden">
-                            <img src="https://i.ibb.co/FqsbsjVB/S-shop-lk-logo.png" alt="Logo" class="h-12 w-12">
-                            <span class="text-3xl font-extrabold text-gray-900">S Shop LK</span>
-                        </div>
-                        <h1 class="text-3xl font-bold text-gray-900">Welcome Back</h1>
-                        <p class="text-gray-500 mt-2">Log in to manage your account</p>
-                    </div>
-
                     <!-- Login Form -->
-                    <form id="loginForm" class="space-y-5">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
-                            <input type="email" id="email" placeholder="name@company.com" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-gray-900" required>
+                    <div id="loginFormWrapper" class="auth-form p-8 sm:p-12">
+                        <div class="text-center mb-8">
+                            <h1 class="text-3xl font-bold text-gray-900">Welcome Back</h1>
+                            <p class="text-gray-500 mt-2">Sign in to your account</p>
                         </div>
-                        
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
-                                <button type="button" id="forgotPasswordBtn" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors uppercase tracking-wider">Forgot password?</button>
+
+                        <form id="loginForm" class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+                                <input type="email" id="loginEmail" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="name@example.com" required>
                             </div>
-                            <div class="relative">
-                                <input type="password" id="password" placeholder="••••••••" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-gray-900 pr-12" required>
-                                <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 px-4 flex items-center text-gray-400 hover:text-gray-600" aria-label="Toggle password visibility">
-                                    <svg id="eyeIcon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                </button>
+                            <div>
+                                <div class="flex justify-between mb-1.5">
+                                    <label class="block text-sm font-semibold text-gray-700">Password</label>
+                                    <span class="text-xs font-bold text-blue-600 cursor-pointer hover:underline" onclick="openModal('forgotModal')">Forgot?</span>
+                                </div>
+                                <input type="password" id="loginPass" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="••••••••" required>
                             </div>
-                        </div>
-                        
-                        <div class="flex items-center">
-                            <input type="checkbox" id="rememberMe" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
-                            <label for="rememberMe" class="ml-2 text-sm text-gray-600 cursor-pointer select-none">Stay signed in for 30 days</label>
-                        </div>
-                        
-                        <button type="submit" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold text-lg hover:bg-blue-700 shadow-lg shadow-blue-200 active:scale-[0.98] transition-all duration-200">
-                            Sign In
-                        </button>
-                    </form>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">Sign In</button>
+                        </form>
 
-                    <!-- Divider -->
-                    <div class="relative my-8">
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-200"></div>
+                        <div class="relative my-8">
+                            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+                            <div class="relative flex justify-center text-sm"><span class="px-4 bg-white text-gray-400">Or continue with</span></div>
                         </div>
-                        <div class="relative flex justify-center text-sm">
-                            <span class="px-4 bg-white lg:bg-transparent text-gray-400 uppercase tracking-widest font-medium text-xs">Or continue with</span>
+
+                        <div class="grid grid-cols-1 gap-3">
+                            <button onclick="handleGoogleLogin()" class="flex items-center justify-center gap-2 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
+                                <span class="font-medium text-gray-600">Continue with Google</span>
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-8">
+                            <p class="text-gray-500">Don't have an account? <span class="text-blue-600 font-bold cursor-pointer hover:underline" onclick="toggleMode()">Create one</span></p>
                         </div>
                     </div>
 
-                    <!-- Google Sign-In Button -->
-                    <button id="googleSignInBtn" type="button" class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 font-bold py-3.5 rounded-xl shadow-sm hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 active:scale-[0.98]">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
-                        Sign in with Google
-                    </button>
+                    <!-- Signup Form -->
+                    <div id="signupFormWrapper" class="auth-form p-8 sm:p-12">
+                        <div class="text-center mb-8">
+                            <h1 class="text-3xl font-bold text-gray-900">Create Account</h1>
+                            <p class="text-gray-500 mt-2">Join S Shop LK today</p>
+                        </div>
 
-                    <!-- Error/Success Messages -->
-                    <div id="googleErrorMessage" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-center text-sm font-medium"></div>
-                    <div id="errorMessage" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-center text-sm font-medium">
-                        Invalid email or password. Please try again.
-                    </div>
-                    <div id="successMessage" class="hidden mt-4 p-3 bg-green-50 border border-green-200 text-green-600 rounded-xl text-center text-sm font-medium">
-                        Login successful! Redirecting...
+                        <form id="registerForm" class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
+                                <input type="text" id="regName" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="John Doe" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+                                <input type="email" id="regEmail" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="name@example.com" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
+                                <input type="password" id="regPass" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Create a password" required>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">Create Account</button>
+                        </form>
+
+                        <div class="relative my-8">
+                            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+                            <div class="relative flex justify-center text-sm"><span class="px-4 bg-white text-gray-400">Or sign up with</span></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-3">
+                            <button onclick="handleGoogleLogin()" class="flex items-center justify-center gap-2 p-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
+                                <span class="font-medium text-gray-600">Sign up with Google</span>
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-8">
+                            <p class="text-gray-500">Already have an account? <span class="text-blue-600 font-bold cursor-pointer hover:underline" onclick="toggleMode()">Log in</span></p>
+                        </div>
                     </div>
 
-                    <!-- Sign Up Link -->
-                    <div class="text-center mt-8">
-                        <p class="text-gray-500 font-medium">
-                            New here? 
-                            <button type="button" id="showSignUpBtn" class="text-blue-600 hover:text-blue-800 font-bold decoration-2 hover:underline">Create an account</button>
-                        </p>
-                    </div>
-
-                    <!-- Back to Website -->
-                    <div class="text-center mt-8 pt-4 border-t border-gray-100 lg:border-none">
-                        <a href="index.html" class="text-sm font-bold text-gray-400 hover:text-blue-600 transition-colors inline-flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                            Back to Website
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modals (Keep all original IDs) -->
-    <div id="forgotPasswordModal" class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm flex items-center justify-center z-[1000] p-4 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Reset Password</h3>
-            <p class="text-gray-600 mb-6">Enter your email address and we'll send you a link to reset your password.</p>
-            <input type="email" id="resetEmail" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6 text-gray-900" placeholder="Enter your email">
-            <div class="flex flex-col gap-3">
-                <button id="resetPasswordBtn" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors">
-                    Send Reset Link
-                </button>
-                <button type="button" id="closeForgotPasswordBtn" class="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="signUpModal" class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm flex items-center justify-center z-[1000] p-4 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <h3 class="text-2xl font-bold text-gray-900 mb-6">Create Account</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Username</label>
-                    <input type="text" id="signUpUsername" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900" placeholder="e.g. janesmith">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
-                    <input type="email" id="signUpEmail" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900" placeholder="jane@example.com">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
-                    <div class="relative">
-                        <input type="password" id="signUpPassword" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 text-gray-900" placeholder="Create a strong password">
-                        <button type="button" id="toggleSignUpPassword" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        </button>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Confirm Password</label>
-                    <div class="relative">
-                        <input type="password" id="signUpConfirmPassword" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10 text-gray-900" placeholder="Repeat password">
-                        <button type="button" id="toggleSignUpConfirmPassword" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8">
-                <button id="createAccountBtn" class="bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors order-1 sm:order-2">
-                    Create Account
-                </button>
-                <button type="button" id="closeSignUpBtn" class="bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors order-2 sm:order-1">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer Component -->
+    <!-- Footer -->
     <div id="footer-container" class="w-full"></div>
 
-    <!-- Firebase SDK (Using original scripts) -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="modal-overlay">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md transform scale-100 transition-transform">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lock text-2xl text-blue-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900">Reset Password</h2>
+                <p class="text-gray-500 mt-2">Enter your email to receive a reset link.</p>
+            </div>
+            <input type="email" id="resetEmail" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6 text-gray-900" placeholder="name@example.com">
+            <div class="flex gap-3">
+                <button class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors" onclick="closeModal('forgotModal')">Cancel</button>
+                <button class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors" onclick="handleReset()">Send Link</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Components and Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="header-component.js"></script>
-    <script src="footer-component.js" defer></script>
-    <script src="login.js" defer></script>
+    <script src="footer-component.js"></script>
 
+    <script>
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+    apiKey: "AIzaSyBXQxty-9mU_PFONIE0RGgs3gg2G8gi1ng",
+    authDomain: "sshop-lk.firebaseapp.com",
+    projectId: "sshop-lk",
+    storageBucket: "sshop-lk.firebasestorage.app",
+    messagingSenderId: "1032750720586",
+    appId: "1:1032750720586:web:3b08580929f8e1686f68b3",
+    measurementId: "G-4XQTJVKS72"
+  };
+  
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // --- HELPER: SAVE TO DB ---
+        function saveUserToDB(user) {
+            return db.collection("users").doc(user.uid).set({
+                name: user.displayName || "Member",
+                email: user.email,
+                photo: user.photoURL || "",
+                lastLogin: new Date().toISOString(),
+                role: "member"
+            }, { merge: true });
+        }
+
+        // --- 1. SIGN UP (With Verification Email) ---
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+            const name = document.getElementById('regName').value;
+
+            firebase.auth().createUserWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    // 1. Update Name
+                    user.updateProfile({ displayName: name }).then(() => {
+
+                        // 2. SEND VERIFICATION EMAIL
+                        user.sendEmailVerification().then(() => {
+                            // 3. Force Logout
+                            firebase.auth().signOut();
+
+                            // 4. Show Message with Spam warning
+                            alert(
+                                `Verification email sent to ${email}!\n\n` +
+                                `NOTE: Since this is a free student project, the email will come from "support@sshoplk.xyz".\n\n` +
+                                `Please check your SPAM or JUNK folder if you don't see it.`
+                            );
+                            toggleMode(); // Go back to login screen
+                        });
+                    });
+                })
+                .catch((error) => {
+                    showToast(error.message, 'error');
+                });
+        });
+
+        // --- 2. SIGN IN (Check Verification) ---
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+
+            firebase.auth().signInWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    // --- CRITICAL CHECK: IS EMAIL VERIFIED? ---
+                    if (user.emailVerified) {
+                        showToast(`Welcome back!`);
+                        saveUserToDB(user);
+                        localStorage.setItem('currentUser', JSON.stringify({
+                            name: user.displayName || "Member",
+                            email: user.email,
+                            photo: user.photoURL
+                        }));
+                        setTimeout(() => window.location.href = '/index.html', 1500);
+
+                    } else {
+                        firebase.auth().signOut();
+                        alert("Your email is not verified yet! Please check your inbox (and spam folder) for the verification link.");
+                    }
+                })
+                .catch((error) => {
+                    showToast("Invalid email or password", 'error');
+                });
+        });
+
+        // --- GOOGLE/GITHUB ---
+        function handleSocialLogin(providerName) {
+            const provider = providerName === 'google'
+                ? new firebase.auth.GoogleAuthProvider()
+                : new firebase.auth.GithubAuthProvider();
+
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    saveUserToDB(user);
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        name: user.displayName || user.email,
+                        email: user.email,
+                        photo: user.photoURL
+                    }));
+                    showToast(`Welcome ${user.displayName}!`);
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                }).catch((e) => showToast(e.message, 'error'));
+        }
+
+        // Mapping buttons
+        function handleGoogleLogin() { handleSocialLogin('google'); }
+        function handleGithubLogin() { handleSocialLogin('github'); }
+
+        // --- UTILS ---
+        const container = document.getElementById('mainContainer');
+        function toggleMode() { container.classList.toggle('show-signup'); }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const txt = document.getElementById('toastMsg');
+            txt.textContent = msg;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function handleReset() {
+            const email = document.getElementById('resetEmail').value;
+            if (email) {
+                firebase.auth().sendPasswordResetEmail(email)
+                    .then(() => { closeModal('forgotModal'); alert("Reset link sent!"); })
+                    .catch(e => alert(e.message));
+            }
+        }
+        function simulateSocialLogin(provider) {
+            alert("Facebook login requires App Review. Use Google or GitHub for now!");
+        }
+        // --- PASSWORD RESET LOGIC (With "User Check") ---
+        function handleReset() {
+            const emailInput = document.getElementById('resetEmail');
+            const email = emailInput.value;
+
+            // 1. Check if empty
+            if (!email) {
+                showToast("Please enter your email address first.", "error");
+                return;
+            }
+
+            // 2. Try to send the email
+            firebase.auth().sendPasswordResetEmail(email)
+                .then(() => {
+                    // SUCCESS: User exists, email sent
+                    closeModal('forgotModal');
+                    emailInput.value = "";
+                    alert(
+                        `Password reset link sent to: ${email}\n\n` +
+                        `Please check your Inbox (and Spam folder).`
+                    );
+                })
+                .catch((error) => {
+                    console.error(error); // Debugging
+
+                    // --- THIS IS THE CHECK YOU ASKED FOR ---
+                    if (error.code === 'auth/user-not-found') {
+                        // User does NOT exist
+                        closeModal('forgotModal');
+                        alert("No account found with this email!\n\nPlease create an account first.");
+
+                        // Smart Move: Automatically switch to the Sign Up form
+                        const container = document.getElementById('mainContainer');
+                        if (!container.classList.contains('show-signup')) {
+                            toggleMode();
+                        }
+                    }
+                    else if (error.code === 'auth/invalid-email') {
+                        showToast("That email address is invalid.", "error");
+                    }
+                    else {
+                        showToast("Error: " + error.message, "error");
+                    }
+                });
+        }
+
+    </script>
 </body>
+
 </html>
