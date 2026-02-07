@@ -98,7 +98,7 @@ class NewArrivalsWidget {
             productCard.onclick = () => window.location.href = detailPage;
 
             productCard.innerHTML = `
-                <div class="mb-4 overflow-hidden shadow-2xl relative bg-slate-800 border border-slate-700 rounded-xl aspect-[3/4]">
+                <div class="mb-4 overflow-hidden shadow-2xl relative bg-slate-800 border border-slate-700 rounded-2xl aspect-[3/4]">
                     <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ${isSoldOut ? 'opacity-50 grayscale' : ''}">
                     
                     <!-- Category Tag with Icon -->
