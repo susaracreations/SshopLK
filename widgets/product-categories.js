@@ -14,7 +14,7 @@ class ProductCategoriesWidget {
         container.innerHTML = `
         <section class="py-12 px-4 max-w-7xl mx-auto">
             <!-- Header Section Restored -->
-            <div class="text-center mb-12">
+            <div class="text-center mb-8">
                 <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4 drop-shadow-sm">
                     Explore <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Categories</span>
                 </h2>

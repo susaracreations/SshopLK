@@ -10,7 +10,7 @@ class HeaderComponent {
                     <div class="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-md transition-opacity duration-300"></div>
                     <div class="relative container mx-auto px-4 py-2 flex items-center justify-center gap-3 text-sm font-medium text-white">
                         <span class="drop-shadow-sm tracking-wide">✨ 20% OFF SITE-WIDE!</span>
-                        <a href="products.html" class="px-3 py-0.5 rounded-full bg-white/20 hover:bg-white/30 border border-white/20 text-xs font-bold transition-all hover:scale-105 shadow-sm">SHOP NOW</a>
+                        <a href="products.html" class="px-3 py-0.5 rounded-full bg-white/20 hover:bg-white/30 border border-white/20 text-xs font-bold transition-all shadow-sm">SHOP NOW</a>
                         <button id="closeAnnouncementBar" aria-label="Dismiss announcement" class="absolute right-4 p-1 rounded-full hover:bg-white/10 transition-colors">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -23,13 +23,13 @@ class HeaderComponent {
                     <div class="flex justify-between items-center">
                         <!-- Left side: Logo -->
                         <a href="index.html" class="group relative flex items-center gap-2 lg:gap-3">
-                            <div class="relative flex items-center justify-center w-8 h-8 lg:w-10 lg:h-10 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-white/5 group-hover:border-blue-500/30 transition-all duration-300 overflow-hidden">
-                                <div class="absolute inset-0 bg-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                <svg class="h-6 w-6 text-blue-400 relative z-10 transform group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div class="relative flex items-center justify-center w-8 h-8 lg:w-10 lg:h-10 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-white/5 transition-all duration-300 overflow-hidden">
+                                <div class="absolute inset-0 bg-blue-500/20 blur-xl opacity-0 transition-opacity duration-500"></div>
+                                <svg class="h-6 w-6 text-blue-400 relative z-10 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
-                            <span id="headerSiteName" class="text-lg lg:text-xl font-bold tracking-tight text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">S Shop LK</span>
+                            <span id="headerSiteName" class="text-lg lg:text-xl font-bold tracking-tight text-white transition-all duration-300">S Shop LK</span>
                         </a>
 
                         <!-- Right side: Actions -->
@@ -41,11 +41,11 @@ class HeaderComponent {
                                     <a href="login.html" class="hidden sm:flex px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white transition-colors hover:bg-white/5">
                                         Sign In
                                     </a>
-                                    <a href="login.html" class="relative group px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:-translate-y-0.5">
-                                        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    <a href="login.html" class="relative group px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold overflow-hidden transition-all">
+                                        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 transition-opacity duration-300"></div>
                                         <span class="relative z-10 flex items-center gap-2">
                                             Get Started
-                                            <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg class="w-4 h-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                             </svg>
                                         </span>
@@ -55,14 +55,14 @@ class HeaderComponent {
                                 <!-- Logged In - FIXED: Added items-center to ensure vertical alignment -->
                                 <div id="loggedInUser" class="hidden flex items-center gap-4">
                                     <div class="relative group flex items-center">
-                                        <button id="userAvatar" class="relative w-8 h-8 lg:w-10 lg:h-10 rounded-full overflow-hidden ring-2 ring-white/10 hover:ring-blue-500/50 transition-all duration-300 shadow-lg">
+                                        <button id="userAvatar" class="relative w-8 h-8 lg:w-10 lg:h-10 rounded-full overflow-hidden ring-2 ring-white/10 transition-all duration-300 shadow-lg">
                                             <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-sm font-bold text-white">
                                                 <span id="avatarInitials">U</span>
                                             </div>
                                         </button>
                                         
                                         <!-- Profile Dropdown -->
-                                        <div class="absolute right-0 top-full mt-4 w-64 p-2 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-white/10 shadow-2xl transform opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0 z-50">
+                                        <div class="absolute right-0 top-full mt-4 w-64 p-2 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-white/10 shadow-2xl transform opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                                             <div class="p-3 mb-2 rounded-xl bg-white/5 border border-white/5">
                                                 <div class="text-sm font-bold text-white truncate" id="dropdownUsername">User</div>
                                                 <div class="text-xs text-gray-400 truncate" id="dropdownEmail">user@example.com</div>
@@ -85,7 +85,7 @@ class HeaderComponent {
                             <!-- Menu Button -->
                             <div class="relative flex items-center">
                                 <button id="menuBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="mobileMenuDropdown" aria-label="Open menu" class="p-2 lg:p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 text-gray-300 hover:text-white transition-all duration-300 group backdrop-blur-sm">
-                                    <svg class="w-6 h-6 transform group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg class="w-6 h-6 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                                     </svg>
                                 </button>
@@ -127,19 +127,19 @@ class HeaderComponent {
                                             <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Categories</h4>
                                             <div class="grid grid-cols-2 gap-2">
                                                 <a href="category-games.html" class="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all group">
-                                                    <svg class="w-6 h-6 text-purple-400 mb-2 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                    <svg class="w-6 h-6 text-purple-400 mb-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                                     <span class="text-xs font-medium text-gray-300 group-hover:text-white">Games</span>
                                                 </a>
                                                 <a href="category-software-apps.html" class="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all group">
-                                                    <svg class="w-6 h-6 text-indigo-400 mb-2 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
+                                                    <svg class="w-6 h-6 text-indigo-400 mb-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
                                                     <span class="text-xs font-medium text-gray-300 group-hover:text-white">Software</span>
                                                 </a>
                                                 <a href="category-boosting-coaching.html" class="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all group">
-                                                    <svg class="w-6 h-6 text-yellow-400 mb-2 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                                    <svg class="w-6 h-6 text-yellow-400 mb-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                                                     <span class="text-xs font-medium text-gray-300 group-hover:text-white">Boosting</span>
                                                 </a>
                                                 <a href="category-gift-cards.html" class="flex flex-col items-center justify-center p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all group">
-                                                    <svg class="w-6 h-6 text-pink-400 mb-2 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                    <svg class="w-6 h-6 text-pink-400 mb-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                                     <span class="text-xs font-medium text-gray-300 group-hover:text-white">Gift Cards</span>
                                                 </a>
                                             </div>

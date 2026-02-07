@@ -13,18 +13,18 @@
     const style = document.createElement('style');
     style.textContent = `
         .game-banner-container {
-            width: calc(100% - 20px);
-            max-width: 1200px;
-            margin: 15px auto;
-            border-radius: 24px;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            border-radius: 0;
             overflow: hidden;
             position: relative;
             background-color: #000b29;
             color: #ffffff;
             display: flex;
             align-items: center;
-            min-height: 240px;
-            box-shadow: 0 10px 30px rgba(0, 17, 43, 0.5);
+            min-height: 350px;
+            box-shadow: none;
             /* Animations removed */
             opacity: 1;
             transform: none;
@@ -123,7 +123,6 @@
         /* Medium screens (Tablets) */
         @media (max-width: 900px) {
             .game-banner-container {
-                min-height: 180px;
             }
             .game-banner-content {
                 padding: 20px 30px;
@@ -133,9 +132,9 @@
         /* Mobile specific adjustments */
         @media (max-width: 600px) {
             .game-banner-container {
-                min-height: 100px;
-                border-radius: 16px;
-                margin: 10px auto;
+                border-radius: 0;
+                margin: 0;
+                min-height: 160px;
             }
             
             .game-banner-content {
@@ -215,4 +214,23 @@
             document.body.appendChild(banner);
         }
     }
+
+    // 4. Dynamic Resize Handler
+    function handleBannerResize() {
+        const container = document.querySelector('.game-banner-container');
+        if (!container) return;
+
+        const width = window.innerWidth;
+        // Smooth dynamic height adjustment
+        if (width > 1200) {
+            container.style.minHeight = '400px';
+        } else if (width > 768) {
+            container.style.minHeight = '320px';
+        } else {
+            container.style.minHeight = '160px';
+        }
+    }
+
+    window.addEventListener('resize', handleBannerResize);
+    handleBannerResize();
 })();

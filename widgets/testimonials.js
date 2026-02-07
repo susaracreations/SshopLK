@@ -46,30 +46,19 @@
         const style = document.createElement('style');
         style.textContent = `
             :root {
-                /* Warmer, more "human" color palette */
-                --ts-primary: #2563eb;
-                --ts-primary-rgb: 37, 99, 235;
-                --ts-bg: #fdfcf9;
-                --ts-card-bg: #ffffff;
-                --ts-text: #334155;
-                --ts-heading: #1e293b;
-                --ts-border: #e2e8f0;
+                /* Main Site Theme Colors (Dark Mode) */
+                --ts-primary: #3b82f6;
+                --ts-primary-rgb: 59, 130, 246;
+                --ts-bg: transparent;
+                --ts-card-bg: #1e293b;
+                --ts-text: #cbd5e1;
+                --ts-heading: #f8fafc;
+                --ts-border: #334155;
                 --ts-accent: #f59e0b;
-                --ts-subtext: #64748b;
-                --ts-avatar-bg: #f8fafc;
+                --ts-subtext: #94a3b8;
+                --ts-avatar-bg: #0f172a;
                 --ts-star: #fbbf24;
                 --ts-transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            }
-
-            @media (prefers-color-scheme: dark) {
-                :root {
-                    --ts-bg: #0f172a;
-                    --ts-card-bg: #1e293b;
-                    --ts-text: #cbd5e1;
-                    --ts-heading: #f8fafc;
-                    --ts-border: #334155;
-                    --ts-subtext: #94a3b8;
-                }
             }
 
             #testimonials-widget-container {
@@ -287,7 +276,7 @@
         testimonials.forEach((t) => {
             let starsSvg = '';
             for(let i=0; i<5; i++) {
-                const fill = i < t.rating ? 'var(--ts-star)' : '#cbd5e1';
+                const fill = i < t.rating ? 'var(--ts-star)' : '#475569';
                 // Hand-drawn feel star path
                 starsSvg += `<svg class="ss-star-svg" viewBox="0 0 24 24" style="fill: ${fill}">
                     <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/>

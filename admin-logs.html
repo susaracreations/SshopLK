@@ -22,60 +22,8 @@
 </head>
 <body class="min-h-screen">
 
-    <!-- Header -->
-    <header class="bg-slate-900/70 backdrop-blur-sm border-b border-slate-700 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-blue-600/30 rounded-lg flex items-center justify-center border border-blue-500/50">
-                    <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                </div>
-                <span class="text-xl font-bold text-white">Admin Logs</span>
-            </div>
-            <div class="flex items-center space-x-4">
-                <span class="text-sm text-slate-400">Welcome, <span id="adminUsername" class="font-semibold text-white">Admin</span></span>
-                <button onclick="refreshLogs()" class="bg-blue-600/80 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-blue-700/80 transition-colors text-xs">
-                    Refresh
-                </button>
-                <button onclick="clearLogs()" class="bg-red-600/80 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-red-700/80 transition-colors text-xs">
-                    Clear All Logs
-                </button>
-                <button onclick="logout()" class="bg-red-600/80 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-red-700/80 transition-colors text-xs">
-                    Logout
-                </button>
-                <a href="admin-dashboard.html" class="text-slate-400 hover:text-white text-xs flex items-center space-x-1">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    <span>Back to Dashboard</span>
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="bg-slate-800/50 border-b border-slate-700">
-        <div class="container mx-auto px-4">
-            <div class="flex space-x-8 py-2">
-                <a href="admin-dashboard.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
-                    Dashboard
-                </a>
-                <a href="admin.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
-                    Products
-                </a>
-                <a href="admin-chat.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
-                    Chat
-                </a>
-                <a href="admin-logs.html" class="text-blue-400 border-b-2 border-blue-400 py-2 px-1 text-sm font-medium">
-                    Logs
-                </a>
-                <a href="admin-settings.html" class="text-slate-400 hover:text-white py-2 px-1 text-sm font-medium">
-                    Settings
-                </a>
-            </div>
-        </div>
-    </nav>
+    <!-- Admin Header Script -->
+    <script src="admin-widgets\admin-header.js"></script>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-6">
@@ -173,10 +121,6 @@
             if (isLoggedIn !== 'true') {
                 window.location.href = 'admin-login.html';
                 return;
-            }
-            
-            if (username) {
-                document.getElementById('adminUsername').textContent = username;
             }
         }
 

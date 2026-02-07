@@ -303,11 +303,13 @@
                 document.getElementById('related-products-section').classList.remove('hidden');
                 related.forEach(p => {
                     const card = document.createElement('div');
+                    const isSoldOut = !p.availability || p.availability <= 0;
                     card.className = 'group cursor-pointer';
                     card.onclick = () => window.location.href = `dynamic-product-detail.html?id=${p.id}`;
                     card.innerHTML = `
                         <div class="game-card-img-container mb-4 overflow-hidden shadow-2xl relative">
-                            <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ${isSoldOut ? 'opacity-50 grayscale' : ''}">
+                            ${isSoldOut ? `<div class="absolute inset-0 flex items-center justify-center"><span class="bg-black/80 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Sold Out</span></div>` : ''}
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mb-1 opacity-80">${p.deliveryMethod || 'Instant Delivery'}</p>
